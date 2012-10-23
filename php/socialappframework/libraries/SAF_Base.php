@@ -39,8 +39,8 @@ abstract class SAF_Base {
     /**
      * CONSTRUCTOR
      *
-     * @access public
-     * @return void
+     * @access    public
+     * @return    void
      */
     public function __construct() {
         // begin benchmark
@@ -68,9 +68,9 @@ abstract class SAF_Base {
     /**
      * GET PUBLIC DATA
      *
-     * @access protected
-     * @param $object_id Facebook graph object id
-     * @return array
+     * @access    protected
+     * @param     string $object_id Facebook graph object id
+     * @return    array
      */
     protected function getPublicData($object_id) {
         $url = 'https://graph.facebook.com/'.$object_id;

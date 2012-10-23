@@ -138,9 +138,9 @@ class SAF_Session {
     /**
      * INIT
      *
-     * @access public
-     * @param string $appID the app id of the app currently running ( eg - $facebook->getAppId() )
-     * @return void
+     * @access    public
+     * @param     string $appID the app id of the app currently running ( eg - $facebook->getAppId() )
+     * @return    void
      */
     public static function init($appID=null) {
         // start session
@@ -166,8 +166,8 @@ class SAF_Session {
     /**
      * Start a session if one has not been started by checking the session id
      *
-     * @access public
-     * @return void
+     * @access    public
+     * @return    void
      */
     public static function start() {
         if (!session_id()) {
@@ -180,8 +180,8 @@ class SAF_Session {
     /**
      * End SAF session
      *
-     * @access public
-     * @return void
+     * @access    public
+     * @return    void
      */
     public static function end() {
         self::destroySession();
@@ -193,8 +193,8 @@ class SAF_Session {
      * Destroy session
      * Destroys the entire session, including non-SAF related data
      *
-     * @access public
-     * @return void
+     * @access    public
+     * @return    void
      */
     public static function destroySession() {
         // kill session
@@ -209,10 +209,10 @@ class SAF_Session {
      * Stores the given ($key, $value) pair, so that future calls to
      * getPersistentData($key) return $value. This call may be in another request.
      *
-     * @access public
-     * @param string $key
-     * @param mixed $value
-     * @return void
+     * @access    public
+     * @param     string $key
+     * @param     mixed $value
+     * @return    void
      */
     public static function setPersistentData($key, $value) {
         if (!in_array($key, self::$supported_keys)) {
@@ -229,10 +229,10 @@ class SAF_Session {
     /**
      * Get the data for $key, persisted by SAF_Session::setPersistentData()
      *
-     * @access public
-     * @param string $key The key of the data to retrieve
-     * @param boolean $default The default value to return if $key is not found
-     * @return mixed
+     * @access    public
+     * @param     string $key The key of the data to retrieve
+     * @param     boolean $default The default value to return if $key is not found
+     * @return    mixed
      */
     public static function getPersistentData($key, $default=false) {
         if (!in_array($key, self::$supported_keys)) {
@@ -249,9 +249,9 @@ class SAF_Session {
     /**
      * Clear the data with $key from the persistent storage
      *
-     * @access public
-     * @param string $key
-     * @return void
+     * @access    public
+     * @param     string $key
+     * @return    void
      */
     public static function clearPersistentData($key) {
         if (!in_array($key, self::$supported_keys)) {
@@ -284,9 +284,9 @@ class SAF_Session {
      * CHECK IF USER HAS PERMISSION
      * Tells is if a user has allowed a specific permission
      *
-     * @access public
-     * @param string $perm permission to check
-     * @return bool
+     * @access    public
+     * @param     string $perm permission to check
+     * @return    bool
      */
     public static function hasPermission($perm) {
         if ( in_array($perm, self::getUserRevokedPerms()) ) {
@@ -304,11 +304,10 @@ class SAF_Session {
      * Helper to get to signed request data sub key
      * Actually returns $_SESSION['saf_signed_request_obj'][$key]
      *
-     * @access private
-     * @param string $key The key of the data to retrieve
-     * @param boolean $default The default value to return if $key is not found
-     *
-     * @return mixed
+     * @access    private
+     * @param     string $key The key of the data to retrieve
+     * @param     boolean $default The default value to return if $key is not found
+     * @return    mixed
      */
     private static function _getPersistentSignedRequestData($key, $default=false) {
         $signed_request_array = self::getPersistentData('signed_request_obj', array());
@@ -323,10 +322,10 @@ class SAF_Session {
      * Helper to get to page data sub key
      * Actually returns $_SESSION['saf_page_obj][$key]
      *
-     * @access private
-     * @param string $key The key of the data to retrieve
-     * @param boolean $default The default value to return if $key is not found
-     * @return mixed
+     * @access    private
+     * @param     string $key The key of the data to retrieve
+     * @param     boolean $default The default value to return if $key is not found
+     * @return    mixed
      */
     private static function _getPersistentPageData($key, $default=false) {
         $page_array = self::getPersistentData('page_obj', array());
@@ -341,10 +340,10 @@ class SAF_Session {
      * Helper to get to user data sub key
      * Actually returns $_SESSION['saf_user_obj][$key]
      *
-     * @access private
-     * @param string $key The key of the data to retrieve
-     * @param boolean $default The default value to return if $key is not found
-     * @return mixed
+     * @access    private
+     * @param     string $key The key of the data to retrieve
+     * @param     boolean $default The default value to return if $key is not found
+     * @return    mixed
      */
     private static function _getPersistentUserData($key, $default=false) {
         $user_array = self::getPersistentData('user_obj', array());
@@ -359,8 +358,8 @@ class SAF_Session {
      * Construct variable name just for our SAF persistent data
      * eg - 'key' becomes 'saf_key'
      *
-     * access private
-     * @return void
+     * access     private
+     * @return    void
      */
     private static function _constructSessionVariableName($key) {
         return implode( '_', array('saf', $key) );

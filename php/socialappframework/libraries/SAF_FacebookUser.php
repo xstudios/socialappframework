@@ -292,8 +292,8 @@ abstract class SAF_FacebookUser extends SAF_FanPage {
      * Sometimes Facebook 'breaks' things so let's check
      * for things we can fix using data we already have
      *
-     * @access private
-     * @return associative array
+     * @access     private
+     * @return     array
      */
     private function _fixUserData() {
         if ( !isset($this->_fb_user['id']) ) {
@@ -321,10 +321,10 @@ abstract class SAF_FacebookUser extends SAF_FanPage {
      *
      * Return a clean var value (eg - if something doesn't exist, return default value)
      *
-     * @access private
-     * @param mixed $key key to check for
-     * @param mixed $default default value if not set
-     * @return void
+     * @access    private
+     * @param     mixed $key key to check for
+     * @param     mixed $default default value if not set
+     * @return    void
      */
     private function _getUserValue($key, $default=false) {
         if ( !isset($this->_fb_user[$key]) ) {

@@ -40,8 +40,8 @@ class SAF extends SAF_FacebookUser {
     /**
      * CONSTRUCTOR
      *
-     * @access public
-     * @return void
+     * @access    public
+     * @return    void
      */
     public function __construct() {
         // this is used in conjuction with SAF_Config::forceRedirect(true)
@@ -59,8 +59,8 @@ class SAF extends SAF_FacebookUser {
      * INIT SAF
      * Here we go...
      *
-     * @access public
-     * @return void
+     * @access    public
+     * @return    void
      */
     public function init() {
         parent::__construct();

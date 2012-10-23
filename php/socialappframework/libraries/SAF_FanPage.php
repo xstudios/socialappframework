@@ -250,8 +250,8 @@ abstract class SAF_FanPage extends SAF_SignedRequest {
      *
      * Add our own useful social app framework parameter(s) to the fb_page object
      *
-     * @access private
-     * @return associative array
+     * @access    private
+     * @return    array
      */
     private function _injectSAFData($page_restrictions=false) {
         // page tab url (eg - https://www.facebook.com/XXXXXXXXXX?sk=app_XXXXXXXXXX)
@@ -287,8 +287,8 @@ abstract class SAF_FanPage extends SAF_SignedRequest {
      * Sometimes Facebook 'breaks' things so let's check
      * for things we can fix using data we already have
      *
-     * @access private
-     * @return associative array
+     * @access    private
+     * @return    array
      */
     private function _fixPageData() {
         if ( !isset($this->_fb_page['id']) ) {
@@ -317,10 +317,10 @@ abstract class SAF_FanPage extends SAF_SignedRequest {
      * Return a clean var value
      * (eg - if something doesn't exist, return default value)
      *
-     * @access private
-     * @param mixed $key key to check for
-     * @param mixed $default default value if not set
-     * @return void
+     * @access    private
+     * @param     mixed $key key to check for
+     * @param     mixed $default default value if not set
+     * @return    void
      */
     private function _getPageValue($key, $default=false) {
         if ( !isset($this->_fb_page[$key]) ) {
