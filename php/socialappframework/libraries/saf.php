@@ -21,12 +21,12 @@ $dirname = dirname(__FILE__);
 $dirname .= (substr($dirname, -1) == '/' ? '' : '/');
 $required_files = array(
     'facebook_sdk/facebook',
-    'SAF_Config',
-    'SAF_Session',
-    'SAF_Base',
-    'SAF_SignedRequest',
-    'SAF_FanPage',
-    'SAF_FacebookUser',
+    'saf_config',
+    'saf_session',
+    'saf_base',
+    'saf_signed_request',
+    'saf_fan_page',
+    'saf_facebook_user',
     '../config/config'
 );
 foreach ($required_files as $file) {

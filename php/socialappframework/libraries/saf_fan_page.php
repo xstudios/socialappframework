@@ -10,7 +10,7 @@
  * You should have received a copy of the license along with this program.
  * If not, see <http://socialappframework.com/license/>.
  */
-abstract class SAF_FanPage extends SAF_SignedRequest {
+abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
     private $_fb_page = null;
 

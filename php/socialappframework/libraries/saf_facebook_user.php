@@ -10,7 +10,7 @@
  * You should have received a copy of the license along with this program.
  * If not, see <http://socialappframework.com/license/>.
  */
-abstract class SAF_FacebookUser extends SAF_FanPage {
+abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
     private $_fb_user = null;
 
