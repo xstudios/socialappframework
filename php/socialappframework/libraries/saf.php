@@ -33,7 +33,7 @@ foreach ($required_files as $file) {
     require_once $dirname.$file.'.php';
 }
 
-class SAF extends SAF_FacebookUser {
+class SAF extends SAF_Facebook_User {
 
     // ------------------------------------------------------------------------
 
