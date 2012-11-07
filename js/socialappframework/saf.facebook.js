@@ -21,6 +21,7 @@ var SAF_Facebook = function(obj) {
 
     var mAppID = obj.app_id;
     var mBaseURL = obj.base_url;
+    var mAppURL = obj.app_url;
     var mLoginURL = obj.login_url;
 
     var mPermissions = obj.permissions || '';
@@ -98,7 +99,7 @@ var SAF_Facebook = function(obj) {
             if ( isValidCallback(_callbackFunc) ) {
                 _callbackFunc(_response);
             } else {
-                top.location.href = top.location;
+                top.location.href = mAppURL;
             }
         }, options);
     };
@@ -110,7 +111,7 @@ var SAF_Facebook = function(obj) {
             if ( isValidCallback(_callbackFunc) ) {
                 _callbackFunc(_response);
             } else {
-                top.location.href = top.location;
+                top.location.href = mAppURL;
             }
         });
     };
