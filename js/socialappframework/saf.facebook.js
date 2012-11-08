@@ -15,17 +15,17 @@
 var SAF_Facebook = function(obj) {
     //"use strict";
 
-    var self = this;
+    var self         = this;
 
-    var mDebugMode = obj.debug_mode || false;
+    var mDebugMode   = obj.debug_mode || false;
 
-    var mAppID = obj.app_id;
-    var mBaseURL = obj.base_url;
-    var mAppURL = obj.app_url;
-    var mLoginURL = obj.login_url;
+    var mAppID       = obj.app_id;
+    var mBaseURL     = obj.base_url;
+    var mAppURL      = obj.app_url;
+    var mLoginURL    = obj.login_url;
 
     var mPermissions = obj.permissions || '';
-    var mUserFields = obj.user_fields || 'id, name, first_name, last_name, gender, username, email, link, picture, website';
+    var mUserFields  = obj.user_fields || 'id, name, first_name, last_name, gender, username, email, link, picture, website';
 
     var mUserID;
     var mAccessToken;
@@ -44,7 +44,7 @@ var SAF_Facebook = function(obj) {
     // INIT
     // ------------------------------------------------------------------------
     var __construct__ = function() {
-        FB._https = (window.location.protocol == "https:");
+        FB._https  = (window.location.protocol == "https:");
         FB._secure = (window.location.protocol == "https:");
 
         FB.init({
@@ -71,8 +71,8 @@ var SAF_Facebook = function(obj) {
         if (_response.status === 'connected') {
             // the user is logged in and has authenticated our app
             debug('Facebook::updateAuthStatus:: User is logged in and has authenticated our app.');
-            mUserID = _response.authResponse.userID;
-            mAccessToken = _response.authResponse.accessToken;
+            mUserID        = _response.authResponse.userID;
+            mAccessToken   = _response.authResponse.accessToken;
             mAuthenticated = true;
         } else if (_response.status === 'not_authorized') {
             // the user is logged in to Facebook,
