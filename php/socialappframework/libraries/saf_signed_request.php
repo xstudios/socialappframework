@@ -62,15 +62,18 @@ abstract class SAF_Signed_Request extends SAF_Base {
         // get the signed request
         $this->_signed_request = $this->facebook->getSignedRequest();
 
+        // get user access token (preferably the long-lived access token)
+        $this->_access_token = $this->_getLongLivedAccessToken();
+
         if ( !empty($this->_signed_request) ) {
 
             // get the user id
             $this->user_id = $this->facebook->getUser();
 
-            if ( !empty($this->user_id) ) {
+            /*if ( !empty($this->user_id) ) {
                 // get user access token (preferably the long-lived access token)
                 $this->_access_token = $this->_getLongLivedAccessToken();
-            }
+            }*/
 
             // by testing for the presence of the user_id and oauth_token parameters,
             // we can determine if the user has authorized our application
@@ -258,12 +261,14 @@ abstract class SAF_Signed_Request extends SAF_Base {
      * @return    string
      */
     private function _getLongLivedAccessToken() {
-        // get access token
-        $access_token = $this->facebook->getAccessToken();
-
         // get long-lived access token
-        $url = 'oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s';
-        $url = sprintf($url, $this->getAppID(), $this->getAppSecret(), $access_token);
+        $params = array(
+            'grant_type'        => 'fb_exchange_token',
+            'client_id'         => $this->getAppID(),
+            'client_secret'     => $this->getAppSecret(),
+            'fb_exchange_token' => $this->facebook->getAccessToken()
+        );
+        $url = 'oauth/access_token?'.http_build_query($params);
         $access_token_response = SAF_FBHelper::graph_request($url, false);
 
         // response returns a query string, output it as an associative array
@@ -273,11 +278,11 @@ abstract class SAF_Signed_Request extends SAF_Base {
         // override the old access token with our new long-lived one
         if ( !empty($response_params) ) {
             if (isset($response_params['access_token'])) {
-                $access_token = $response_params['access_token'];
+                return $response_params['access_token'];
             }
         }
 
-        return $access_token;
+        return $this->facebook->getAccessToken();
     }
 
     // ------------------------------------------------------------------------
