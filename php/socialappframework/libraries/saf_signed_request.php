@@ -16,10 +16,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
     private $_access_token = null;
 
-    private $_authenticated = false;
-
     private $_page_admin = false;
-    private $_app_developer = false;
 
     private $_page_liked = false;
     private $_like_via_fan_gate = false;
@@ -36,10 +33,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
     public function getAppData() { return $this->_app_data; }
 
-    public function isAuthenticated() { return $this->_authenticated; }
-
     public function isPageAdmin() { return $this->_page_admin; }
-    public function isAppDeveloper() { return $this->_app_developer; }
 
     public function isPageLiked() { return $this->_page_liked; }
     public function isPageLikeViaFanGate() { return $this->_like_via_fan_gate; }
@@ -59,93 +53,75 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $benchmark = $this->benchmark();
         if ($benchmark) $benchmark->begin();
 
-        // get the signed request
-        $this->_signed_request = $this->facebook->getSignedRequest();
-
         // get user access token (preferably the long-lived access token)
-        $this->_access_token = $this->_getLongLivedAccessToken();
+        // this will get us an access token for a Facebook Connect app
+        if (isset($_REQUEST['code'])) {
+
+            $this->facebook->setAccessToken( $this->_getAccessTokenFromCode() );
+            $this->_access_token = $this->facebook->getAccessToken();
+
+        }
+
+        // get the signed request (only available for tab or canvas apps)
+        $this->_signed_request = $this->facebook->getSignedRequest();
 
         if ( !empty($this->_signed_request) ) {
 
             // get the user id
             $this->user_id = $this->facebook->getUser();
 
-            /*if ( !empty($this->user_id) ) {
-                // get user access token (preferably the long-lived access token)
-                $this->_access_token = $this->_getLongLivedAccessToken();
-            }*/
+            // get us an access token for a tab or canvas app
+            $this->_access_token = $this->_getLongLivedAccessToken();
 
-            // by testing for the presence of the user_id and oauth_token parameters,
-            // we can determine if the user has authorized our application
-            if ( !empty($this->user_id) && !empty($this->_access_token) ) {
+            // are we viewing this within a fan page?
+            if ( isset($this->_signed_request['page']) ) {
 
-                $this->_authenticated = true;
-                $this->debug(__CLASS__.':: User ('.$this->user_id.') is authenticated');
+                // get page id
+                $this->page_id = $this->_signed_request['page']['id'];
+                $this->debug(__CLASS__.':: User is viewing tab on fan page ('.$this->page_id.')');
 
-            } else {
+                // does the user like this page?
+                $this->_page_liked = $this->_signed_request['page']['liked'];
 
-                $this->_authenticated = false;
-                $this->debug(__CLASS__.':: User is not authenticated, unable to obtain User ID and/or Access Token', null, 3);
+                if ($this->_page_liked == true) {
 
-            }
+                    if ( isset($_SESSION['saf_fan_gate']) && $_SESSION['saf_fan_gate'] == true ) {
 
-            // is this a tab?
-            if ( SAF_Config::pageType() == SAF_Config::PAGE_TYPE_TAB ) {
-
-                // are we viewing this within a fan page?
-                if ( isset($this->_signed_request['page']) ) {
-
-                    // get page id
-                    $this->page_id = $this->_signed_request['page']['id'];
-                    $this->debug(__CLASS__.':: User is viewing tab on fan page ('.$this->page_id.')');
-
-                    // does the user like this page?
-                    $this->_page_liked = $this->_signed_request['page']['liked'];
-
-                    if ($this->_page_liked == true) {
-
-                        if ( isset($_SESSION['saf_fan_gate']) && $_SESSION['saf_fan_gate'] == true ) {
-
-                            $this->_like_via_fan_gate = true;
-                            // unset fan gate flag so we don't keep assuming the user liked this via fan gate
-                            unset( $_SESSION['saf_fan_gate'] );
-                            $this->debug(__CLASS__.':: User likes this page (via Fan Gate)');
-
-                        } else {
-
-                            $this->debug(__CLASS__.':: User likes this page');
-
-                        }
+                        $this->_like_via_fan_gate = true;
+                        // unset fan gate flag so we don't keep assuming the user liked this via fan gate
+                        unset( $_SESSION['saf_fan_gate'] );
+                        $this->debug(__CLASS__.':: User likes this page (via Fan Gate)');
 
                     } else {
 
-                        $this->debug(__CLASS__.':: User does not like this page');
-                        // set a session flag so we know when the user originally came here they did not like the page
-                        $_SESSION['saf_fan_gate'] = true;
+                        $this->debug(__CLASS__.':: User likes this page');
 
                     }
 
-                    // is user a page admin?
-                    $this->_page_admin = $this->_isPageAdmin();
-
-                    // get app data passed via the url
-                    if ( isset($this->_signed_request['app_data']))  {
-                        $this->_app_data = $this->_signed_request['app_data'];
-                        $this->debug(__CLASS__.':: App data (passed via \'app_data\' GET param):', $this->_app_data);
-                    }
-
-                // we are most likely looking at the tab from somewhere we don't want
                 } else {
 
-                    header("Location: ".SAF_Config::srRedirectTabURL());
-                    exit;
+                    $this->debug(__CLASS__.':: User does not like this page');
+                    // set a session flag so we know when the user originally came here they did not like the page
+                    $_SESSION['saf_fan_gate'] = true;
 
                 }
 
-            }
+                // is user a page admin?
+                $this->_page_admin = $this->_isPageAdmin();
 
-            // are we the app developer?
-            $this->_app_developer = $this->_isAppDeveloper();
+                // get app data passed via the url
+                if ( isset($this->_signed_request['app_data']))  {
+                    $this->_app_data = $this->_signed_request['app_data'];
+                    $this->debug(__CLASS__.':: App data (passed via \'app_data\' GET param):', $this->_app_data);
+                }
+
+            // we are most likely looking at the tab from somewhere we don't want
+            } else {
+
+                header("Location: ".SAF_Config::srRedirectTabURL());
+                exit;
+
+            }
 
             // remove some params we don't want nor need to store since we create our own
             unset($this->_signed_request['page']);
@@ -154,11 +130,9 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
             // add our own useful Social App Framework parameter(s) to the signed_request object
             $this->_signed_request['saf_user_id'] = $this->user_id;
-            $this->_signed_request['saf_authenticated'] = $this->_authenticated;
             $this->_signed_request['saf_page_id'] = $this->page_id;
             $this->_signed_request['saf_page_liked'] = $this->_page_liked;
             $this->_signed_request['saf_page_admin'] = $this->_page_admin;
-            $this->_signed_request['saf_app_developer'] = $this->_app_developer;
 
             // add our social app framework user data into the session
             SAF_Session::setPersistentData('signed_request_obj', $this->_signed_request);
@@ -169,7 +143,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
         } else {
 
             // make sure we clear all SAF Session data since we can't assume anything is still valid
-            $this->debug(__CLASS__.':: No signed request. Wipe session data.');
             SAF_Session::clearAllPersistentData();
 
             // tab
@@ -194,6 +167,11 @@ abstract class SAF_Signed_Request extends SAF_Base {
                     exit;
                 }
 
+            }
+
+            // facebook connect
+            if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_FACEBOOK_CONNECT) {
+                $this->debug(__CLASS__.':: No signed request. Viewing Facebook Connect app.', null, 3, false);
             }
 
             // widget
@@ -231,22 +209,35 @@ abstract class SAF_Signed_Request extends SAF_Base {
     // ------------------------------------------------------------------------
 
     /**
-     * DETERMINE IF USER IS THE APP DEVELOPER
+     * GET ACCESS TOKEN FROM CODE
+     *
+     * Return an access token (used with Facebook Connect only)
      *
      * @access    private
-     * @return    boolean
+     * @return    string
      */
-    private function _isAppDeveloper() {
-        // explode our comma seperated developer ids into an array
-        $developers = preg_replace('/\s+/', '', SAF_Config::fbDevelopers());
-        $developers = explode(',', $developers);
+    private function _getAccessTokenFromCode() {
+        $params = array(
+            'client_id'     => $this->getAppID(),
+            'client_secret' => $this->getAppSecret(),
+            'redirect_uri'  => 'http://mindclay.xstudiosdev.org/', //SAF_Config::urlBase();
+            'code'          => $_REQUEST['code']
+        );
+        $url = 'oauth/access_token?'.http_build_query($params);
+        $access_token_response = SAF_FBHelper::graph_request($url, false);
 
-        if ( in_array($this->user_id, $developers) == true ) {
-            $this->debug(__CLASS__.':: User is the app developer');
-            return true;
-        } else {
+        if (empty($access_token_response)) {
             return false;
         }
+
+        // response returns a query string, output it as an associative array
+        $response_params = array();
+        parse_str($access_token_response, $response_params);
+        if (!isset($response_params['access_token'])) {
+            return false;
+        }
+
+        return $response_params['access_token'];
     }
 
     // ------------------------------------------------------------------------
@@ -254,8 +245,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
     /**
      * GET LONG-LIVED ACCESS TOKEN
      *
-     * Gives us a 60 day access token by exchanging the short-lived token
-     * for a long-lived one
+     * Return a 60 day access token by exchanging the
+     * short-lived token for a long-lived one
      *
      * @access    private
      * @return    string
@@ -271,23 +262,22 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $url = 'oauth/access_token?'.http_build_query($params);
         $access_token_response = SAF_FBHelper::graph_request($url, false);
 
+        if (empty($access_token_response)) {
+            return false;
+        }
+
         // response returns a query string, output it as an associative array
         $response_params = array();
         parse_str($access_token_response, $response_params);
-
-        // override the old access token with our new long-lived one
-        if ( !empty($response_params) ) {
-            if (isset($response_params['access_token'])) {
-                return $response_params['access_token'];
-            }
+        if (!isset($response_params['access_token'])) {
+            return false;
         }
 
-        return $this->facebook->getAccessToken();
+        return $response_params['access_token'];
     }
 
     // ------------------------------------------------------------------------
 
 }
 
-/* End of file SAF_SignedRequest.php */
-/* Location: ./socialappframework/libraries/SAF_SignedRequest.php */
+/* End of file */

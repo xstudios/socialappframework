@@ -25,6 +25,9 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     private $_login_link;
     private $_logout_link;
 
+    private $_app_developer = false;
+    private $_authenticated = false;
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
@@ -55,6 +58,9 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function getLoginLink() { return $this->_login_link; }
     public function getLogoutLink() { return $this->_logout_link; }
 
+    public function isAppDeveloper() { return $this->_app_developer; }
+    public function isAuthenticated() { return $this->_authenticated; }
+    
     public function setRedirectURL($value) {
         $this->_redirect_url = $value;
         // update login url/link too
@@ -95,95 +101,72 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         $this->_login_url = $this->_getLoginURL();
         $this->_login_link = SAF_FBHelper::login_link($this->_login_url);
 
-        // if we have a user id
-        if ( !empty($this->user_id) ) {
-            // proceed knowing you have a logged in user who's authenticated
+        // we have a user id and/or a access token, so probably a logged in user...
+        // if not, we'll get an exception, which we will handle below
+        try {
 
-            // logout URL
-            $params = array( 'next' => $this->_redirect_url );
-            $this->_logout_url = $this->facebook->getLogoutUrl($params);
-            $this->_logout_link = SAF_FBHelper::logout_link($this->_logout_url);
+            $this->_fb_user = $this->facebook->api('/me', 'GET', array(
+                'access_token' => $this->getAccessToken(),
+                'fields' => SAF_Config::graphUserFields()
+            ));
 
-            try {
+            // if we have user data
+            if ( !empty($this->_fb_user) ) {
 
-                // we have a user id, so probably a logged in user...if not, we'll get an exception, which we handle below
-                $this->_fb_user = $this->facebook->api('/me', 'GET', array(
-                    'access_token' => $this->getAccessToken(),
-                    'fields' => SAF_Config::graphUserFields()
-                ));
+                // logout URL
+                $params = array( 'next' => $this->_redirect_url );
+                $this->_logout_url = $this->facebook->getLogoutUrl($params);
+                $this->_logout_link = SAF_FBHelper::logout_link($this->_logout_url);
 
-                // if we have user data
-                if ( !empty($this->_fb_user) ) {
+                // user is authenticated (obviously since we have user data)
+                $this->_authenticated = true;
 
-                    // fix user data
-                    $this->_fb_user = $this->_fixUserData();
-
-                    // check user permissions if we are asking for any
-                    if ( !empty($this->_extended_perms) ) {
-                        $this->_checkPermissions();
-                    }
-
-                    // if user is the admin and authenticated and has the manage_pages perm,
-                    // then let's get the long-lived access token for the page
-                    // only if we actually have a page (eg - a page id)
-                    if ( $this->isPageAdmin() == true && $this->isAuthenticated() == true && $this->hasPermission('manage_pages') == true && !empty($this->page_id) ) {
-                        $this->getPageAccessToken();
-                    }
-
-                    // add our own useful social app framework parameter(s) to the fb_user object
-                    $this->_fb_user['saf_perms_granted'] = $this->_granted_perms;
-                    $this->_fb_user['saf_perms_revoked'] = $this->_revoked_perms;
-
-                    // add our social app framework user data into the session as well
-                    SAF_Session::setPersistentData('user_obj', $this->_fb_user);
-
-                    $this->debug(__CLASS__.':: User ('.$this->user_id.') is authenticated with data:', $this->_fb_user);
-
-                } else {
-
-                    $this->debug(__CLASS__.':: User ('.$this->user_id.') is authenticated, but user data is empty', null, 1, true);
-
+                // if this is a facebook connect app this is where we will
+                // finally get a user id as there is no signed request
+                if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_FACEBOOK_CONNECT) {
+                    $this->user_id = $this->_fb_user['id'];
                 }
 
-            } catch (FacebookApiException $e) {
+                // fix user data
+                $this->_fb_user = $this->_fixUserData();
 
-                // if the user is logged out, you can have a user ID even though the access token is invalid
-                // in this case, we'll get an exception, so we'll just prompt the user to login again here
-
-                $this->debug(__CLASS__.':: User ('.$this->user_id.') is authenticated, but... '.$e, null, 1, true);
-
-                // wipe the 'saf_user_obj' session object
-                SAF_Session::clearPersistentData('user_obj');
-
-                // something is up, so let's try to get public data as a fallback
-                $this->_fb_user = $this->getPublicData($this->user_id);
-
-                // if we have public data
-                if ( !empty($this->_fb_user) ) {
-
-                    // fix user data
-                    $this->_fb_user = $this->_fixUserData();
-
-                    // add our social app framework user data into the session
-                    SAF_Session::setPersistentData('user_obj', $this->_fb_user);
-
-                    $this->debug(__CLASS__.':: User ('.$this->user_id.') is authenticated, public data:', $this->_fb_user);
-
-                } else {
-
-                    $this->debug(__CLASS__.':: User ('.$this->user_id.') is authenticated, but public data is empty', null, 3, true);
-
+                // check user permissions if we are asking for any
+                if ( !empty($this->_extended_perms) ) {
+                    $this->_checkPermissions();
                 }
+
+                // is the user the app developer?
+                $this->_app_developer = $this->_isAppDeveloper();
+
+                // if user is the admin and authenticated and has the manage_pages perm,
+                // then let's get the long-lived access token for the page
+                // only if we actually have a page (eg - a page id)
+                if ( $this->isPageAdmin() == true && $this->isAuthenticated() == true && $this->hasPermission('manage_pages') == true && !empty($this->page_id) ) {
+                    $this->getPageAccessToken();
+                }
+
+                // add our own useful social app framework parameter(s) to the fb_user object
+                $this->_fb_user['saf_perms_granted'] = $this->_granted_perms;
+                $this->_fb_user['saf_perms_revoked'] = $this->_revoked_perms;
+                $this->_fb_user['saf_app_developer'] = $this->_app_developer;
+                $this->_fb_user['saf_access_token'] = $this->getAccessToken();
+                $this->_fb_user['saf_authenticated'] = $this->_authenticated;
+
+                // add our social app framework user data into the session as well
+                SAF_Session::setPersistentData('user_obj', $this->_fb_user);
+
+                $this->debug(__CLASS__.':: User ('.$this->user_id.') is authenticated with data:', $this->_fb_user);
 
             }
 
-        } else {
+        } catch (FacebookApiException $e) {
+
+            // proceed knowing we require user login and/or authentication
+            $this->debug(__CLASS__.':: '.$e, null, 1, true);
+            $this->debug(__CLASS__.':: User is not authenticated. Prompt them to login...', null, 3);
 
             // wipe the 'saf_user_obj' session object
             SAF_Session::clearPersistentData('user_obj');
-
-            // proceed knowing we require user login and/or authentication
-            $this->debug(__CLASS__.':: User is not authenticated. Prompt them to login...', null, 3);
 
             // force admin to login to the app if desired
             if ($this->isPageAdmin() == true && SAF_Config::permsAutoRequestAdmin() == true) {
@@ -229,6 +212,27 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * DETERMINE IF USER IS THE APP DEVELOPER
+     *
+     * @access    private
+     * @return    boolean
+     */
+    private function _isAppDeveloper() {
+        // explode our comma seperated developer ids into an array
+        $developers = preg_replace('/\s+/', '', SAF_Config::fbDevelopers());
+        $developers = explode(',', $developers);
+
+        if ( in_array($this->user_id, $developers) == true ) {
+            $this->debug(__CLASS__.':: User is the app developer');
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     // ------------------------------------------------------------------------
 
     /**
@@ -302,13 +306,13 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         }
 
         if ( !isset($this->_fb_user['picture']) ) {
-            $segment = isset($this->_fb_user['username']) ? $this->_fb_user['username'] : $this->user_id;
-            $this->_fb_user['picture']['data']['url'] = 'https://graph.facebook.com/'.$segment.'/picture';
+            $user_id = isset($this->_fb_user['username']) ? $this->_fb_user['username'] : $this->user_id;
+            $this->_fb_user['picture']['data']['url'] = SAF_FBHelper::picture_url($user_id);
         }
 
         if ( !isset($this->_fb_user['link']) ) {
-            $segment = isset($this->_fb_user['username']) ? $this->_fb_user['username'] : $this->user_id;
-            $this->_fb_user['link'] = 'https://www.facebook.com/'.$segment;
+            $user_id = isset($this->_fb_user['username']) ? $this->_fb_user['username'] : $this->user_id;
+            $this->_fb_user['link'] = SAF_FBHelper::profile_url($user_id);
         }
 
         return $this->_fb_user;

@@ -37,14 +37,8 @@ class SAF_Session {
         return self::getPersistentData('signed_request_obj', array());
     }
 
-    public static function isAuthenticated() {
-        return self::_getPersistentSignedRequestData('saf_authenticated');
-    }
     public static function isPageAdmin() {
         return self::_getPersistentSignedRequestData('saf_page_admin');
-    }
-    public static function isAppDeveloper() {
-        return self::_getPersistentSignedRequestData('saf_app_developer');
     }
     public static function isPageLiked() {
         return self::_getPersistentSignedRequestData('saf_page_liked');
@@ -131,6 +125,13 @@ class SAF_Session {
     }
     public static function getUserRevokedPerms() {
         return self::_getPersistentUserData('saf_perms_revoked', array());
+    }
+
+    public static function isAppDeveloper() {
+        return self::_getPersistentUserData('saf_app_developer');
+    }
+    public static function isAuthenticated() {
+        return self::_getPersistentUserData('saf_authenticated');
     }
 
     // ------------------------------------------------------------------------
