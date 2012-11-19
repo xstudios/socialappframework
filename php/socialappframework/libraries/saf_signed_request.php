@@ -220,7 +220,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $params = array(
             'client_id'     => $this->getAppID(),
             'client_secret' => $this->getAppSecret(),
-            'redirect_uri'  => 'http://mindclay.xstudiosdev.org/', //SAF_Config::urlBase();
+            'redirect_uri'  => SAF_Config::urlBase(),
             'code'          => $_REQUEST['code']
         );
         $url = 'oauth/access_token?'.http_build_query($params);
