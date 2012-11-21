@@ -137,6 +137,16 @@ Get the fan page data. Usage example:
 
 ***
 
+###getPageAccessToken()
+Get the page access token for use with Facebook Graph API requests. This will allow
+the app to post as the page when the user is not logged in. Usage example:
+    
+    $saf->getPageAccessToken();
+
+**NOTE: This method is only available to a page admin.**
+
+***
+
 ###getPageName()
 Get the fan page name. Usage example:
     
