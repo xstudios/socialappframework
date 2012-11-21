@@ -60,7 +60,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
     public function isAppDeveloper() { return $this->_app_developer; }
     public function isAuthenticated() { return $this->_authenticated; }
-    
+
     public function setRedirectURL($value) {
         $this->_redirect_url = $value;
         // update login url/link too

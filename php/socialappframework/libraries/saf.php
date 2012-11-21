@@ -57,7 +57,10 @@ class SAF extends SAF_Facebook_User {
 
     /**
      * INIT SAF
-     * Here we go...
+     *
+     * Must be called to init the framework. Manual call to allow us to have
+     * finer control over when the framework actually initializes after it's
+     * been constructed.
      *
      * @access    public
      * @return    void
@@ -70,5 +73,4 @@ class SAF extends SAF_Facebook_User {
 
 }
 
-/* End of file SAF.php */
-/* Location: ./socialappframework/libraries/SAF.php */
+/* End of file */
