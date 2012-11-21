@@ -173,41 +173,6 @@ class SAF_FBHelper {
 
     // ------------------------------------------------------------------------
 
-    /**
-     * Helps parse a Signed Request
-     *
-     * @access    public
-     * @param     string $signed_request
-     * @param     string $secret
-     * @return    mixed
-     */
-    public static function parse_signed_request($signed_request, $secret) {
-        list($encoded_sig, $payload) = explode('.', $signed_request, 2);
-
-        // decode the data
-        $sig = self::_base64_url_decode($encoded_sig);
-        $data = json_decode(self::_base64_url_decode($payload), true);
-
-        if (strtoupper($data['algorithm']) !== 'HMAC-SHA256') {
-            return ' Unknown algorithm. Expected HMAC-SHA256';
-        }
-
-        // check sig
-        $expected_sig = hash_hmac('sha256', $payload, $secret, $raw = true);
-        if ($sig !== $expected_sig) {
-            return ' Bad Signed JSON signature!';
-        }
-
-        return $data;
-    }
-
-    private static function _base64_url_decode($input) {
-        return base64_decode(strtr($input, '-_', '+/'));
-    }
-
-    // ------------------------------------------------------------------------
-
 }
 
-/* End of file xs_facebook_helper.php */
-/* Location: ./application/helpers/xs_facebook_helper.php */
+/* End of file */
