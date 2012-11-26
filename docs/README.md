@@ -10,7 +10,7 @@
 * [Facebook User Class](#facebook-user-class)
 
 <a id="saf-class"></a>
-# SAF
+# SAF Class
 The SAF class is a small class with a simple task: Initialize the framework.
 Usage Example:
 
@@ -125,8 +125,8 @@ method. Usage example:
 
 <a id="fan-page-class"></a>
 # Fan Page Class
-The SAF Fan Page class gathers info bla, bla, bla. **It is important to note that
-the Signed Request class is only used in Tab applications.**
+The SAF Fan Page class provides easy access to fan page data. **It is important 
+to note that the Fan Page class is only used in Tab applications.**
 
 ##Public Methods
 
@@ -240,7 +240,8 @@ the page data. Usage example:
 
 <a id="facebook-user-class"></a>
 # Facebook User Class
-The SAF Facebook User class gathers info bla, bla, bla.
+The SAF Facebook User class authenticates users, checks extended permissions and
+provides wasy access to user data.
 
 ##Public Methods
 
