@@ -139,11 +139,8 @@ class SAF_FBHelper {
 
     /**
      * Returns public info from the Facebook graph api
-     * Most of the time Facebook will responsd with JSON data,
+     * Most of the time Facebook will respond with JSON data,
      * but there are special cases where it will not
-     *
-     * Note this wrapper function exists in order to circumvent
-     * PHPÕs strict obeying of HTTP error codes.
      *
      * @access    public
      * @param     int $object_id id of the object we want public info for

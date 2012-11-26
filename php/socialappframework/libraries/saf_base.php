@@ -19,20 +19,20 @@ abstract class SAF_Base {
 
     const VERSION = '1.0.0';
 
-    protected $facebook; // instance of Facebook SDK
+    protected $_facebook; // instance of Facebook SDK
 
-    protected $user_id = null; // facebook user id
+    protected $_user_id = null; // facebook user id
     protected $page_id = null; // facebook page id
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
-    public function getFacebook() { return $this->facebook; }
-    public function getAppID() { return $this->facebook->getAppId(); }
-    public function getAppSecret() { return $this->facebook->getAppSecret(); }
+    public function getFacebook() { return $this->_facebook; }
+    public function getAppID() { return $this->_facebook->getAppId(); }
+    public function getAppSecret() { return $this->_facebook->getAppSecret(); }
 
-    public function getUserID() { return $this->user_id; }
-    public function getPageID() { return $this->page_id; }
+    public function getUserID() { return $this->_user_id; }
+    public function getPageID() { return $this->_page_id; }
 
     // ------------------------------------------------------------------------
 
@@ -48,7 +48,7 @@ abstract class SAF_Base {
         if ($benchmark) $benchmark->begin();
 
         // create application instance
-        $this->facebook = new Facebook(array(
+        $this->_facebook = new Facebook(array(
             'appId'  => SAF_Config::fbAppID(),
             'secret' => SAF_Config::fbAppSecret(),
             'cookie' => SAF_Config::fbUseCookie(),
@@ -139,5 +139,4 @@ abstract class SAF_Base {
 
 }
 
-/* End of file SAF_Base.php */
-/* Location: ./socialappframework/libraries/SAF_Base.php */
+/* End of file */

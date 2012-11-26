@@ -159,7 +159,10 @@ class SAF_Session {
             self::setPersistentData('app_id', $appID);
 
             XS_Debug::addMessage(__METHOD__.':: Initiated new SAF Session.');
+
+            XS_Debug::addMessage('--------------------');
         }
+
     }
 
     // ------------------------------------------------------------------------
@@ -277,6 +280,7 @@ class SAF_Session {
             self::clearPersistentData($key);
         }
         XS_Debug::addMessage(__METHOD__.':: Cleared all SAF session data.');
+        XS_Debug::addMessage('--------------------');
     }
 
     // ------------------------------------------------------------------------
@@ -370,5 +374,4 @@ class SAF_Session {
 
 }
 
-/* End of file SAF_Session.php */
-/* Location: ./socialappframework/libraries/SAF_Session.php */
+/* End of file */

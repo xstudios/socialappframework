@@ -18,7 +18,6 @@ class SAF_Config {
     const PAGE_TYPE_TAB              = 'tab';
     const PAGE_TYPE_APP              = 'app';
     const PAGE_TYPE_FACEBOOK_CONNECT = 'facebook connect';
-    const PAGE_TYPE_WIDGET           = 'widget';
 
     // page type
     private static $_page_type = self::PAGE_TYPE_FACEBOOK_CONNECT; // tab, app, facebook connect or widget

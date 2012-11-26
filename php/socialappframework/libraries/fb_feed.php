@@ -397,5 +397,4 @@ class FB_Feed {
 
 }
 
-/* End of file FB_Feed.php */
-/* Location: ./socialappframework/libraries/FB_Feed.php */
+/* End of file */

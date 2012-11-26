@@ -53,22 +53,13 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $benchmark = $this->benchmark();
         if ($benchmark) $benchmark->begin();
 
-        // get user access token (preferably the long-lived access token)
-        // this will get us an access token for a Facebook Connect app
-        if (isset($_REQUEST['code'])) {
-
-            $this->facebook->setAccessToken( $this->_getAccessTokenFromCode() );
-            $this->_access_token = $this->facebook->getAccessToken();
-
-        }
-
         // get the signed request (only available for tab or canvas apps)
-        $this->_signed_request = $this->facebook->getSignedRequest();
+        $this->_signed_request = $this->_facebook->getSignedRequest();
 
         if ( !empty($this->_signed_request) ) {
 
             // get the user id
-            $this->user_id = $this->facebook->getUser();
+            $this->_user_id = $this->_facebook->getUser();
 
             // get us an access token for a tab or canvas app
             $this->_access_token = $this->_getLongLivedAccessToken();
@@ -77,8 +68,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
             if ( isset($this->_signed_request['page']) ) {
 
                 // get page id
-                $this->page_id = $this->_signed_request['page']['id'];
-                $this->debug(__CLASS__.':: User is viewing tab on fan page ('.$this->page_id.')');
+                $this->_page_id = $this->_signed_request['page']['id'];
+                $this->debug(__CLASS__.':: User is viewing tab on fan page ('.$this->_page_id.')');
 
                 // does the user like this page?
                 $this->_page_liked = $this->_signed_request['page']['liked'];
@@ -129,12 +120,12 @@ abstract class SAF_Signed_Request extends SAF_Base {
             unset($this->_signed_request['user_id']);
 
             // add our own useful Social App Framework parameter(s) to the signed_request object
-            $this->_signed_request['saf_user_id'] = $this->user_id;
-            $this->_signed_request['saf_page_id'] = $this->page_id;
+            $this->_signed_request['saf_user_id'] = $this->_user_id;
+            $this->_signed_request['saf_page_id'] = $this->_page_id;
             $this->_signed_request['saf_page_liked'] = $this->_page_liked;
             $this->_signed_request['saf_page_admin'] = $this->_page_admin;
 
-            // add our social app framework user data into the session
+            // add our signed request data into the session
             SAF_Session::setPersistentData('signed_request_obj', $this->_signed_request);
 
             $this->debug(__CLASS__.':: SAF Signed request data:', $this->_signed_request);
@@ -148,7 +139,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
             // tab
             if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_TAB) {
 
-                $this->debug(__CLASS__.':: No signed request. Viewing tab outside of Facebook.', null, 3, false);
+                $this->debug(__CLASS__.':: No signed request. Viewing tab outside of Facebook.', null, 3);
 
                 if ( SAF_Config::srRedirectTab() == true ) {
                     header("Location: ".SAF_Config::srRedirectTabURL());
@@ -160,7 +151,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
             // app
             if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_APP) {
 
-                $this->debug(__CLASS__.':: No signed request. Viewing app outside of Facebook.', null, 3, false);
+                $this->debug(__CLASS__.':: No signed request. Viewing app outside of Facebook.', null, 3);
 
                 if ( SAF_Config::srRedirectApp() == true ) {
                     header("Location: ".SAF_Config::srRedirectAppURL());
@@ -171,12 +162,33 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
             // facebook connect
             if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_FACEBOOK_CONNECT) {
-                $this->debug(__CLASS__.':: No signed request. Viewing Facebook Connect app.', null, 3, false);
-            }
 
-            // widget
-            if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_WIDGET) {
-                $this->debug(__CLASS__.':: No signed request. Viewing widget.', null, 3, false);
+                $this->debug(__CLASS__.':: No signed request. Viewing Facebook Connect app.', null, 3);
+
+                // get user access token
+                if (isset($_REQUEST['code'])) {
+
+                    $access_token = $this->_getAccessTokenFromCode();
+
+                    if (!empty($access_token)) {
+
+                        $this->_facebook->setAccessToken($access_token);
+                        $this->_access_token = $this->_facebook->getAccessToken();
+
+                        $this->debug(__CLASS__.':: Obtained access token from the request code.');
+
+                    } else {
+
+                        $this->debug(__CLASS__.':: Unable to obtain access token.', null, 3);
+
+                    }
+
+                } else {
+
+                    $this->debug(__CLASS__.':: Request code is not present. Prompt user to login...', null, 3);
+
+                }
+
             }
 
         }
@@ -257,7 +269,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
             'grant_type'        => 'fb_exchange_token',
             'client_id'         => $this->getAppID(),
             'client_secret'     => $this->getAppSecret(),
-            'fb_exchange_token' => $this->facebook->getAccessToken()
+            'fb_exchange_token' => $this->_facebook->getAccessToken()
         );
         $url = 'oauth/access_token?'.http_build_query($params);
         $access_token_response = SAF_FBHelper::graph_request($url, false);
