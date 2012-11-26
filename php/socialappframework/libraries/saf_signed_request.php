@@ -49,10 +49,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
     public function __construct() {
         parent::__construct();
 
-        // begin benchmark
-        $benchmark = $this->benchmark();
-        if ($benchmark) $benchmark->begin();
-
         // get the signed request (only available for tab or canvas apps)
         $this->_signed_request = $this->_facebook->getSignedRequest();
 
@@ -109,7 +105,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
             // we are most likely looking at the tab from somewhere we don't want
             } else {
 
-                header("Location: ".SAF_Config::srRedirectTabURL());
+                header("Location: ".SAF_Config::getTabRedirectURL());
                 exit;
 
             }
@@ -137,31 +133,31 @@ abstract class SAF_Signed_Request extends SAF_Base {
             SAF_Session::clearAllPersistentData();
 
             // tab
-            if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_TAB) {
+            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
 
-                $this->debug(__CLASS__.':: No signed request. Viewing tab outside of Facebook.', null, 3);
+                $this->debug(__CLASS__.':: No signed request. Viewing Tab app outside of Facebook.', null, 3);
 
-                if ( SAF_Config::srRedirectTab() == true ) {
-                    header("Location: ".SAF_Config::srRedirectTabURL());
+                if ( SAF_Config::getForceRedirectTab() == true ) {
+                    header("Location: ".SAF_Config::getTabRedirectURL());
                     exit;
                 }
 
             }
 
             // app
-            if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_APP) {
+            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
 
-                $this->debug(__CLASS__.':: No signed request. Viewing app outside of Facebook.', null, 3);
+                $this->debug(__CLASS__.':: No signed request. Viewing Canvas app outside of Facebook.', null, 3);
 
-                if ( SAF_Config::srRedirectApp() == true ) {
-                    header("Location: ".SAF_Config::srRedirectAppURL());
+                if ( SAF_Config::getForceRedirectCanvas() == true ) {
+                    header("Location: ".SAF_Config::getCanvasRedirectURL());
                     exit;
                 }
 
             }
 
             // facebook connect
-            if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_FACEBOOK_CONNECT) {
+            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
 
                 $this->debug(__CLASS__.':: No signed request. Viewing Facebook Connect app.', null, 3);
 
@@ -194,9 +190,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
         }
 
         $this->debug('--------------------');
-
-        // end benchmark
-        if ($benchmark) if ($benchmark) $benchmark->end(__CLASS__);
     }
 
     // ------------------------------------------------------------------------
@@ -232,7 +225,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $params = array(
             'client_id'     => $this->getAppID(),
             'client_secret' => $this->getAppSecret(),
-            'redirect_uri'  => SAF_Config::urlBase(),
+            'redirect_uri'  => SAF_Config::getBaseURL(),
             'code'          => $_REQUEST['code']
         );
         $url = 'oauth/access_token?'.http_build_query($params);

@@ -44,10 +44,10 @@ class SAF extends SAF_Facebook_User {
      * @return    void
      */
     public function __construct() {
-        // this is used in conjuction with SAF_Config::forceRedirect(true)
+        // this is used in conjuction with SAF_Config::setForceRedirect(true)
         // allows us a workaround for browsers which do not allow 3rd party
         // cookies (eg - cookies from iframe apps)
-        if ( SAF_Config::forceRedirect() == true && isset($_GET['saf_redirect']) == true ) {
+        if ( SAF_Config::getForceRedirect() == true && isset($_GET['saf_redirect']) == true ) {
             header('Location: '.$_GET['saf_redirect']);
             exit;
         }

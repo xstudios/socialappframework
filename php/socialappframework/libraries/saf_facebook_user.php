@@ -79,22 +79,18 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function __construct() {
         parent::__construct();
 
-        // begin benchmark
-        $benchmark = $this->benchmark();
-        if ($benchmark) $benchmark->begin();
-
         // determine our redirect url
-        if ( SAF_Config::pageType() == SAF_Config::PAGE_TYPE_TAB) {
-            $this->_redirect_url = SAF_Config::forceRedirect() == false ? $this->getPageTabURL() : SAF_Config::urlBase().'?saf_redirect='.urlencode($this->getPageTabURL());
+        if ( SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
+            $this->_redirect_url = SAF_Config::getForceRedirect() == false ? $this->getPageTabURL() : SAF_Config::getBaseURL().'?saf_redirect='.urlencode($this->getPageTabURL());
         } else {
-            $this->_redirect_url = SAF_Config::urlBase();
+            $this->_redirect_url = SAF_Config::getBaseURL();
         }
 
         // is the user a regular user or page admin and what extended perms should we ask for?
         if ( $this->isPageAdmin() == false ) {
-            $this->_extended_perms = SAF_Config::permsExtended();
+            $this->_extended_perms = SAF_Config::getExtendedPerms();
         } else {
-            $this->_extended_perms = SAF_Config::permsExtendedAdmin();
+            $this->_extended_perms = SAF_Config::getExtendedPermsAdmin();
         }
 
         // login URL (always determine this in case we need more permissions later from the user)
@@ -107,7 +103,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
             $this->_fb_user = $this->_facebook->api('/me', 'GET', array(
                 'access_token' => $this->getAccessToken(),
-                'fields' => SAF_Config::graphUserFields()
+                'fields' => SAF_Config::getGraphUserFields()
             ));
 
             // if we have user data
@@ -123,7 +119,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
                 // if this is a facebook connect app this is where we will
                 // finally get a user id as there is no signed request
-                if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_FACEBOOK_CONNECT) {
+                if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
                     $this->_user_id = $this->_fb_user['id'];
                 }
 
@@ -169,14 +165,14 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
             SAF_Session::clearPersistentData('user_obj');
 
             // force admin to login to the app if desired
-            if ($this->isPageAdmin() == true && SAF_Config::permsAutoRequestAdmin() == true) {
+            if ($this->isPageAdmin() == true && SAF_Config::getAutoRequestPermsAdmin() == true) {
                 // get OAuth dialog and redirect back to our callback url (redirect_url)
                 echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
                 exit;
             }
 
             // if normal user and we are auto-requesting perms then direct user to login url
-            if ( (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_TAB && SAF_Config::permsAutoRequestTab() == true) || (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_APP && SAF_Config::permsAutoRequestApp() == true) ) {
+            if ( (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB && SAF_Config::getAutoRequestPermsTab() == true) || (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS && SAF_Config::getAutoRequestPermsCanvas() == true) ) {
 
                 // get OAuth dialog and redirect back to our callback url (redirect_url)
                 echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
@@ -187,9 +183,6 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         }
 
         $this->debug('--------------------');
-
-        // end benchmark
-        if ($benchmark) $benchmark->end(__CLASS__);
     }
 
     // ------------------------------------------------------------------------
@@ -222,7 +215,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
      */
     private function _isAppDeveloper() {
         // explode our comma seperated developer ids into an array
-        $developers = preg_replace('/\s+/', '', SAF_Config::fbDevelopers());
+        $developers = preg_replace('/\s+/', '', SAF_Config::getDevelopers());
         $developers = explode(',', $developers);
 
         if ( in_array($this->_user_id, $developers) == true ) {

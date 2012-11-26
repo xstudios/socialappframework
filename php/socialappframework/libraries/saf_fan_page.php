@@ -60,10 +60,6 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     public function __construct() {
         parent::__construct();
 
-        // begin benchmark
-        $benchmark = $this->benchmark();
-        if ($benchmark) $benchmark->begin();
-
         // We may or may not have the page id based on the type of app
         if ( !empty($this->_page_id) ) {
 
@@ -73,7 +69,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
                 // note that we don't utilize _getPageData() as this is reserved for calls
                 // when we don't know the page id because the app is a Canvas or Facebook Connect app
                 $this->_fb_page = $this->_facebook->api('/'.$this->_page_id, 'GET', array(
-                    'fields' => SAF_Config::graphPageFields()
+                    'fields' => SAF_Config::getGraphPageFields()
                 ));
 
                 // if we have page data
@@ -149,12 +145,12 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
             SAF_Session::clearPersistentData('page_obj');
 
             // app
-            if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_APP) {
+            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
                 $this->debug(__CLASS__.':: No page data. Viewing Canvas app.', null, 3);
             }
 
             // facebook connect
-            if (SAF_Config::pageType() == SAF_Config::PAGE_TYPE_FACEBOOK_CONNECT) {
+            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
                 $this->debug(__CLASS__.':: No page data. Viewing Facebook Connect app.', null, 3);
             }
 
@@ -163,9 +159,6 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
         }
 
         $this->debug('--------------------');
-
-        // end benchmark
-        if ($benchmark) $benchmark->end(__CLASS__);
     }
 
     // ------------------------------------------------------------------------
@@ -267,10 +260,10 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
         }
 
         // add page tab url (eg - https://www.facebook.com/dialog/pagetab?app_id=XXXXXXXXXX&next=https://www.facebook.com/)
-        $this->_add_page_tab_url = SAF_Config::urlAddPageTab();
+        $this->_add_page_tab_url = SAF_Config::getAddPageTabURL();
 
         // canvas app url (eg - https://apps.facebook.com/app-namespace)
-        $this->_canvas_app_url = SAF_Config::urlAppCanvas();
+        $this->_canvas_app_url = SAF_Config::getCanvasURL();
 
 
         $this->_fb_page['saf_page_tab_url'] = $this->_page_tab_url;

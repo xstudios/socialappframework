@@ -43,24 +43,17 @@ abstract class SAF_Base {
      * @return    void
      */
     public function __construct() {
-        // begin benchmark
-        $benchmark = $this->benchmark();
-        if ($benchmark) $benchmark->begin();
-
         // create application instance
         $this->_facebook = new Facebook(array(
-            'appId'  => SAF_Config::fbAppID(),
-            'secret' => SAF_Config::fbAppSecret(),
-            'cookie' => SAF_Config::fbUseCookie(),
-            'domain' => SAF_Config::fbAppDomain(),
-            'fileUpload' => SAF_Config::fbFileUpload()
+            'appId'  => SAF_Config::getAppID(),
+            'secret' => SAF_Config::getAppSecret(),
+            'cookie' => SAF_Config::getUseCookie(),
+            'domain' => SAF_Config::getAppDomain(),
+            'fileUpload' => SAF_Config::getFileUpload()
         ));
 
         // init saf session
-        SAF_Session::init(SAF_Config::fbAppID());
-
-        // end benchmark
-        if ($benchmark) $benchmark->end(__CLASS__, true);
+        SAF_Session::init(SAF_Config::getAppID());
     }
 
     // ------------------------------------------------------------------------

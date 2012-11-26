@@ -96,7 +96,7 @@ class SAF_FBHelper {
      * Returns the url needed to add the app as a page tab
      *
      * @access    public
-     * @param     int $fb_user_id
+     * @param     int $fb_app_id
      * @param     string $redirect_url
      * @return    string
      */
