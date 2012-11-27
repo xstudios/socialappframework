@@ -47,13 +47,10 @@ class SAF_Config {
 
     // signed request vars
     private static $_sr_fan_page_hash       = '';
-    private static $_sr_redirect_tab        = false;
-    private static $_sr_redirect_canvas     = false;
-    private static $_sr_redirect_tab_url    = '';
-    private static $_sr_redirect_canvas_url = '';
+    private static $_sr_force_facebook_view = false;
 
-    // SAF redirect
-    private static $_force_redirect = false;
+    // session redirect
+    private static $_force_session_redirect = false;
 
     // graph fields
     private static $_user_fields = '';
@@ -383,73 +380,21 @@ class SAF_Config {
     // ------------------------------------------------------------------------
 
     /**
-     * Set force redirect tab app
+     * Set force Facebook view
+     *
+     * Force user to view the tab or canvas app within Facebook
      *
      * @param    bool  $value
      */
-    public static function setForceRedirectTab($value) {
-        self::$_sr_redirect_tab = $value;
+    public static function setForceFacebookView($value) {
+        self::$_sr_force_facebook_view = $value;
     }
 
     /**
-     * Get force redirect tab app
+     * Get force Facebook view
      */
-    public static function getForceRedirectTab() {
-        return self::$_sr_redirect_tab;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Set force redirect canvas app
-     *
-     * @param    bool  $value
-     */
-    public static function setForceRedirectCanvas($value) {
-        self::$_sr_redirect_canvas = $value;
-    }
-
-    /**
-     * Get force redirect canvas app
-     */
-    public static function getForceRedirectCanvas() {
-        return self::$_sr_redirect_canvas;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Set tab app redirect URL
-     *
-     * @param    string  $value
-     */
-    public static function setTabRedirectURL($value) {
-        self::$_sr_redirect_tab_url = $value;
-    }
-
-    /**
-     * Get tab app redirect URL
-     */
-    public static function getTabRedirectURL() {
-        return self::$_sr_redirect_tab_url;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Set canvas redirect URL
-     *
-     * @param    string  $value
-     */
-    public static function setCanvasRedirectURL($value) {
-        self::$_sr_redirect_canvas_url = $value;
-    }
-
-    /**
-     * Get canvas app redirect URL
-     */
-    public static function getCanvasRedirectURL() {
-        return self::$_sr_redirect_canvas_url;
+    public static function getForceFacebookView() {
+        return self::$_sr_force_facebook_view;
     }
 
     // ------------------------------------------------------------------------
@@ -457,21 +402,22 @@ class SAF_Config {
     // ------------------------------------------------------------------------
 
     /**
-     * Set force redirect
+     * Set force session redirect
      *
-     * Fixes an issue with browsers that block 3rd part cookies
+     * Fixes an issue with browsers that block 3rd party cookies which
+     * prevents us from accessing the session
      *
      * @param    bool  $value
      */
-    public static function setForceRedirect($value) {
-        self::$_force_redirect = $value;
+    public static function setForceSessionRedirect($value) {
+        self::$_force_session_redirect = $value;
     }
 
     /**
-     * Get force redirect URL
+     * Get force session redirect
      */
-    public static function getForceRedirect() {
-        return self::$_force_redirect;
+    public static function getForceSessionRedirect() {
+        return self::$_force_session_redirect;
     }
 
     // ------------------------------------------------------------------------

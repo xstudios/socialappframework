@@ -54,8 +54,15 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
         if ( !empty($this->_signed_request) ) {
 
+            // force user to view tab or canvacs app within Facebook chrome
+            // if forceFacebookView(true) set in config
+            $this->_forceFacebookChrome();
+
             // get the user id
             $this->_user_id = $this->_facebook->getUser();
+
+            // add our own useful Social App Framework parameter(s) to the signed_request object
+            $this->_signed_request['saf_user_id'] = $this->_user_id;
 
             // get us an access token for a tab or canvas app
             $this->_access_token = $this->_getLongLivedAccessToken();
@@ -102,11 +109,10 @@ abstract class SAF_Signed_Request extends SAF_Base {
                     $this->debug(__CLASS__.':: App data (passed via \'app_data\' GET param):', $this->_app_data);
                 }
 
-            // we are most likely looking at the tab from somewhere we don't want
-            } else {
-
-                header("Location: ".SAF_Config::getTabRedirectURL());
-                exit;
+                // add our own useful Social App Framework parameter(s) to the signed_request object
+                $this->_signed_request['saf_page_id'] = $this->_page_id;
+                $this->_signed_request['saf_page_liked'] = $this->_page_liked;
+                $this->_signed_request['saf_page_admin'] = $this->_page_admin;
 
             }
 
@@ -115,48 +121,42 @@ abstract class SAF_Signed_Request extends SAF_Base {
             unset($this->_signed_request['user']);
             unset($this->_signed_request['user_id']);
 
-            // add our own useful Social App Framework parameter(s) to the signed_request object
-            $this->_signed_request['saf_user_id'] = $this->_user_id;
-            $this->_signed_request['saf_page_id'] = $this->_page_id;
-            $this->_signed_request['saf_page_liked'] = $this->_page_liked;
-            $this->_signed_request['saf_page_admin'] = $this->_page_admin;
-
             // add our signed request data into the session
             SAF_Session::setPersistentData('signed_request_obj', $this->_signed_request);
 
             $this->debug(__CLASS__.':: SAF Signed request data:', $this->_signed_request);
 
-        // we are looking at the tab or app outside of the Facebook chrome
+        // we are looking at the app outside of the Facebook chrome
         } else {
 
             // make sure we clear all SAF Session data since we can't assume anything is still valid
             SAF_Session::clearAllPersistentData();
 
-            // tab
+            // tab app
             if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
 
                 $this->debug(__CLASS__.':: No signed request. Viewing Tab app outside of Facebook.', null, 3);
 
-                if ( SAF_Config::getForceRedirectTab() == true ) {
-                    header("Location: ".SAF_Config::getTabRedirectURL());
+                if ( SAF_Config::getForceFacebookView() == true ) {
+                    header('Location: '.SAF_Config::getPageTabURL());
                     exit;
                 }
 
             }
 
-            // app
+            // canvas app
             if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
 
                 $this->debug(__CLASS__.':: No signed request. Viewing Canvas app outside of Facebook.', null, 3);
 
-                if ( SAF_Config::getForceRedirectCanvas() == true ) {
-                    header("Location: ".SAF_Config::getCanvasRedirectURL());
+                if ( SAF_Config::getForceFacebookView() == true ) {
+                    header('Location: '.SAF_Config::getCanvasURL());
                     exit;
                 }
 
             }
 
-            // facebook connect
+            // facebook connect app
             if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
 
                 $this->debug(__CLASS__.':: No signed request. Viewing Facebook Connect app.', null, 3);
@@ -279,6 +279,40 @@ abstract class SAF_Signed_Request extends SAF_Base {
         }
 
         return $response_params['access_token'];
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * FORCE FACEBOOK CHROME
+     *
+     * Ensure the user is viewing the tab or canvas app within the Facebook
+     * chrome.
+     *
+     * @access    private
+     * @return    string
+     */
+    private function _forceFacebookChrome() {
+        // a code will only be present outside of the Facebook chrome
+        if ( isset($this->_signed_request['code']) ) {
+
+            if ( SAF_Config::getForceFacebookView() == true ) {
+
+                // if a tab app, force view within the Facebook chrome
+                if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
+                    header('Location: '.SAF_Config::getPageTabURL());
+                    exit;
+                }
+
+                // if a canvas app, force view within the Facebook chrome
+                if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
+                    header('Location: '.SAF_Config::getCanvasURL());
+                    exit;
+                }
+
+            }
+
+        }
     }
 
     // ------------------------------------------------------------------------

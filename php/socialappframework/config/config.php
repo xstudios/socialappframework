@@ -30,7 +30,7 @@ SAF_Config::setFileUpload(false);
 
 // app namespace (must match the one on your Facebook app's settings)
 // only needed if you are developing a canvas app
-SAF_Config::setAppNamespace('APP-NAMESPACE');
+SAF_Config::setAppNamespace('APP_NAMESPACE');
 
 // admin id(s) - comma delimited
 SAF_Config::setAdmins('743687287');
@@ -69,23 +69,18 @@ SAF_Config::setAutoRequestPermsAdmin(false);
 // ------------------------------------------------------------------------
 // there is no way to determine our fan page tab link without page info
 // supplied from the signed request so we need to assign a fallback value
-SAF_Config::setFanPageHash('');
+SAF_Config::setFanPageHash('FAN_PAGE_HASH');
 
-// force the user to view tab and/or app in Facebook
-SAF_Config::setForceRedirectTab(false);
-SAF_Config::setForceRedirectCanvas(false);
-
-// preferred redirect urls if the above redirects are true
-SAF_Config::setTabRedirectURL( SAF_Config::getPageTabURL() );
-SAF_Config::setCanvasRedirectURL( SAF_Config::getPageTabURL() );
+// force the user to view tab and canvas app in Facebook
+SAF_Config::setForceFacebookView(true);
 
 // ------------------------------------------------------------------------
-// 3RD PARTY COOKIE BLOCK WORK-AROUND
+// SESSION REDIRECT - 3RD PARTY COOKIE BLOCK WORK-AROUND
 // ------------------------------------------------------------------------
 // force the app to redirect to the base url (where the app is hosted) before
 // redirecting back to the app tab (allows session to be started on the app domain)
 // this is used as a work around for browsers which block 3rd party cookies
-SAF_Config::setForceRedirect(false);
+SAF_Config::setForceSessionRedirect(false);
 
 // ------------------------------------------------------------------------
 
