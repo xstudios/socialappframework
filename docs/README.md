@@ -16,7 +16,7 @@ your config file of course):
 
 ## Table of Contents
 
-* [SAF Config](/saf_config.md)
+* [SAF Config](docs/saf_config.md)
 * [SAF Class](saf.md)
 * [SAF Base Class](saf_base.md)
 * [SAF Signed Request Class](saf_signed_request.md)
