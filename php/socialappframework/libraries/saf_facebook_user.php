@@ -79,11 +79,19 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function __construct() {
         parent::__construct();
 
-        // determine our redirect url
-        if ( SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
-            $this->_redirect_url = SAF_Config::getForceRedirect() == false ? $this->getPageTabURL() : SAF_Config::getBaseURL().'?saf_redirect='.urlencode($this->getPageTabURL());
-        } else {
-            $this->_redirect_url = SAF_Config::getBaseURL();
+        // if force session redirect, then set our redirect url
+        if (SAF_Config::getForceSessionRedirect() == true) {
+
+            if ( SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
+                $redirect_param = '?saf_redirect='.urlencode($this->getPageTabURL());
+            }
+
+            if ( SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
+                $redirect_param = '?saf_redirect='.urlencode($this->getCanvasAppURL());
+            }
+
+            $this->_redirect_url = SAF_Config::getBaseURL().$redirect_param;
+
         }
 
         // is the user a regular user or page admin and what extended perms should we ask for?
