@@ -59,7 +59,7 @@ class SAF_Session {
         return self::_getPersistentPageData('link');
     }
     public static function getPageProfilePicture() {
-        return SAF_FBHelper::picture_url(self::getPageID());
+        return FB_Helper::picture_url(self::getPageID());
     }
 
     public static function getPageLikes() {
@@ -117,7 +117,7 @@ class SAF_Session {
         return self::_getPersistentUserData('link');
     }
     public static function getUserProfilePicture() {
-        return SAF_FBHelper::picture_url(self::getUserID());
+        return FB_Helper::picture_url(self::getUserID());
     }
 
     public static function getUserGrantedPerms() {

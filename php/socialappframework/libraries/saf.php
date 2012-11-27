@@ -27,7 +27,8 @@ $required_files = array(
     'saf_signed_request',
     'saf_fan_page',
     'saf_facebook_user',
-    '../config/config'
+    '../config/config',
+    '../helpers/fb_helper.php'
 );
 foreach ($required_files as $file) {
     require_once $dirname.$file.'.php';

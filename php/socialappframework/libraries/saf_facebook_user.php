@@ -65,7 +65,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         $this->_redirect_url = $value;
         // update login url/link too
         $this->_login_url = $this->_getLoginURL();
-        $this->_login_link = SAF_FBHelper::login_link($this->_login_url);
+        $this->_login_link = FB_Helper::login_link($this->_login_url);
     }
 
     // ------------------------------------------------------------------------
@@ -103,7 +103,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
         // login URL (always determine this in case we need more permissions later from the user)
         $this->_login_url = $this->_getLoginURL();
-        $this->_login_link = SAF_FBHelper::login_link($this->_login_url);
+        $this->_login_link = FB_Helper::login_link($this->_login_url);
 
         // we have a user id and/or a access token, so probably a logged in user...
         // if not, we'll get an exception, which we will handle below
@@ -120,7 +120,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
                 // logout URL
                 $params = array( 'next' => $this->_redirect_url );
                 $this->_logout_url = $this->_facebook->getLogoutUrl($params);
-                $this->_logout_link = SAF_FBHelper::logout_link($this->_logout_url);
+                $this->_logout_link = FB_Helper::logout_link($this->_logout_url);
 
                 // user is authenticated (obviously since we have user data)
                 $this->_authenticated = true;
@@ -308,12 +308,12 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
         if ( !isset($this->_fb_user['picture']) ) {
             $user_id = isset($this->_fb_user['username']) ? $this->_fb_user['username'] : $this->_user_id;
-            $this->_fb_user['picture']['data']['url'] = SAF_FBHelper::picture_url($user_id);
+            $this->_fb_user['picture']['data']['url'] = FB_Helper::picture_url($user_id);
         }
 
         if ( !isset($this->_fb_user['link']) ) {
             $user_id = isset($this->_fb_user['username']) ? $this->_fb_user['username'] : $this->_user_id;
-            $this->_fb_user['link'] = SAF_FBHelper::profile_url($user_id);
+            $this->_fb_user['link'] = FB_Helper::profile_url($user_id);
         }
 
         return $this->_fb_user;

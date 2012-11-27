@@ -229,7 +229,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
             'code'          => $_REQUEST['code']
         );
         $url = 'oauth/access_token?'.http_build_query($params);
-        $access_token_response = SAF_FBHelper::graph_request($url, false);
+        $access_token_response = FB_Helper::graph_request($url, false);
 
         if (empty($access_token_response)) {
             return false;
@@ -265,7 +265,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
             'fb_exchange_token' => $this->_facebook->getAccessToken()
         );
         $url = 'oauth/access_token?'.http_build_query($params);
-        $access_token_response = SAF_FBHelper::graph_request($url, false);
+        $access_token_response = FB_Helper::graph_request($url, false);
 
         if (empty($access_token_response)) {
             return false;

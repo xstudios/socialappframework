@@ -1,6 +1,6 @@
 <?php
 /**
- * SAF Facebook Helper
+ * Social App Framework Facebook Helper
  *
  * Helps generate Facebook Open Graph meta tags and other useful methods
  * for Facebook development
@@ -16,7 +16,7 @@
  * You should have received a copy of the license along with this program.
  * If not, see <http://socialappframework.com/license/>.
  */
-class SAF_FBHelper {
+class FB_Helper {
 
     // ------------------------------------------------------------------------
 
