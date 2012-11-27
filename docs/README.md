@@ -17,8 +17,8 @@ your config file of course):
 ## Table of Contents
 
 * [SAF Config](docs/saf_config.md)
-* [SAF Class](saf.md)
-* [SAF Base Class](saf_base.md)
-* [SAF Signed Request Class](saf_signed_request.md)
-* [SAF Fan Page Class](saf_fan_page.md)
-* [SAF Facebook User Class](saf_facebook_user.md)
+* [SAF Class](docs/saf.md)
+* [SAF Base Class](docs/saf_base.md)
+* [SAF Signed Request Class](docs/saf_signed_request.md)
+* [SAF Fan Page Class](docs/saf_fan_page.md)
+* [SAF Facebook User Class](docs/saf_facebook_user.md)
