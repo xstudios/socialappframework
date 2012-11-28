@@ -18,7 +18,6 @@ class SAF_Session {
 
     private static $supported_keys = array(
         'app_id',
-        'session_id',
         'signed_request_obj',
         'page_obj',
         'user_obj'
@@ -42,6 +41,10 @@ class SAF_Session {
     }
     public static function isPageLiked() {
         return self::_getPersistentSignedRequestData('saf_page_liked');
+    }
+
+    public static function getAccessToken() {
+        return self::_getPersistentSignedRequestData('saf_access_token');
     }
 
     // page info
@@ -84,6 +87,9 @@ class SAF_Session {
 
     public static function isPagePublished() {
         return self::_getPersistentPageData('is_published');
+    }
+    public static function hasAddedApp() {
+        return self::_getPersistentPageData('has_added_app');
     }
     public static function hasPageRestrictions() {
         return self::_getPersistentPageData('saf_page_restrictions');
@@ -287,17 +293,17 @@ class SAF_Session {
 
     /**
      * CHECK IF USER HAS PERMISSION
-     * Tells is if a user has allowed a specific permission
+     * Determines if a user has allowed a specific permission
      *
      * @access    public
      * @param     string $perm permission to check
      * @return    bool
      */
     public static function hasPermission($perm) {
-        if ( in_array($perm, self::getUserRevokedPerms()) ) {
-            return false;
-        } else {
+        if ( in_array($perm, self::getUserGrantedPerms()) ) {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -315,10 +321,10 @@ class SAF_Session {
      * @return    mixed
      */
     private static function _getPersistentSignedRequestData($key, $default=false) {
-        $signed_request_array = self::getPersistentData('signed_request_obj', array());
-        if ( empty($signed_request_array) ) return $default;
+        $array = self::getPersistentData('signed_request_obj', array());
+        if ( empty($array) ) return $default;
 
-        return isset($signed_request_array[$key]) ? $signed_request_array[$key] : $default;
+        return isset($array[$key]) ? $array[$key] : $default;
     }
 
     // ------------------------------------------------------------------------
@@ -333,10 +339,10 @@ class SAF_Session {
      * @return    mixed
      */
     private static function _getPersistentPageData($key, $default=false) {
-        $page_array = self::getPersistentData('page_obj', array());
-        if ( empty($page_array) ) return $default;
+        $array = self::getPersistentData('page_obj', array());
+        if ( empty($array) ) return $default;
 
-        return isset($page_array[$key]) ? $page_array[$key] : $default;
+        return isset($array[$key]) ? $array[$key] : $default;
     }
 
     // ------------------------------------------------------------------------
@@ -351,10 +357,10 @@ class SAF_Session {
      * @return    mixed
      */
     private static function _getPersistentUserData($key, $default=false) {
-        $user_array = self::getPersistentData('user_obj', array());
-        if ( empty($user_array) ) return $default;
+        $array = self::getPersistentData('user_obj', array());
+        if ( empty($array) ) return $default;
 
-        return isset($user_array[$key]) ? $user_array[$key] : $default;
+        return isset($array[$key]) ? $array[$key] : $default;
     }
 
     // ------------------------------------------------------------------------

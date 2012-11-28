@@ -61,11 +61,12 @@ abstract class SAF_Signed_Request extends SAF_Base {
             // get the user id
             $this->_user_id = $this->_facebook->getUser();
 
-            // add our own useful Social App Framework parameter(s) to the signed_request object
-            $this->_signed_request['saf_user_id'] = $this->_user_id;
-
             // get us an access token for a tab or canvas app
             $this->_access_token = $this->_getLongLivedAccessToken();
+
+            // add our own useful Social App Framework parameter(s) to the signed_request object
+            $this->_signed_request['saf_user_id'] = $this->_user_id;
+            $this->_signed_request['saf_access_token'] = $this->_access_token;
 
             // are we viewing this within a fan page?
             if ( isset($this->_signed_request['page']) ) {
