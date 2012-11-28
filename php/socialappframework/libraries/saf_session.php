@@ -26,10 +26,13 @@ class SAF_Session {
     // ------------------------------------------------------------------------
     // GETTERS
     // ------------------------------------------------------------------------
+
     // app info
     public static function getAppID() {
         return self::getPersistentData('app_id');
     }
+
+    // ------------------------------------------------------------------------
 
     // signed request info
     public static function getSignedRequestData() {
@@ -46,6 +49,8 @@ class SAF_Session {
     public static function getAccessToken() {
         return self::_getPersistentSignedRequestData('saf_access_token');
     }
+
+    // ------------------------------------------------------------------------
 
     // page info
     public static function getPageData() {
@@ -94,6 +99,8 @@ class SAF_Session {
     public static function hasPageRestrictions() {
         return self::_getPersistentPageData('saf_page_restrictions');
     }
+
+    // ------------------------------------------------------------------------
 
     // user info
     public static function getUserData() {
