@@ -9,6 +9,7 @@
 * [SAF Signed Request Class](saf_signed_request.md)
 * [SAF Fan Page Class](saf_fan_page.md)
 * [SAF Facebook User Class](saf_facebook_user.md)
+* [SAF Session](saf_session.md)
 
 # Signed Request Class
 The SAF Signed Request class gathers info from the signed request and does a lot

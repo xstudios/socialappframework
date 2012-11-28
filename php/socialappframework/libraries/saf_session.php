@@ -39,15 +39,15 @@ class SAF_Session {
         return self::getPersistentData('signed_request_obj', array());
     }
 
+    public static function getAccessToken() {
+        return self::_getPersistentSignedRequestData('saf_access_token');
+    }
+
     public static function isPageAdmin() {
         return self::_getPersistentSignedRequestData('saf_page_admin');
     }
     public static function isPageLiked() {
         return self::_getPersistentSignedRequestData('saf_page_liked');
-    }
-
-    public static function getAccessToken() {
-        return self::_getPersistentSignedRequestData('saf_access_token');
     }
 
     // ------------------------------------------------------------------------
@@ -145,6 +145,14 @@ class SAF_Session {
     }
     public static function isAuthenticated() {
         return self::_getPersistentUserData('saf_authenticated');
+    }
+
+    public static function hasPermission($perm) {
+        if ( in_array($perm, self::getUserGrantedPerms()) ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     // ------------------------------------------------------------------------
@@ -294,24 +302,6 @@ class SAF_Session {
         }
         XS_Debug::addMessage(__METHOD__.':: Cleared all SAF session data.');
         XS_Debug::addMessage('--------------------');
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * CHECK IF USER HAS PERMISSION
-     * Determines if a user has allowed a specific permission
-     *
-     * @access    public
-     * @param     string $perm permission to check
-     * @return    bool
-     */
-    public static function hasPermission($perm) {
-        if ( in_array($perm, self::getUserGrantedPerms()) ) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     // ------------------------------------------------------------------------

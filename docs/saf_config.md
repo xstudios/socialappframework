@@ -9,6 +9,7 @@
 * [SAF Signed Request Class](saf_signed_request.md)
 * [SAF Fan Page Class](saf_fan_page.md)
 * [SAF Facebook User Class](saf_facebook_user.md)
+* [SAF Session](saf_session.md)
 
 # SAF Config Class
 The SAF class is a small class with a simple task: Configure the framework. All

@@ -61,6 +61,22 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function isAppDeveloper() { return $this->_app_developer; }
     public function isAuthenticated() { return $this->_authenticated; }
 
+    /**
+     * CHECK IF USER HAS PERMISSION
+     * Determine if a user has allowed a specific permission
+     *
+     * @access    public
+     * @param     string $perm permission to check
+     * @return    bool
+     */
+    public function hasPermission($perm) {
+        if ( in_array($perm, $this->_granted_perms) ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function setRedirectURL($value) {
         $this->_redirect_url = $value;
         // update login url/link too
@@ -191,24 +207,6 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         }
 
         $this->debug('--------------------');
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * CHECK IF USER HAS PERMISSION
-     * Determine if a user has allowed a specific permission
-     *
-     * @access    public
-     * @param     string $perm permission to check
-     * @return    bool
-     */
-    public function hasPermission($perm) {
-        if ( in_array($perm, $this->_granted_perms) ) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     // ------------------------------------------------------------------------
