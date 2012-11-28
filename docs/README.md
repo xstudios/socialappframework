@@ -22,3 +22,4 @@ your config file of course):
 * [SAF Signed Request Class](docs/saf_signed_request.md)
 * [SAF Fan Page Class](docs/saf_fan_page.md)
 * [SAF Facebook User Class](docs/saf_facebook_user.md)
+* [SAF Session](docs/saf_session.md)
