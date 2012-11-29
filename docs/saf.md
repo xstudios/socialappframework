@@ -20,4 +20,8 @@ Usage Example:
     $saf = new SAF();
     $saf->init();
 
+    // to authenticate the user manually, then call
+    // you would use this value in a link the user clicks
+    $this->getLoginURL();
+
 ***
