@@ -15,17 +15,18 @@
 var SAF_Facebook = function(obj) {
     //"use strict";
 
-    var self         = this;
+    var self = this;
 
-    var mDebugMode   = obj.debug_mode || false;
+    var mDebugMode = obj.debug_mode || false;
 
-    var mAppID       = obj.app_id;
-    var mBaseURL     = obj.base_url;
-    var mAppURL      = obj.app_url;
-    var mLoginURL    = obj.login_url;
+    var mAppID = obj.app_id;
+    var mBaseURL = obj.base_url;
+    var mAppURL = obj.app_url;
+    var mLoginURL = obj.login_url;
 
     var mPermissions = obj.permissions || '';
-    var mUserFields  = obj.user_fields || 'id, name, first_name, last_name, gender, username, email, link, picture, website';
+    var mUserFields = obj.user_fields || 'id, name, first_name, last_name, '+
+    'gender, username, email, link, picture, website';
 
     var mUserID;
     var mAccessToken;
@@ -44,16 +45,17 @@ var SAF_Facebook = function(obj) {
     // INIT
     // ------------------------------------------------------------------------
     var __construct__ = function() {
-        FB._https  = (window.location.protocol == "https:");
+        FB._https = (window.location.protocol == "https:");
         FB._secure = (window.location.protocol == "https:");
 
         FB.init({
             appId: mAppID,
-            channelUrl: mBaseURL+'js/socialappframework/fb-channel.html',
+            channelUrl: mBaseURL+'public/js/socialappframework/fb-channel.html',
             status: true,
             cookie: true,
             oauth: true,
-            xfbml: true
+            xfbml: true,
+            frictionlessRequests: true
         });
 
         FB.Canvas.setAutoGrow();
@@ -70,14 +72,16 @@ var SAF_Facebook = function(obj) {
     var updateAuthStatus = function(_response) {
         if (_response.status === 'connected') {
             // the user is logged in and has authenticated our app
-            debug('Facebook::updateAuthStatus:: User is logged in and has authenticated our app.');
-            mUserID        = _response.authResponse.userID;
-            mAccessToken   = _response.authResponse.accessToken;
+            debug('Facebook::updateAuthStatus:: User is logged in and has '+
+                  'authenticated our app.');
+            mUserID = _response.authResponse.userID;
+            mAccessToken = _response.authResponse.accessToken;
             mAuthenticated = true;
         } else if (_response.status === 'not_authorized') {
             // the user is logged in to Facebook,
             // but has not authenticated with our app
-            debug('Facebook::updateAuthStatus:: User is logged in, but has not authenticated our app.');
+            debug('Facebook::updateAuthStatus:: User is logged in, but has not '+
+                  'authenticated our app.');
             mAuthenticated = false;
         } else {
             // the user isn't logged in to Facebook
@@ -129,18 +133,24 @@ var SAF_Facebook = function(obj) {
     this.subscribeToLike = function(_callbackFunc) {
         FB.Event.subscribe('edge.create', function(_response) {
             debug('Facebook::subscribeToLike', _response);
-            if ( isValidCallback(_callbackFunc) ) {
-                _callbackFunc(_response);
-            }
+            doCallback(_callbackFunc, _response);
         });
     };
 
     this.subscribeToUnlike = function(_callbackFunc) {
         FB.Event.subscribe('edge.remove', function(_response) {
             debug('Facebook::subscribeToUnlike', _response);
-            if ( isValidCallback(_callbackFunc) ) {
-                _callbackFunc(_response);
-            }
+            doCallback(_callbackFunc, _response);
+        });
+    };
+
+    // ------------------------------------------------------------------------
+    // GET FAN PAGE DATA
+    // ------------------------------------------------------------------------
+    this.getFanPageData = function(_pageID, _callbackFunc) {
+        FB.api('/' + _pageID, function(_response) {
+            debug('Facebook::getFanPageData', _response);
+            doCallback(_callbackFunc, _response);
         });
     };
 
@@ -150,9 +160,7 @@ var SAF_Facebook = function(obj) {
     this.getUserData = function(_callbackFunc){
         FB.api('/' + mUserID, {fields:mUserFields}, function(_response) {
             debug('Facebook::getUserData', _response);
-            if ( isValidCallback(_callbackFunc) ) {
-                _callbackFunc(_response);
-            }
+            doCallback(_callbackFunc, _response);
         });
     };
 
@@ -162,9 +170,7 @@ var SAF_Facebook = function(obj) {
     this.getPhotoAlbums = function(_callbackFunc) {
         FB.api('/' + mUserID + '/albums', function(_response) {
             debug('Facebook::getPhotoAlbums', _response);
-            if ( isValidCallback(_callbackFunc) ) {
-                _callbackFunc(_response);
-            }
+            doCallback(_callbackFunc, _response);
         });
     };
 
@@ -174,9 +180,7 @@ var SAF_Facebook = function(obj) {
     this.getAlbumPhotos = function(_albumID, _callbackFunc) {
         FB.api('/' + _albumID + '/photos', {limit:200}, function(_response) {
             debug('Facebook::getAlbumPhotos', _response);
-            if ( isValidCallback(_callbackFunc) ) {
-                _callbackFunc(_response);
-            }
+            doCallback(_callbackFunc, _response);
         });
     };
 
@@ -186,9 +190,14 @@ var SAF_Facebook = function(obj) {
     this.feed = function(_publishObj, _callbackFunc) {
         FB.api('/' + mUserID + '/feed', 'post', _publishObj, function(_response) {
             debug('Facebook::feed', _response);
-            if ( isValidCallback(_callbackFunc) ) {
-                _callbackFunc(_response);
-            }
+            doCallback(_callbackFunc, _response);
+        });
+    };
+
+    this.removeFeed = function(_postID, _callbackFunc) {
+        FB.api(_postID, 'delete', function(_response) {
+            debug('Facebook::removeFeed', _response);
+            doCallback(_callbackFunc, _response);
         });
     };
 
@@ -196,13 +205,76 @@ var SAF_Facebook = function(obj) {
     // SHARE --no need for user to be logged in, uses Facebook ui dialog
     // ------------------------------------------------------------------------
     this.share = function(_publishObj, _callbackFunc) {
-        debug('Facebook::share', _publishObj);
         FB.ui(_publishObj, function(_response) {
             debug('Facebook::share', _response);
-            if ( isValidCallback(_callbackFunc) ) {
-                _callbackFunc(_response);
-            }
+            doCallback(_callbackFunc, _response);
         });
+    };
+
+    // ------------------------------------------------------------------------
+    // SEND - lets people to send content to specific friends
+    // ------------------------------------------------------------------------
+    this.send = function(_publishObj, _callbackFunc) {
+        FB.ui(_publishObj, function(_response) {
+            debug('Facebook::send', _response);
+            doCallback(_callbackFunc, _response);
+        });
+    };
+
+    // ------------------------------------------------------------------------
+    // SEND REQUEST TO SINGLE / MANY USERS
+    // ------------------------------------------------------------------------
+    this.sendRequest = function(_userID, _message, _callbackFunc) {
+        if (!_userID) {
+            debug('Facebook::sendRequest > You must supply a user ID.');
+            return;
+        }
+
+        // set defaults
+        _message = defaultValue(_message, 'Message goes here.');
+
+        var publishObj = {
+            method: 'apprequests',
+            message: _message,
+            to: _userID
+        };
+
+        // callback will pass response back as a param
+        // response.request for successful post
+        FB.ui(publishObj, function(_response) {
+            debug('Facebook::sendRequest', _response);
+            doCallback(_callbackFunc, _response);
+        });
+    };
+
+    this.sendRequestViaMultiFriendSelector = function(_message, _callbackFunc) {
+        // set defaults
+        _message = defaultValue(_message, 'Message goes here.');
+
+        var publishObj = {
+            method: 'apprequests',
+            message: _message
+        };
+
+        // callback will pass response back as a param
+        // response.request for successful post
+        FB.ui(publishObj, function(_response) {
+            debug('Facebook::sendRequestViaMultiFriendSelector', _response);
+            doCallback(_callbackFunc, _response);
+        });
+    };
+
+    // ------------------------------------------------------------------------
+    // ADD PAGE TAB
+    // ------------------------------------------------------------------------
+    this.addPageTab = function() {
+        var obj = {
+            app_id: mAppID,
+            method: 'pagetab',
+            redirect_uri: mAppURL,
+        };
+        // no callback needed
+        FB.ui(obj);
     };
 
     // ------------------------------------------------------------------------
@@ -216,8 +288,18 @@ var SAF_Facebook = function(obj) {
     // HELPER FUNCTIONS
     // ------------------------------------------------------------------------
     // do we have a valid callback?
-    var isValidCallback = function(_callback) {
-        return typeof(_callback) === 'function';
+    var isValidCallback = function(_callbackFunc) {
+        return typeof(_callbackFunc) === 'function';
+    };
+
+    // invoke callback
+    var doCallback = function(_callbackFunc, _response) {
+        if (isValidCallback(_callbackFunc)) {
+            _callbackFunc(_response);
+        } else {
+            debug('Facebook::doCallback > You must define a valid callback '+
+                  'function in order to handle the response.');
+        }
     };
 
     // helps set defaults for empty params
