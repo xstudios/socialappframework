@@ -171,6 +171,6 @@ Usage example:
 
     $saf->setRedirectURL('http://domain.com/');
 
-**NOTE: See Facebook documentation for rectrictions on Redirect URLs.**
+**NOTE: See Facebook documentation for restrictions on Redirect URLs.**
 
 ***
