@@ -19,14 +19,20 @@ var SAF_Facebook = function(obj) {
 
     var mDebugMode = obj.debug_mode || false;
 
-    var mAppID = obj.app_id;
-    var mBaseURL = obj.base_url;
-    var mAppURL = obj.app_url;
+    var mAppName  = obj.app_name;
+    var mAppID    = obj.app_id;
+    var mPageID   = obj.page_id;
+
+    var mBaseURL  = obj.base_url;
+    var mAppURL   = obj.app_url;
     var mLoginURL = obj.login_url;
 
     var mPermissions = obj.permissions || '';
-    var mUserFields = obj.user_fields || 'id, name, first_name, last_name, '+
-    'gender, username, email, link, picture, website';
+
+    var mUserFields  = obj.user_fields || 'id, name, first_name, last_name, '+
+        'gender, username, email, link, picture, website';
+    var mPageFields  = obj.page_fields || 'id, name, category, is_published, '+
+        'likes, link, picture, website';
 
     var mUserID;
     var mAccessToken;
@@ -36,6 +42,26 @@ var SAF_Facebook = function(obj) {
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
+    this.setDebugMode = function(_value) {
+        mDebugMode = _value;
+    };
+
+    this.setPageID = function(_value) {
+        mPageID = _value;
+    };
+
+    this.setGraphPageFields = function(_value) {
+        mPageFields = _value;
+    };
+
+    this.setGraphUserFields = function(_value) {
+        mUserFields = _value;
+    };
+
+    this.setPermissions = function(_value) {
+        mPermissions = _value;
+    };
+
     this.isAuthenticated = function() {
         debug('Facebook::isAuthenticated ('+mAuthenticated+')');
         return mAuthenticated;
@@ -145,11 +171,14 @@ var SAF_Facebook = function(obj) {
     };
 
     // ------------------------------------------------------------------------
-    // GET FAN PAGE DATA
+    // GET PAGE DATA
     // ------------------------------------------------------------------------
-    this.getFanPageData = function(_pageID, _callbackFunc) {
-        FB.api('/' + _pageID, function(_response) {
-            debug('Facebook::getFanPageData', _response);
+    this.getPageData = function(_pageID, _callbackFunc) {
+        // set defaults
+        _pageID = defaultValue(_pageID, mPageID);
+
+        FB.api('/' + _pageID, {fields:mPageFields}, function(_response) {
+            debug('Facebook::getPageData', _response);
             doCallback(_callbackFunc, _response);
         });
     };
@@ -157,8 +186,11 @@ var SAF_Facebook = function(obj) {
     // ------------------------------------------------------------------------
     // GET USER DATA
     // ------------------------------------------------------------------------
-    this.getUserData = function(_callbackFunc){
-        FB.api('/' + mUserID, {fields:mUserFields}, function(_response) {
+    this.getUserData = function(_userID, _callbackFunc){
+        // set defaults
+        _userID = defaultValue(_userID, mUserID);
+
+        FB.api('/' + _userID, {fields:mUserFields}, function(_response) {
             debug('Facebook::getUserData', _response);
             doCallback(_callbackFunc, _response);
         });
@@ -194,15 +226,8 @@ var SAF_Facebook = function(obj) {
         });
     };
 
-    this.removeFeed = function(_postID, _callbackFunc) {
-        FB.api(_postID, 'delete', function(_response) {
-            debug('Facebook::removeFeed', _response);
-            doCallback(_callbackFunc, _response);
-        });
-    };
-
     // ------------------------------------------------------------------------
-    // SHARE --no need for user to be logged in, uses Facebook ui dialog
+    // SHARE -- no need for user to be logged in, uses Facebook UI dialog
     // ------------------------------------------------------------------------
     this.share = function(_publishObj, _callbackFunc) {
         FB.ui(_publishObj, function(_response) {
@@ -212,17 +237,31 @@ var SAF_Facebook = function(obj) {
     };
 
     // ------------------------------------------------------------------------
-    // SEND - lets people to send content to specific friends
+    // SEND -- lets people to send content to specific friends via messages
     // ------------------------------------------------------------------------
-    this.send = function(_publishObj, _callbackFunc) {
-        FB.ui(_publishObj, function(_response) {
-            debug('Facebook::send', _response);
+    this.send = function(_callbackFunc, _description, _name, _link, _image) {
+        // set defaults
+        _description = defaultValue(_description, 'Description goes here');
+        _name  = defaultValue(_name, mAppName);
+        _link  = defaultValue(_link, mAppURL);
+        _image = defaultValue(_image, mBaseURL + 'public/img/fb-icon.jpg');
+
+        var publishObj = {
+            method: 'send',
+            name: _name,
+            link: _link,
+            picture: _image,
+            description: _description
+        };
+
+        FB.ui(publishObj, function(_response) {
+            debug('Facebook::send', _response)
             doCallback(_callbackFunc, _response);
         });
     };
 
     // ------------------------------------------------------------------------
-    // SEND REQUEST TO SINGLE / MANY USERS
+    // SEND REQUEST
     // ------------------------------------------------------------------------
     this.sendRequest = function(_userID, _message, _callbackFunc) {
         if (!_userID) {
@@ -260,6 +299,16 @@ var SAF_Facebook = function(obj) {
         // response.request for successful post
         FB.ui(publishObj, function(_response) {
             debug('Facebook::sendRequestViaMultiFriendSelector', _response);
+            doCallback(_callbackFunc, _response);
+        });
+    };
+
+    // ------------------------------------------------------------------------
+    // DELETE POST
+    // ------------------------------------------------------------------------
+    this.deletePost = function(_postID, _callbackFunc) {
+        FB.api(_postID, 'delete', function(_response) {
+            debug('Facebook::deletePost', _response);
             doCallback(_callbackFunc, _response);
         });
     };
