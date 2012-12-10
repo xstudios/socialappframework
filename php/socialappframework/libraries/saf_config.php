@@ -23,6 +23,9 @@ class SAF_Config {
     // app type
     private static $_app_type = self::APP_TYPE_FACEBOOK_CONNECT;
 
+    // app name
+    private static $_fb_app_name = '';
+
     // facebook vars
     private static $_fb_app_id;
     private static $_fb_app_secret;
@@ -72,6 +75,26 @@ class SAF_Config {
      */
     public static function getAppType() {
         return self::$_app_type;
+    }
+
+    // ------------------------------------------------------------------------
+    // APP NAME
+    // ------------------------------------------------------------------------
+
+    /**
+     * Set app name
+     *
+     * @param    string  $value
+     */
+    public static function setAppName($value) {
+        self::$_fb_app_name = $value;
+    }
+
+    /**
+     * Get app name
+     */
+    public static function getAppName() {
+        return self::$_fb_app_name;
     }
 
     // ------------------------------------------------------------------------
