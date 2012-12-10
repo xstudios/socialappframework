@@ -95,18 +95,32 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function __construct() {
         parent::__construct();
 
-        // if force session redirect, then set our redirect url
-        if (SAF_Config::getForceSessionRedirect() == true) {
+        // determine our redirect url
+        switch (SAF_Config::getAppType()) {
 
-            if ( SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
-                $redirect_param = '?saf_redirect='.urlencode($this->getPageTabURL());
-            }
+            // tab
+            case SAF_Config::APP_TYPE_TAB:
+                if (SAF_Config::getForceSessionRedirect() == true) {
+                    $redirect_param = '?saf_redirect='.urlencode($this->getPageTabURL());
+                    $this->_redirect_url = SAF_Config::getBaseURL().$redirect_param;
+                } else {
+                    $this->_redirect_url = $this->getPageTabURL();
+                }
+                break;
 
-            if ( SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
-                $redirect_param = '?saf_redirect='.urlencode($this->getCanvasAppURL());
-            }
+            // canvas app
+            case SAF_Config::APP_TYPE_CANVAS:
+                if (SAF_Config::getForceSessionRedirect() == true) {
+                    $redirect_param = '?saf_redirect='.urlencode($this->getCanvasAppURL());
+                    $this->_redirect_url = SAF_Config::getBaseURL().$redirect_param;
+                } else {
+                    $this->_redirect_url = $this->getCanvasAppURL();
+                }
+                break;
 
-            $this->_redirect_url = SAF_Config::getBaseURL().$redirect_param;
+            // facebook connect
+            default:
+                $this->_redirect_url = SAF_Config::getBaseURL();
 
         }
 
@@ -121,88 +135,77 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         $this->_login_url = $this->_getLoginURL();
         $this->_login_link = FB_Helper::login_link($this->_login_url);
 
-        // we have a user id and/or a access token, so probably a logged in user...
-        // if not, we'll get an exception, which we will handle below
-        try {
+        // if we have a user id
+        if (!empty($this->_user_id)) {
 
-            $this->_fb_user = $this->_facebook->api('/me', 'GET', array(
-                'access_token' => $this->getAccessToken(),
-                'fields' => SAF_Config::getGraphUserFields()
-            ));
+            // we have a user id and an access token, so probably a logged in user...
+            // if not, we'll get an exception, which we will handle below
+            try {
 
-            // if we have user data
-            if ( !empty($this->_fb_user) ) {
+                $this->_fb_user = $this->_facebook->api('/me', 'GET', array(
+                    'access_token' => $this->getAccessToken(),
+                    'fields' => SAF_Config::getGraphUserFields()
+                ));
 
-                // logout URL
-                $params = array( 'next' => $this->_redirect_url );
-                $this->_logout_url = $this->_facebook->getLogoutUrl($params);
-                $this->_logout_link = FB_Helper::logout_link($this->_logout_url);
+                // if we have user data
+                if ( !empty($this->_fb_user) ) {
 
-                // user is authenticated (obviously since we have user data)
-                $this->_authenticated = true;
+                    // logout URL
+                    $params = array( 'next' => $this->_redirect_url );
+                    $this->_logout_url = $this->_facebook->getLogoutUrl($params);
+                    $this->_logout_link = FB_Helper::logout_link($this->_logout_url);
 
-                // if this is a facebook connect app this is where we will
-                // finally get a user id as there is no signed request
-                if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
-                    $this->_user_id = $this->_fb_user['id'];
+                    // user is authenticated (obviously since we have user data)
+                    $this->_authenticated = true;
+
+                    // if this is a facebook connect app this is where we will
+                    // finally get a user id as there is no signed request
+                    if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
+                        $this->_user_id = $this->_fb_user['id'];
+                    }
+
+                    // fix user data
+                    $this->_fb_user = $this->_fixUserData();
+
+                    // check user permissions if we are asking for any
+                    if ( !empty($this->_extended_perms) ) {
+                        $this->_checkPermissions();
+                    }
+
+                    // is the user the app developer?
+                    $this->_app_developer = $this->_isAppDeveloper();
+
+                    // if user is the admin and authenticated and has the manage_pages perm,
+                    // then let's get the long-lived access token for the page
+                    // only if we actually have a page (eg - a page id)
+                    if ( $this->isPageAdmin() == true && $this->isAuthenticated() == true && $this->hasPermission('manage_pages') == true && !empty($this->_page_id) ) {
+                        $this->getPageAccessToken();
+                    }
+
+                    // add our own useful social app framework parameter(s) to the fb_user object
+                    $this->_fb_user['saf_perms_granted'] = $this->_granted_perms;
+                    $this->_fb_user['saf_perms_revoked'] = $this->_revoked_perms;
+                    $this->_fb_user['saf_app_developer'] = $this->_app_developer;
+                    $this->_fb_user['saf_access_token'] = $this->getAccessToken();
+                    $this->_fb_user['saf_authenticated'] = $this->_authenticated;
+
+                    // add our social app framework user data into the session as well
+                    SAF_Session::setPersistentData('user_obj', $this->_fb_user);
+
+                    $this->debug(__CLASS__.':: User ('.$this->_user_id.') is authenticated with data:', $this->_fb_user);
+
                 }
 
-                // fix user data
-                $this->_fb_user = $this->_fixUserData();
+            } catch (FacebookApiException $e) {
 
-                // check user permissions if we are asking for any
-                if ( !empty($this->_extended_perms) ) {
-                    $this->_checkPermissions();
-                }
-
-                // is the user the app developer?
-                $this->_app_developer = $this->_isAppDeveloper();
-
-                // if user is the admin and authenticated and has the manage_pages perm,
-                // then let's get the long-lived access token for the page
-                // only if we actually have a page (eg - a page id)
-                if ( $this->isPageAdmin() == true && $this->isAuthenticated() == true && $this->hasPermission('manage_pages') == true && !empty($this->_page_id) ) {
-                    $this->getPageAccessToken();
-                }
-
-                // add our own useful social app framework parameter(s) to the fb_user object
-                $this->_fb_user['saf_perms_granted'] = $this->_granted_perms;
-                $this->_fb_user['saf_perms_revoked'] = $this->_revoked_perms;
-                $this->_fb_user['saf_app_developer'] = $this->_app_developer;
-                $this->_fb_user['saf_access_token'] = $this->getAccessToken();
-                $this->_fb_user['saf_authenticated'] = $this->_authenticated;
-
-                // add our social app framework user data into the session as well
-                SAF_Session::setPersistentData('user_obj', $this->_fb_user);
-
-                $this->debug(__CLASS__.':: User ('.$this->_user_id.') is authenticated with data:', $this->_fb_user);
+                $this->debug(__CLASS__.':: '.$e, null, 3);
+                $this->_handleException();
 
             }
 
-        } catch (FacebookApiException $e) {
+        } else {
 
-            // proceed knowing we require user login and/or authentication
-            $this->debug(__CLASS__.':: '.$e, null, 1, true);
-            $this->debug(__CLASS__.':: User is not authenticated. Prompt them to login...', null, 3);
-
-            // wipe the 'saf_user_obj' session object
-            SAF_Session::clearPersistentData('user_obj');
-
-            // force admin to login to the app if desired
-            if ($this->isPageAdmin() == true && SAF_Config::getAutoRequestPermsAdmin() == true) {
-                // get OAuth dialog and redirect back to our callback url (redirect_url)
-                echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
-                exit;
-            }
-
-            // if normal user and we are auto-requesting perms then direct user to login url
-            if ( (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB && SAF_Config::getAutoRequestPermsTab() == true) || (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS && SAF_Config::getAutoRequestPermsCanvas() == true) ) {
-
-                // get OAuth dialog and redirect back to our callback url (redirect_url)
-                echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
-                exit;
-
-            }
+            $this->_handleException();
 
         }
 
@@ -211,6 +214,38 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * HANDLE EXCEPTION
+     *
+     * @access    private
+     * @return    void
+     */
+    private function _handleException() {
+        // proceed knowing we require user login and/or authentication
+        $this->debug(__CLASS__.':: User is not authenticated. Prompt them to login...', null, 3);
+
+        // wipe the 'saf_user_obj' session object
+        SAF_Session::clearPersistentData('user_obj');
+
+        // force admin to login to the app if desired
+        if ($this->isPageAdmin() == true && SAF_Config::getAutoRequestPermsAdmin() == true) {
+            // get OAuth dialog and redirect back to our callback url (redirect_url)
+            echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
+            exit;
+        }
+
+        // if normal user and we are auto-requesting perms then direct user to login url
+        if ( (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB && SAF_Config::getAutoRequestPermsTab() == true) || (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS && SAF_Config::getAutoRequestPermsCanvas() == true) ) {
+
+            // get OAuth dialog and redirect back to our callback url (redirect_url)
+            echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
+            exit;
+
+        }
+    }
+
     // ------------------------------------------------------------------------
 
     /**
