@@ -23,34 +23,32 @@ class SAF_Config {
     // app type
     private static $_app_type = self::APP_TYPE_FACEBOOK_CONNECT;
 
-    // app name
-    private static $_fb_app_name = '';
-
     // facebook vars
-    private static $_fb_app_id;
-    private static $_fb_app_secret;
-    private static $_fb_app_domain;
+    private static $_app_id;
+    private static $_app_secret;
+    private static $_app_domain;
 
-    private static $_fb_use_cookie  = true;
-    private static $_fb_file_upload = true;
+    private static $_use_cookie  = true;
+    private static $_file_upload = true;
 
-    private static $_fb_app_namespace = '';
-    private static $_fb_admins        = '';
-    private static $_fb_developers    = '';
+    private static $_app_name      = '';
+    private static $_app_namespace = '';
+    private static $_admins        = '';
+    private static $_developers    = '';
 
     // app url vars
-    private static $_url_base = ''; // base url of our app
+    private static $_base_url = '';
 
     // permission vars
-    private static $_perms_extended           = '';
-    private static $_perms_extended_admin     = '';
-    private static $_perms_auto_request_tab   = false;
-    private static $_perms_auto_request_app   = false;
-    private static $_perms_auto_request_admin = false;
+    private static $_extended_perms            = '';
+    private static $_extended_perms_admin      = '';
+    private static $_auto_request_perms_tab    = false;
+    private static $_auto_request_perms_canvas = false;
+    private static $_auto_request_perms_admin  = false;
 
     // signed request vars
-    private static $_sr_fan_page_hash       = '';
-    private static $_sr_force_facebook_view = false;
+    private static $_fan_page_hash       = '';
+    private static $_force_facebook_view = false;
 
     // session redirect
     private static $_force_session_redirect = false;
@@ -78,26 +76,6 @@ class SAF_Config {
     }
 
     // ------------------------------------------------------------------------
-    // APP NAME
-    // ------------------------------------------------------------------------
-
-    /**
-     * Set app name
-     *
-     * @param    string  $value
-     */
-    public static function setAppName($value) {
-        self::$_fb_app_name = $value;
-    }
-
-    /**
-     * Get app name
-     */
-    public static function getAppName() {
-        return self::$_fb_app_name;
-    }
-
-    // ------------------------------------------------------------------------
     // FACEBOOK
     // ------------------------------------------------------------------------
 
@@ -107,14 +85,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setAppID($value) {
-        self::$_fb_app_id = $value;
+        self::$_app_id = $value;
     }
 
     /**
      * Get app id
      */
     public static function getAppID() {
-        return self::$_fb_app_id;
+        return self::$_app_id;
     }
 
     // ------------------------------------------------------------------------
@@ -125,14 +103,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setAppSecret($value) {
-        self::$_fb_app_secret = $value;
+        self::$_app_secret = $value;
     }
 
     /**
      * Get app secret
      */
     public static function getAppSecret() {
-        return self::$_fb_app_secret;
+        return self::$_app_secret;
     }
 
     // ------------------------------------------------------------------------
@@ -143,14 +121,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setAppDomain($value) {
-        self::$_fb_app_domain = $value;
+        self::$_app_domain = $value;
     }
 
     /**
      * Get app domain
      */
     public static function getAppDomain() {
-        return self::$_fb_app_domain;
+        return self::$_app_domain;
     }
 
     // ------------------------------------------------------------------------
@@ -161,14 +139,14 @@ class SAF_Config {
      * @param    bool  $value
      */
     public static function setUseCookie($value) {
-        self::$_fb_use_cookie = $value;
+        self::$_use_cookie = $value;
     }
 
     /**
      * Get use cookie
      */
     public static function getUseCookie() {
-        return self::$_fb_use_cookie;
+        return self::$_use_cookie;
     }
 
     // ------------------------------------------------------------------------
@@ -179,14 +157,32 @@ class SAF_Config {
      * @param    bool  $value
      */
     public static function setFileUpload($value) {
-        self::$_fb_file_upload = $value;
+        self::$_file_upload = $value;
     }
 
     /**
      * Get file upload
      */
     public static function getFileUpload() {
-        return self::$_fb_file_upload;
+        return self::$_file_upload;
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Set app name
+     *
+     * @param    string  $value
+     */
+    public static function setAppName($value) {
+        self::$_app_name = $value;
+    }
+
+    /**
+     * Get app name
+     */
+    public static function getAppName() {
+        return self::$_app_name;
     }
 
     // ------------------------------------------------------------------------
@@ -197,14 +193,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setAppNamespace($value) {
-        self::$_fb_app_namespace = $value;
+        self::$_app_namespace = $value;
     }
 
     /**
      * Get app namespace
      */
     public static function getAppNamespace() {
-        return self::$_fb_app_namespace;
+        return self::$_app_namespace;
     }
 
     // ------------------------------------------------------------------------
@@ -215,14 +211,14 @@ class SAF_Config {
      * @param    string  $value  comma delimited
      */
     public static function setAdmins($value) {
-        self::$_fb_admins = $value;
+        self::$_admins = $value;
     }
 
     /**
      * Get admins
      */
     public static function getAdmins() {
-        return self::$_fb_admins;
+        return self::$_admins;
     }
 
     // ------------------------------------------------------------------------
@@ -233,14 +229,14 @@ class SAF_Config {
      * @param    string  $value  comma delimited
      */
     public static function setDevelopers($value) {
-        self::$_fb_developers = $value;
+        self::$_developers = $value;
     }
 
     /**
      * Get developers
      */
     public static function getDevelopers() {
-        return self::$_fb_developers;
+        return self::$_developers;
     }
 
     // ------------------------------------------------------------------------
@@ -253,14 +249,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setBaseURL($value) {
-        self::$_url_base = $value;
+        self::$_base_url = $value;
     }
 
     /**
      * Get base URL
      */
     public static function getBaseURL() {
-        return self::$_url_base;
+        return self::$_base_url;
     }
 
     // ------------------------------------------------------------------------
@@ -296,14 +292,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setExtendedPerms($value) {
-        self::$_perms_extended = $value;
+        self::$_extended_perms = $value;
     }
 
     /**
      * Get extended perms
      */
     public static function getExtendedPerms() {
-        return self::$_perms_extended;
+        return self::$_extended_perms;
     }
 
     // ------------------------------------------------------------------------
@@ -314,14 +310,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setExtendedPermsAdmin($value) {
-        self::$_perms_extended_admin = $value;
+        self::$_extended_perms_admin = $value;
     }
 
     /**
      * Get extended perms for the admin
      */
     public static function getExtendedPermsAdmin() {
-        return self::$_perms_extended_admin;
+        return self::$_extended_perms_admin;
     }
 
     // ------------------------------------------------------------------------
@@ -332,14 +328,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setAutoRequestPermsTab($value) {
-        self::$_perms_auto_request_tab = $value;
+        self::$_auto_request_perms_tab = $value;
     }
 
     /**
      * Get auto-request perms for a tab app
      */
     public static function getAutoRequestPermsTab() {
-        return self::$_perms_auto_request_tab;
+        return self::$_auto_request_perms_tab;
     }
 
     // ------------------------------------------------------------------------
@@ -350,14 +346,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setAutoRequestPermsCanvas($value) {
-        self::$_perms_auto_request_app = $value;
+        self::$_auto_request_perms_canvas = $value;
     }
 
     /**
      * Get auto-request perms for a canvas app
      */
     public static function getAutoRequestPermsCanvas() {
-        return self::$_perms_auto_request_app;
+        return self::$_auto_request_perms_canvas;
     }
 
     // ------------------------------------------------------------------------
@@ -368,14 +364,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setAutoRequestPermsAdmin($value) {
-        self::$_perms_auto_request_admin = $value;
+        self::$_auto_request_perms_admin = $value;
     }
 
     /**
      * Get auto-request perms for the page admin
      */
     public static function getAutoRequestPermsAdmin() {
-        return self::$_perms_auto_request_admin;
+        return self::$_auto_request_perms_admin;
     }
 
     // ------------------------------------------------------------------------
@@ -390,14 +386,14 @@ class SAF_Config {
      * @param    string  $value
      */
     public static function setFanPageHash($value) {
-        self::$_sr_fan_page_hash = $value;
+        self::$_fan_page_hash = $value;
     }
 
     /**
      * Get fan page hash
      */
     public static function getFanPageHash() {
-        return self::$_sr_fan_page_hash;
+        return self::$_fan_page_hash;
     }
 
     // ------------------------------------------------------------------------
@@ -410,14 +406,14 @@ class SAF_Config {
      * @param    bool  $value
      */
     public static function setForceFacebookView($value) {
-        self::$_sr_force_facebook_view = $value;
+        self::$_force_facebook_view = $value;
     }
 
     /**
      * Get force Facebook view
      */
     public static function getForceFacebookView() {
-        return self::$_sr_force_facebook_view;
+        return self::$_force_facebook_view;
     }
 
     // ------------------------------------------------------------------------
