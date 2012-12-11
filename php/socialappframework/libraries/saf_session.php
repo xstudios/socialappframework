@@ -164,15 +164,15 @@ class SAF_Session {
      * @param     string $appID the app id of the app currently running ( eg - $facebook->getAppId() )
      * @return    void
      */
-    public static function init($appID=null) {
+    public static function init($app_id=null) {
         // start session
         self::start();
 
         // bail if no app id supplied
-        if ($appID == null) return;
+        if ($app_id == null) return;
 
         // check app id
-        if ( self::getPersistentData('app_id') == false || self::getPersistentData('app_id') !== $appID ) {
+        if ( self::getPersistentData('app_id') == false || self::getPersistentData('app_id') !== $app_id ) {
             // wipe existing SAF Session data
             self::clearAllPersistentData();
 

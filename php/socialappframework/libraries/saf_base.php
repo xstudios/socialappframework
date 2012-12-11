@@ -22,7 +22,7 @@ abstract class SAF_Base {
     protected $_facebook; // instance of Facebook SDK
 
     protected $_user_id = null; // facebook user id
-    protected $page_id = null; // facebook page id
+    protected $_page_id = null; // facebook page id
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
@@ -45,10 +45,10 @@ abstract class SAF_Base {
     public function __construct() {
         // create application instance
         $this->_facebook = new Facebook(array(
-            'appId'  => SAF_Config::getAppID(),
-            'secret' => SAF_Config::getAppSecret(),
-            'cookie' => SAF_Config::getUseCookie(),
-            'domain' => SAF_Config::getAppDomain(),
+            'appId'      => SAF_Config::getAppID(),
+            'secret'     => SAF_Config::getAppSecret(),
+            'cookie'     => SAF_Config::getUseCookie(),
+            'domain'     => SAF_Config::getAppDomain(),
             'fileUpload' => SAF_Config::getFileUpload()
         ));
 

@@ -106,7 +106,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
             } catch (FacebookApiException $e) {
 
-                $this->debug(__CLASS__.':: Page ('.$this->_page_id.') error. '.$e, null, 1, true);
+                $this->debug(__CLASS__.':: '.$e, null, 3, true);
 
                 $this->_fb_page = null;
 
