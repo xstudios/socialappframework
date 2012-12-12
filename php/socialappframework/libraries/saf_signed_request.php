@@ -167,7 +167,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
                 // as codes are now one time use and expire within 10 mins
                 $this->_access_token = SAF_Session::getAccessToken();
                 if ($this->_access_token) {
-                    $this->debug(__CLASS__.':: We have an existing access token.');
+                    $this->debug(__CLASS__.':: We have an existing access token (already exchanged one-time use code).');
                     return;
                 }
 
