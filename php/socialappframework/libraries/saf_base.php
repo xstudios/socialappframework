@@ -43,17 +43,18 @@ abstract class SAF_Base {
      * @return    void
      */
     public function __construct() {
+        // cookies for iframes in IE fix
+        header('P3P: CP="SAF"');
+
+        // init saf session
+        SAF_Session::init(SAF_Config::getAppID());
+
         // create application instance
         $this->_facebook = new Facebook(array(
             'appId'      => SAF_Config::getAppID(),
             'secret'     => SAF_Config::getAppSecret(),
-            'cookie'     => SAF_Config::getUseCookie(),
-            'domain'     => SAF_Config::getAppDomain(),
             'fileUpload' => SAF_Config::getFileUpload()
         ));
-
-        // init saf session
-        SAF_Session::init(SAF_Config::getAppID());
     }
 
     // ------------------------------------------------------------------------
@@ -65,7 +66,7 @@ abstract class SAF_Base {
      * @param     string $object_id Facebook graph object id
      * @return    array
      */
-    protected function getPublicData($object_id) {
+    /*protected function getPublicData($object_id) {
         $url = 'https://graph.facebook.com/'.$object_id;
 
         try {
@@ -84,7 +85,7 @@ abstract class SAF_Base {
             $this->debug(__METHOD__.':: '.$e, null, 3, true);
             return false;
         }
-    }
+    }*/
 
     // ------------------------------------------------------------------------
     // WRAPPER METHODS
@@ -106,25 +107,6 @@ abstract class SAF_Base {
     protected function debug($name, $var=null, $type=1, $log=false) {
         if (class_exists('XS_Debug')) {
             XS_Debug::addMessage($name, $var, $type, $log);
-        }
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * BENCHMARK
-     *
-     * Wrapper around an external class so we can do a simple check if the
-     * class (XS_Benchmark) is even loaded before we attempt to use its methods
-     *
-     * @access    protected
-     * @return    XS_Benchmark instance
-     */
-    protected function benchmark() {
-        if (class_exists('XS_Benchmark')) {
-            if (SAF_Config::benchmark() == true) {
-                return new XS_Benchmark();
-            }
         }
     }
 

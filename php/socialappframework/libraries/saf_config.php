@@ -26,9 +26,6 @@ class SAF_Config {
     // facebook vars
     private static $_app_id;
     private static $_app_secret;
-    private static $_app_domain;
-
-    private static $_use_cookie  = true;
     private static $_file_upload = true;
 
     private static $_app_name      = '';
@@ -111,42 +108,6 @@ class SAF_Config {
      */
     public static function getAppSecret() {
         return self::$_app_secret;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Set app domain
-     *
-     * @param    string  $value
-     */
-    public static function setAppDomain($value) {
-        self::$_app_domain = $value;
-    }
-
-    /**
-     * Get app domain
-     */
-    public static function getAppDomain() {
-        return self::$_app_domain;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Set use cookie
-     *
-     * @param    bool  $value
-     */
-    public static function setUseCookie($value) {
-        self::$_use_cookie = $value;
-    }
-
-    /**
-     * Get use cookie
-     */
-    public static function getUseCookie() {
-        return self::$_use_cookie;
     }
 
     // ------------------------------------------------------------------------

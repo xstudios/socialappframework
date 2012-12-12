@@ -60,7 +60,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     public function __construct() {
         parent::__construct();
 
-        // We may or may not have the page id based on the type of app
+        // we may or may not have the page id based on the type of app
         if ( !empty($this->_page_id) ) {
 
             try {
@@ -86,7 +86,6 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
                 } else {
 
                     // clear any existing stored page data
-                    $this->_fb_page = null;
                     SAF_Session::clearPersistentData('page_obj');
 
                     // inject SAF data, probably safe to assume some sort of page restriction (country/age)
@@ -98,7 +97,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
                     // fall back to default page URL as SAF_FacebookUser will need this value
                     // however, simply trying to force in the page id will cause API errors for some reason
                     // even though navigating to https://www.facebook.com/PAGE_ID resolves to the correct fan page we want
-                    $this->_page_tab_url = 'https://www.facebook.com/'; //.$this->_page_id;
+                    $this->_page_tab_url = 'https://www.facebook.com/';
 
                     //$this->debug(__CLASS__.':: Page ('.$this->_page_id.') may be unpublished or have country/age restrictions', null, 3, true);
 
@@ -108,12 +107,10 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
                 $this->debug(__CLASS__.':: '.$e, null, 3, true);
 
-                $this->_fb_page = null;
-
                 // wipe the 'page_obj' session object
                 SAF_Session::clearPersistentData('page_obj');
 
-                // FALLBACK
+                /*// FALLBACK
                 // something is up, so let's try to get public data as a fallback
                 $this->debug(__CLASS__.':: Fallback, attempting to access public data for page ('.$this->_page_id.')...', null, 3, true);
 
@@ -135,7 +132,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
                     $this->debug(__CLASS__.':: Page ('.$this->_page_id.') public data is empty', null, 3, true);
 
-                }
+                }*/
 
             }
 
@@ -175,8 +172,6 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     public function getPageAccessToken() {
         // if we already have an access token then just return it
         if ( !empty($this->_access_token) ) return $this->_access_token;
-
-        $access_token = null;
 
         try {
 
@@ -265,46 +260,12 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
         // canvas app url (eg - https://apps.facebook.com/app-namespace)
         $this->_canvas_app_url = SAF_Config::getCanvasURL();
 
-
         $this->_fb_page['saf_page_tab_url'] = $this->_page_tab_url;
         $this->_fb_page['saf_add_page_tab_url'] = $this->_add_page_tab_url;
         $this->_fb_page['saf_canvas_app_url'] = $this->_canvas_app_url;
         $this->_fb_page['saf_page_restrictions'] = $page_restrictions;
 
         $this->_fb_page['liked'] = $this->isPageLiked();
-
-        // fix data which may be missing (yes, Facebook makes mistakes)
-        $this->_fb_page = $this->_fixPageData();
-
-        return $this->_fb_page;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * FIX PAGE DATA
-     *
-     * Sometimes Facebook 'breaks' things so let's check
-     * for things we can fix using data we already have
-     *
-     * @access    private
-     * @return    array
-     */
-    private function _fixPageData() {
-        if ( !isset($this->_fb_page['id']) ) {
-            // set page id using the one from the signed request
-            $this->_fb_page['id'] = $this->_page_id;
-        }
-
-        if ( !isset($this->_fb_page['picture']) ) {
-            $segment = isset($this->_fb_page['username']) ? $this->_fb_page['username'] : $this->_page_id;
-            $this->_fb_page['picture']['data']['url'] = 'https://graph.facebook.com/'.$segment.'/picture';
-        }
-
-        if ( !isset($this->_fb_page['link']) ) {
-            $segment = isset($this->_fb_page['username']) ? $this->_fb_page['username'] : $this->_page_id;
-            $this->_fb_page['link'] = 'https://www.facebook.com/'.$segment;
-        }
 
         return $this->_fb_page;
     }

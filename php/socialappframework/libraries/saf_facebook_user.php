@@ -135,8 +135,9 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         $this->_login_url = $this->_getLoginURL();
         $this->_login_link = FB_Helper::login_link($this->_login_url);
 
-        // if we have a user id
-        if (!empty($this->_user_id)) {
+        // if we have an access token
+        $access_token = $this->getAccessToken();
+        if (!empty($access_token)) {
 
             // we have a user id and an access token, so probably a logged in user...
             // if not, we'll get an exception, which we will handle below
@@ -163,9 +164,6 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
                     if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
                         $this->_user_id = $this->_fb_user['id'];
                     }
-
-                    // fix user data
-                    $this->_fb_user = $this->_fixUserData();
 
                     // check user permissions if we are asking for any
                     if ( !empty($this->_extended_perms) ) {
@@ -223,27 +221,38 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
      * @return    void
      */
     private function _handleException() {
-        // proceed knowing we require user login and/or authentication
-        $this->debug(__CLASS__.':: User is not authenticated. Prompt them to login...', null, 3);
-
         // wipe the 'saf_user_obj' session object
         SAF_Session::clearPersistentData('user_obj');
 
+        // facebook connect app
+        if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
+            $this->debug(__CLASS__.':: No user data. Viewing Facebook Connect app.', null, 3);
+        }
+
         // force admin to login to the app if desired
         if ($this->isPageAdmin() == true && SAF_Config::getAutoRequestPermsAdmin() == true) {
-            // get OAuth dialog and redirect back to our callback url (redirect_url)
             echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
             exit;
         }
 
-        // if normal user and we are auto-requesting perms then direct user to login url
-        if ( (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB && SAF_Config::getAutoRequestPermsTab() == true) || (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS && SAF_Config::getAutoRequestPermsCanvas() == true) ) {
-
-            // get OAuth dialog and redirect back to our callback url (redirect_url)
-            echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
-            exit;
-
+        // if it's a tab app and we are auto-requesting perms then direct user to login url
+        if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
+            if (SAF_Config::getAutoRequestPermsTab() == true) {
+                echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
+                exit;
+            }
         }
+
+        // if it's a canvas app and we are auto-requesting perms then direct user to login url
+        if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
+            if (SAF_Config::getAutoRequestPermsCanvas() == true) {
+                echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
+                exit;
+            }
+        }
+
+        // proceed knowing we require user login and/or authentication
+        $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
     }
 
     // ------------------------------------------------------------------------
@@ -277,8 +286,8 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
      */
     private function _checkPermissions() {
         // explode our comma seperated perms into an array
-        $this->_extended_perms = preg_replace('/\s+/', '', $this->_extended_perms);
-        $this->_extended_perms = explode(',', $this->_extended_perms);
+        $extended_perms = preg_replace('/\s+/', '', $this->_extended_perms);
+        $extended_perms = explode(',', $extended_perms);
 
         try {
             // check permissions list
@@ -287,7 +296,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
             ));
 
             // loop through all user's permissions and see if they have everything we require
-            foreach($this->_extended_perms as $perm) {
+            foreach($extended_perms as $perm) {
                 if( !isset($permissions_list['data'][0][$perm]) || $permissions_list['data'][0][$perm] != 1 ) {
                     array_push($this->_revoked_perms, $perm);
                 } else {
@@ -314,42 +323,9 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     private function _getLoginURL() {
         $url = $this->_facebook->getLoginUrl(array(
             'scope'        => $this->_extended_perms,
-            'fbconnect'    => 1,
-            'display'      => 'page',
             'redirect_uri' => $this->_redirect_url
         ));
-
         return $url;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * FIX USER DATA
-     *
-     * Sometimes Facebook 'breaks' things so let's check
-     * for things we can fix using data we already have
-     *
-     * @access     private
-     * @return     array
-     */
-    private function _fixUserData() {
-        if ( !isset($this->_fb_user['id']) ) {
-            // set user id using the one from the signed request
-            $this->_fb_user['id'] = $this->_user_id;
-        }
-
-        if ( !isset($this->_fb_user['picture']) ) {
-            $user_id = isset($this->_fb_user['username']) ? $this->_fb_user['username'] : $this->_user_id;
-            $this->_fb_user['picture']['data']['url'] = FB_Helper::picture_url($user_id);
-        }
-
-        if ( !isset($this->_fb_user['link']) ) {
-            $user_id = isset($this->_fb_user['username']) ? $this->_fb_user['username'] : $this->_user_id;
-            $this->_fb_user['link'] = FB_Helper::profile_url($user_id);
-        }
-
-        return $this->_fb_user;
     }
 
     // ------------------------------------------------------------------------

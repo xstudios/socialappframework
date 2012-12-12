@@ -18,6 +18,7 @@ class SAF_Session {
 
     private static $supported_keys = array(
         'app_id',
+        'access_token',
         'signed_request_obj',
         'page_obj',
         'user_obj'
@@ -40,7 +41,13 @@ class SAF_Session {
     }
 
     public static function getAccessToken() {
-        return self::_getPersistentSignedRequestData('saf_access_token');
+        // first, look in the signed request
+        if (self::_getPersistentSignedRequestData('saf_access_token')) {
+            return self::_getPersistentSignedRequestData('saf_access_token');
+        // fallback to looking in the user data
+        } else {
+            return self::_getPersistentUserData('saf_access_token');
+        }
     }
 
     public static function isPageAdmin() {
@@ -177,13 +184,12 @@ class SAF_Session {
             self::clearAllPersistentData();
 
             // set app id
-            self::setPersistentData('app_id', $appID);
+            self::setPersistentData('app_id', $app_id);
 
             XS_Debug::addMessage(__METHOD__.':: Initiated new SAF Session.');
 
             XS_Debug::addMessage('--------------------');
         }
-
     }
 
     // ------------------------------------------------------------------------
@@ -301,7 +307,6 @@ class SAF_Session {
             self::clearPersistentData($key);
         }
         XS_Debug::addMessage(__METHOD__.':: Cleared all SAF session data.');
-        XS_Debug::addMessage('--------------------');
     }
 
     // ------------------------------------------------------------------------

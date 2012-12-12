@@ -45,10 +45,6 @@ class SAF extends SAF_Facebook_User {
      * @return    void
      */
     public function __construct() {
-        // Some browsers will let iframes set cookies based on the presence of
-        // the P3P header. Notably, IE respects this header.
-        header('P3P: CP="SAF"');
-
         // this is used in conjuction with SAF_Config::setForceRedirect(true)
         // allows us a workaround for browsers which do not allow 3rd party
         // cookies (eg - cookies from iframe apps)

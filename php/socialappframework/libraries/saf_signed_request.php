@@ -130,8 +130,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
         // we are looking at the app outside of the Facebook chrome
         } else {
 
-            // make sure we clear all SAF Session data since we can't assume anything is still valid
-            SAF_Session::clearAllPersistentData();
+            // clear all SAF Signed Request data since we can't assume anything is still valid
+            SAF_Session::clearPersistentData('signed_request_obj');
 
             // tab app
             if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
@@ -161,6 +161,15 @@ abstract class SAF_Signed_Request extends SAF_Base {
             if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
 
                 $this->debug(__CLASS__.':: No signed request. Viewing Facebook Connect app.', null, 3);
+
+                // Dec 5th breaking change fix: we must rely on the access token
+                // we already got from exchanging the code for an access token
+                // as codes are now one time use and expire within 10 mins
+                $this->_access_token = SAF_Session::getAccessToken();
+                if ($this->_access_token) {
+                    $this->debug(__CLASS__.':: We have an existing access token.');
+                    return;
+                }
 
                 // get user access token
                 if (isset($_REQUEST['code'])) {
@@ -224,26 +233,39 @@ abstract class SAF_Signed_Request extends SAF_Base {
      */
     private function _getAccessTokenFromCode() {
         $params = array(
-            'client_id'     => $this->getAppID(),
-            'client_secret' => $this->getAppSecret(),
+            'client_id'     => SAF_Config::getAppID(),
+            'client_secret' => SAF_Config::getAppSecret(),
             'redirect_uri'  => SAF_Config::getBaseURL(),
             'code'          => $_REQUEST['code']
         );
         $url = 'oauth/access_token?'.http_build_query($params);
-        $access_token_response = FB_Helper::graph_request($url, false);
+        $graph_response = FB_Helper::graph_request($url, false);
 
-        if (empty($access_token_response)) {
+        // check for empty response
+        if (empty($graph_response)) {
+            $this->debug(__CLASS__.':: Facebook Graph provided an empty response.', null, 3);
+            SAF_Session::clearPersistentData('access_token');
+            return false;
+        }
+
+        // check for errors (errors will be returned as JSON)
+        $response = json_decode($graph_response);
+        if (is_object($response) && isset($response->error)) {
+            $this->debug(__CLASS__.':: '.$response->error->message, null, 3);
+            SAF_Session::clearPersistentData('access_token');
             return false;
         }
 
         // response returns a query string, output it as an associative array
-        $response_params = array();
-        parse_str($access_token_response, $response_params);
-        if (!isset($response_params['access_token'])) {
+        $params = array();
+        parse_str($graph_response, $params);
+        if (!isset($params['access_token'])) {
+            $this->debug(__CLASS__.':: Access Token is not present in the response.', null, 3);
+            SAF_Session::clearPersistentData('access_token');
             return false;
         }
 
-        return $response_params['access_token'];
+        return $params['access_token'];
     }
 
     // ------------------------------------------------------------------------
@@ -287,8 +309,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
     /**
      * FORCE FACEBOOK CHROME
      *
-     * Ensure the user is viewing the tab or canvas app within the Facebook
-     * chrome.
+     * Ensure the user is viewing the tab or canvas app within the
+     * Facebook chrome.
      *
      * @access    private
      * @return    string
