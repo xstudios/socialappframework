@@ -244,7 +244,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
         // check for empty response
         if (empty($graph_response)) {
             $this->debug(__CLASS__.':: Facebook Graph provided an empty response.', null, 3);
-            SAF_Session::clearPersistentData('access_token');
             return false;
         }
 
@@ -252,7 +251,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $response = json_decode($graph_response);
         if (is_object($response) && isset($response->error)) {
             $this->debug(__CLASS__.':: '.$response->error->message, null, 3);
-            SAF_Session::clearPersistentData('access_token');
             return false;
         }
 
@@ -261,7 +259,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
         parse_str($graph_response, $params);
         if (!isset($params['access_token'])) {
             $this->debug(__CLASS__.':: Access Token is not present in the response.', null, 3);
-            SAF_Session::clearPersistentData('access_token');
             return false;
         }
 
@@ -288,20 +285,27 @@ abstract class SAF_Signed_Request extends SAF_Base {
             'fb_exchange_token' => $this->_facebook->getAccessToken()
         );
         $url = 'oauth/access_token?'.http_build_query($params);
-        $access_token_response = FB_Helper::graph_request($url, false);
+        $graph_response = FB_Helper::graph_request($url, false);
 
-        if (empty($access_token_response)) {
+        if (empty($graph_response)) {
+            return false;
+        }
+
+         // check for errors (errors will be returned as JSON)
+        $response = json_decode($graph_response);
+        if (is_object($response) && isset($response->error)) {
+            $this->debug(__CLASS__.':: '.$response->error->message, null, 3);
             return false;
         }
 
         // response returns a query string, output it as an associative array
-        $response_params = array();
-        parse_str($access_token_response, $response_params);
-        if (!isset($response_params['access_token'])) {
+        $params = array();
+        parse_str($graph_response, $params);
+        if (!isset($params['access_token'])) {
             return false;
         }
 
-        return $response_params['access_token'];
+        return $params['access_token'];
     }
 
     // ------------------------------------------------------------------------
