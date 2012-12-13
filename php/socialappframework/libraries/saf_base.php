@@ -58,36 +58,6 @@ abstract class SAF_Base {
     }
 
     // ------------------------------------------------------------------------
-
-    /**
-     * GET PUBLIC DATA
-     *
-     * @access    protected
-     * @param     string $object_id Facebook graph object id
-     * @return    array
-     */
-    /*protected function getPublicData($object_id) {
-        $url = 'https://graph.facebook.com/'.$object_id;
-
-        try {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_USERAGENT, "I-am-browser");
-            curl_setopt($ch, CURLOPT_HEADER, 0);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-            $response = curl_exec($ch);
-            curl_close($ch);
-
-            $response = json_decode($response, true);
-            return $response;
-        } catch (Exception $e) {
-            $this->debug(__METHOD__.':: '.$e, null, 3, true);
-            return false;
-        }
-    }*/
-
-    // ------------------------------------------------------------------------
     // WRAPPER METHODS
     // ------------------------------------------------------------------------
 

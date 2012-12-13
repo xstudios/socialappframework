@@ -83,12 +83,13 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
                     $this->debug(__CLASS__.':: Fan page ('.$this->_page_id.') data: ', $this->_fb_page);
 
+                // probably some sort of page restriction (country/age)
                 } else {
 
                     // clear any existing stored page data
                     SAF_Session::clearPersistentData('page_obj');
 
-                    // inject SAF data, probably safe to assume some sort of page restriction (country/age)
+                    // inject SAF data, some sort of page restriction (country/age)
                     $this->_fb_page = $this->_injectSAFData(true);
 
                     // add our social app framework page data into the session
@@ -109,30 +110,6 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
                 // wipe the 'page_obj' session object
                 SAF_Session::clearPersistentData('page_obj');
-
-                /*// FALLBACK
-                // something is up, so let's try to get public data as a fallback
-                $this->debug(__CLASS__.':: Fallback, attempting to access public data for page ('.$this->_page_id.')...', null, 3, true);
-
-                // get public data
-                $this->_fb_page = $this->getPublicData($this->_page_id);
-
-                // if we have public data
-                if ( !empty($this->_fb_page) ) {
-
-                    // inject SAF data
-                    $this->_fb_page = $this->_injectSAFData(false);
-
-                    // add our social app framework page data into the session
-                    SAF_Session::setPersistentData('page_obj', $this->_fb_page);
-
-                    $this->debug(__CLASS__.':: Page ('.$this->_page_id.') public data:', $this->_fb_page);
-
-                } else {
-
-                    $this->debug(__CLASS__.':: Page ('.$this->_page_id.') public data is empty', null, 3, true);
-
-                }*/
 
             }
 
@@ -251,7 +228,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     private function _injectSAFData($page_restrictions=false) {
         // page tab url (eg - https://www.facebook.com/XXXXXXXXXX?sk=app_XXXXXXXXXX)
         if ( isset($this->_fb_page['link']) ) {
-            $this->_page_tab_url = str_replace( 'http', 'https', $this->_fb_page['link'].'?sk=app_'.$this->_facebook->getAppId() );
+            $this->_page_tab_url = str_replace( 'http', 'https', $this->_fb_page['link'].'?sk=app_'.SAF_Config::getAppID() );
         }
 
         // add page tab url (eg - https://www.facebook.com/dialog/pagetab?app_id=XXXXXXXXXX&next=https://www.facebook.com/)
