@@ -36,15 +36,16 @@ class FB_Helper {
     // ------------------------------------------------------------------------
 
     /**
-     * Returns the Facebook picture (50x50) url
+     * Returns the Facebook picture url
      *
      * @access    public
      * @param     int $id
+     * @param     string $size square (50x50), small (50x?), normal (100x?) or large (200x?)
      * @return    string
      */
-    public static function picture_url($id) {
-        $html = 'https://graph.facebook.com/%s/picture';
-        return sprintf($html, $id);
+    public static function picture_url($id, $size='square') {
+        $html = 'https://graph.facebook.com/%s/picture?type=%s';
+        return sprintf($html, $id, $size);
     }
 
     // ------------------------------------------------------------------------
