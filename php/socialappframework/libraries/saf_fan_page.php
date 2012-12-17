@@ -18,7 +18,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
     private $_page_tab_url;
     private $_add_page_tab_url;
-    private $_canvas_app_url;
+    private $_canvas_url;
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
@@ -44,7 +44,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
     public function getPageTabURL() { return $this->_page_tab_url; }
     public function getAddPageTabURL() { return $this->_add_page_tab_url; }
-    public function getCanvasAppURL() { return $this->_canvas_app_url; }
+    public function getCanvasURL() { return $this->_canvas_url; }
 
     public function isPagePublished() { return $this->_getPageValue('is_published'); }
     public function hasPageRestrictions() { return $this->_getPageValue('saf_page_restrictions'); }
@@ -215,7 +215,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
             $this->_page_tab_url = str_replace( 'http', 'https', $this->_fb_page['link'].'?sk=app_'.SAF_Config::getAppID() );
         }
         $this->_add_page_tab_url = SAF_Config::getAddPageTabURL();
-        $this->_canvas_app_url = SAF_Config::getCanvasURL();
+        $this->_canvas_url = SAF_Config::getCanvasURL();
 
         $this->_fb_page['saf_page_tab_url'] = $this->_page_tab_url;
         $this->_fb_page['saf_add_page_tab_url'] = $this->_add_page_tab_url;
