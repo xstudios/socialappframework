@@ -20,49 +20,49 @@ provides easy access to user data.
 ###getUserData()
 Get the user's data. Usage example:
 
-    $saf->getUserData();
+    $user_data = $saf->getUserData();
 
 ***
 
 ###getUserFirstName()
 Get the user's first name. Usage example:
 
-    $saf->getUserFirstName();
+    $first_name = $saf->getUserFirstName();
 
 ***
 
 ###getUserLastName()
 Get the user's last name. Usage example:
 
-    $saf->getUserLastName();
+    $last_name = $saf->getUserLastName();
 
 ***
 
 ###getUserName()
 Get the user's full name. Usage example:
 
-    $saf->getUserName();
+    $username = $saf->getUserName();
 
 ***
 
 ###getUserGender()
 Get the user's gender. Returns male, female or false (if not known). Usage example:
 
-    $saf->getUserGender();
+    $gender = $saf->getUserGender();
 
 ***
 
 ###getUserEmail()
 Get the user's email address. Usage example:
 
-    $saf->getUserEmail();
+    $email = $saf->getUserEmail();
 
 ***
 
 ###getUserProfileURL()
 Get the user's profile URL. Usage example:
 
-    $saf->getUserProfileURL();
+    $profile_url = $saf->getUserProfileURL();
 
     // Produces: https://www.facebook.com/profile.php?id=743687287
 
@@ -71,7 +71,7 @@ Get the user's profile URL. Usage example:
 ###getUserProfilePicture()
 Get the user's profile picture URL. Usage example:
 
-    $saf->getUserProfilePicture();
+    $picture = $saf->getUserProfilePicture();
 
     // Produces: https://graph.facebook.com/743687287/picture
 
@@ -81,7 +81,7 @@ Get the user's profile picture URL. Usage example:
 Get the extended permissions we are asking for. Returns a comma delimited
 string. Usage example:
 
-    $saf->getExtendedPerms();
+    $extended_perms = $saf->getExtendedPerms();
 
 ***
 
@@ -89,7 +89,7 @@ string. Usage example:
 Get the extended permissions the user has granted. Returns a comma delimited
 string. Usage example:
 
-    $saf->getUserGrantedPerms();
+    $granted_perms = $saf->getUserGrantedPerms();
 
 ***
 
@@ -97,19 +97,11 @@ string. Usage example:
 Get the extended permissions the user has revoked. Returns a comma delimited
 string. Usage example:
 
-    $saf->getUserRevokedPerms();
+    $revoked_perms = $saf->getUserRevokedPerms();
 
 ***
 
-###getRedirectURL()
-Get the URL to which the user will be redirected to after authentication.
-Usage example:
-
-    $saf->getRedirectURL();
-
-***
-
-###getLoginURL()
+<!--###getLoginURL()
 Get the login URL for app authentication. Usage example:
 
     $saf->getLoginURL();
@@ -121,12 +113,12 @@ Get the logout URL in order to log the user out of Facebook. Usage example:
 
     $saf->getLogoutURL();
 
-***
+***-->
 
 ###getLoginLink()
 Get the login link for app authentication. Returns an anchor tag. Usage example:
 
-    $saf->getLoginLink();
+    $login_link = $saf->getLoginLink();
 
 ***
 
@@ -134,7 +126,7 @@ Get the login link for app authentication. Returns an anchor tag. Usage example:
 Get the logout link in order to log the user out of Faceboo. Returns an anchor
 tag. Usage example:
 
-    $saf->getLogoutLink();
+    $logout_link = $saf->getLogoutLink();
 
 ***
 
@@ -143,7 +135,7 @@ Determines whether or not the user is the app developer. Usage example:
 
     $saf->isAppDeveloper();
 
-**NOTE: This method relies on the developer ID(s) being properly set config file.**
+>**NOTE: This method relies on the developer ID(s) being properly set config file.**
 
 ***
 
@@ -171,6 +163,6 @@ Usage example:
 
     $saf->setRedirectURL('http://domain.com/');
 
-**NOTE: See Facebook documentation for restrictions on Redirect URLs.**
+>**NOTE: See Facebook documentation for restrictions on Redirect URLs.**
 
 ***

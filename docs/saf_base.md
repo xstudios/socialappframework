@@ -16,38 +16,150 @@ The SAF Base class is a small class with a simple task: Initialize the
 Facebook SDK and start a session.
 
 ##Public Methods
+The public methods are the **same** methods available to the Facebook PHP SDK.
 
-###getFacebook()
-Get the instance of the Facebook SDK. Usage example:
+###setAppId()
+Set the application ID. Usage example:
     
-    $saf->getFacebook();
+    $saf->setAppId('APP_ID');
 
 ***
     
-###getAppID()
+###getAppId()
 Get the application ID. Usage example:
 
-    $saf->getAppID();
+    $app_id = $saf->getAppId();
+
+***
+
+###setAppSecret()
+Set the application secret. Usage example:
+
+    $saf->setAppSecret('APP_SECRET');
 
 ***
 
 ###getAppSecret()
 Get the application secret. Usage example:
 
-    $saf->getAppSecret();
+    $app_secret = $saf->getAppSecret();
 
 ***
 
-###getUserID()
-Get the user ID of an authenticated user. Usage example:
+###setFileUploadSupport()
+Set the file upload support status. Usage example:
 
-    $saf->getUserID();
+    $saf->setFileUploadSupport(true);
 
 ***
 
-###getPageID()
-Get the page ID of the current fan page the app resides in. Usage example:
+###getFileUploadSupport()
+Get the file upload support status. Usage example:
 
-     $saf->getPageID();
+    $file_upload_support = $saf->getFileUploadSupport();
+
+***
+
+###setAccessToken()
+Sets the access token for API calls. Usage example:
+
+    $saf->setAccessToken('ACCESS_TOKEN');
+
+***
+
+###getAccessToken()
+Gets the access token for API calls. Usage example:
+
+    $access_token = $saf->getAccessToken();
+
+***
+
+###setExtendedAccessToken()
+Extend an access token. This method is poorly handled by the Facebook SDK.  This
+method **should not** be called manually as Social App Framework handles extending
+access tokens for you automatically when possible. This method is documented solely
+for completeness. Usage example:
+
+    $saf->setExtendedAccessToken();
+
+###getSignedRequest()
+Retrieve the signed request, either from a request parameter or, if not present, 
+from a cookie. Usage example:
+
+    $signed_request = $saf->getSignedRequest();
+
+***
+
+
+###getUser()
+Get the user ID of the connected user, or 0 if the Facebook user is not 
+connected. Usage example:
+
+    $user_id = $saf->getUser();
+
+***
+
+###getLoginUrl()
+Get a Login URL suitable for use with redirects. The parameters:
+
+- **redirect_uri**: the url to go to after a successful login
+- **scope**: comma separated list of requested extended perms
+
+Usage example:
+
+    $params = array(
+        'redirect_uri' => 'https:://domain.com/logged-in',
+        'scope' => 'email, publish_stream'
+    );
+    $login_url = $saf->getLoginUrl($params);
+
+***
+
+###getLogoutUrl()
+Get a Logout URL suitable for use with redirects. The parameters:
+
+- **next**: the url to go to after a successful logout
+
+Usage example:
+
+    $params = array(
+        'next' => 'https:://domain.com/logged-out'
+    );
+    $logout_url = $saf->getLogoutUrl($params);
+
+***
+
+###getLoginStatusUrl()
+Get a login status URL to fetch the status from Facebook.  The parameters:
+
+- **ok_session**: the URL to go to if a session is found
+- **no_session**: the URL to go to if the user is not connected
+- **no_user**: the URL to go to if the user is not signed into facebook
+
+Usage example:
+    
+    $params = array(
+        'ok_session' => 'https://domain.com/ok-session',
+        'no_session' => 'https://domain.com/no-session',
+        'no_user'    => 'https://domain.com/no-user'
+    );
+    $login_status_url = $saf->getLoginStatusUrl($params);
+
+***
+
+###api()
+Make an API call. Usage example:
+
+    $friends = $saf->api('/me/friends', 'GET', array(
+        'access_token' => $saf->getAccessToken()
+    ));
+
+***
+
+###destroySession()
+Destroy the current session. Only the Facebook and SAF session are destroyed. 
+Usage example:
+
+    $saf->destroySession();
 
 ***

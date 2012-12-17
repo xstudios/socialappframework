@@ -13,32 +13,34 @@
 
 # Signed Request Class
 The SAF Signed Request class gathers info from the signed request and does a lot
-of prep work for you such as extending access tokens, fan-gate management, 
-obtaining data passed to the application , etc. **It is important to note that
-the Signed Request class is only used in Tab and Canvas applications.**
+of leg work for you such as extending access tokens, obtaining data passed to the 
+application, etc. **It is important to note thatthe Signed Request class is 
+only used in Tab and Canvas applications.**
 
 ##Public Methods
 
-###getSignedRequestData()
-Get the signed request. Usage example:
+###getUserID()
+Get the user id of the logged in user. An alias for `getUser()`. Usage example:
     
-    $saf->getSignedRequestData();
+    $user_id = $saf->getUserID();
 
 ***
 
-###getAccessToken()
-Get the access token for use with Facebook Graph API requests. Usage example:
+###getPageID()
+Get the page ID. Usage example:
     
-    $saf->getAccessToken();
+    $page_id = $saf->getPageID();
+
+>**NOTE: This method is for Tab apps only.**
 
 ***
 
 ###getAppData()
 Get any data passed to the app via the signed request. Usage example:
     
-    $saf->getAppData();
+    $app_data = $saf->getAppData();
 
-**NOTE: This method is for Tab apps only.**
+>**NOTE: This method is for Tab apps only.**
 
 ***
 
@@ -47,7 +49,7 @@ Allows you to determine if the current user is the page admin. Usage example:
     
     $saf->isPageAdmin();
 
-**NOTE: This method is for Tab apps only.**
+>**NOTE: This method is for Tab apps only.**
 
 ***
 
@@ -56,7 +58,7 @@ Allows you to determine if the current user likes the fan page. Usage example:
     
     $saf->isPageLiked();
 
-**NOTE: This method is for Tab apps only.**
+>**NOTE: This method is for Tab apps only.**
 
 ***
 
@@ -66,6 +68,6 @@ method. Usage example:
     
     $saf->isPageLikeViaFanGate();
 
-**NOTE: This method is for Tab apps only.**
+>**NOTE: This method is for Tab apps only.**
 
 ***

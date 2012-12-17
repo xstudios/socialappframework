@@ -63,33 +63,6 @@ Get the Facebook app secret. Usage example:
 
 ***
 
-###setAppDomain()
-Set the Facebook app domain. Usage example:
-    
-    SAF_Config::setAppDomain('YOUR_DOMAIN.COM');
-
-***
-
-###getAppDomain()
-Get the Facebook app domain. Usage example:
-    
-    SAF_Config::getAppDomain();
-
-***
-
-###setUseCookie()
-Set the Facebook SDK to use cookies. Usage example:
-    
-    SAF_Config::setUseCookie(true);
-
-***
-
-###getUseCookie()
-Get the Facebook SDK use cookie value. Usage example:
-    
-    SAF_Config::getUseCookie();
-
-***
 
 ###setFileUpload()
 Set the Facebook SDK to allow file uploads. Usage example:
@@ -102,6 +75,20 @@ Set the Facebook SDK to allow file uploads. Usage example:
 Get the Facebook SDK allow file upload value. Usage example:
     
     SAF_Config::getFileUpload();
+
+***
+
+###setAppName()
+Set the Facebook app name. Usage example:
+    
+    SAF_Config::setAppName('APP_NAME');
+
+***
+
+###getAppName()
+Get the Facebook app name. Usage example:
+    
+    SAF_Config::getAppName();
 
 ***
 

@@ -13,23 +13,20 @@
 
 # SAF Session Class
 The SAF Session class is a small class with a simple task: Maintain a session
-that contains vital signed request, fan page and user data.
+that contains vital fan page and user data.
 
 ##Public Methods
 This document **does not** outline each of the methods available since its methods
-are the same methods available to each individual class (with a few exceptions):
-
-* Signed Request
-* Fan Page
-* Facebook User
+are the same methods available to both the Fan Page and Facebook User classes 
+(with a few exceptions).
 
 The only difference being that all public methods available to SAF Session are
 static methods.
 
 Usage Example:
     
-    // signed request
-    SAF_Session::getSignedRequestData();
+    // start session
+    $saf_session = new SAF_Session(SAF_Config::getAppID());
 
     // user
     SAF_Session::getUserData();

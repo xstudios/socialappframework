@@ -13,14 +13,15 @@
 
 # Fan Page Class
 The SAF Fan Page class provides easy access to fan page data. **It is important
-to note that the Fan Page class is only used in Tab applications.**
+to note that the Fan Page class is only used in Tab applications, unless
+you explicitly call `setPageID()` before calling `init()`.**
 
 ##Public Methods
 
 ###getPageData()
 Get the fan page data. Usage example:
 
-    $saf->getPageData();
+    $page_data = $saf->getPageData();
 
 ***
 
@@ -28,23 +29,24 @@ Get the fan page data. Usage example:
 Get the page access token for use with Facebook Graph API requests. This will allow
 the app to post as the page when the user is not logged in. Usage example:
 
-    $saf->getPageAccessToken();
+    $page_access_token = $saf->getPageAccessToken();
 
-**NOTE: This method is only available to a page admin.**
+>**NOTE: This method is only available to a page admin with the `manage_pages` 
+permission.**
 
 ***
 
 ###getPageName()
 Get the fan page name. Usage example:
 
-    $saf->getPageName();
+    $page_name = $saf->getPageName();
 
 ***
 
 ###getPageProfileURL()
 Get the fan page profile URL. Usage example:
 
-    $saf->getPageProfileURL();
+    $profile_url = $saf->getPageProfileURL();
 
     // Produces: https://www.facebook.com/SocialAppFramework
 
@@ -53,7 +55,7 @@ Get the fan page profile URL. Usage example:
 ###getPageProfilePicture()
 Get the fan page profile picture URL. Usage example:
 
-    $saf->getPageProfilePicture();
+    $picture = $saf->getPageProfilePicture();
 
     // Produces: https://graph.facebook.com/236913163089998/picture
 
@@ -62,28 +64,21 @@ Get the fan page profile picture URL. Usage example:
 ###getPageLikes()
 Get the total number of likes for the fan page. Usage example:
 
-    $saf->getPageLikes();
-
-***
-
-###getPageCategory()
-Get the page category. Usage example:
-
-    $saf->getPageCategory();
+    $likes = $saf->getPageLikes();
 
 ***
 
 ###getPageWebsite()
 Get the page's website. Usage example:
 
-    $saf->getPageWebsite();
+    $website_url = $saf->getPageWebsite();
 
 ***
 
 ###getPageTabURL()
 Get the page tab URL. Usage example:
 
-    $saf->getPageTabURL();
+    $tab_url = $saf->getPageTabURL();
 
     // Produces: https://www.facebook.com/SocialAppFramework/app_156875707703556
 
@@ -92,16 +87,16 @@ Get the page tab URL. Usage example:
 ###getAddPageTabURL()
 Get the add page tab URL. Usage example:
 
-    $saf->getAddPageTabURL();
+    $add_tab_url = $saf->getAddPageTabURL();
 
     // Produces: https://www.facebook.com/dialog/pagetab?app_id=156875707703556
 
 ***
 
-###getCanvasAppURL()
+###getCanvasURL()
 Get the canvas app URL. Usage example:
 
-    $saf->getCanvasAppURL();
+    $canvas_url = $saf->getCanvasURL();
 
     // Produces: https://apps.facebook.com/social-app-framework/
 
@@ -114,27 +109,22 @@ Determine whether the fan page is published or not. Usage example:
 
 ***
 
-###hasPageAddedApp()
-Determine whether the page has added the app or not. Usage example:
-
-    $saf->hasPageAddedApp();
-
 ###hasPageRestrictions()
 Determine whether the page has restrictions or not. Usage example:
 
     $saf->hasPageRestrictions();
 
-**NOTE: This method is still in development. Do not use.**
+>**NOTE: This method is still in development. Do not use.**
 
 ***
 
 ###setPageID()
-Allows you to set the page id, after which you would call `getPageData()` to get
-the page data. Usage example:
+Allows you to set the page id manually, after which you would call `init()`. 
+Usage example:
 
     $saf->setPageID('236913163089998');
-    $data = $saf->getPageData();
+    $saf->init();
 
-**NOTE: This method is useful with a Canvas or Facebook Connect app.**
+>**NOTE: This method is useful with a Canvas or Facebook Connect app.**
 
 ***
