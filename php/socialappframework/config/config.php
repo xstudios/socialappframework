@@ -42,8 +42,10 @@ SAF_Config::setDevelopers('743687287');
 // ------------------------------------------------------------------------
 // fields we want returned from the graph API for users and pages (comma delimited)
 // if you just want all the default fields set the parameter to an empty string
+// user fields: https://developers.facebook.com/docs/reference/api/user/
+// page fields: https://developers.facebook.com/docs/reference/api/page/
 SAF_Config::setGraphUserFields('id, name, first_name, last_name, gender, username, email, link, picture, website');
-SAF_Config::setGraphPageFields('id, name, category, is_published, likes, link, picture, website');
+SAF_Config::setGraphPageFields('id, name, link, picture, website, is_published, likes');
 
 // ------------------------------------------------------------------------
 // FACEBOOK PERMISSIONS

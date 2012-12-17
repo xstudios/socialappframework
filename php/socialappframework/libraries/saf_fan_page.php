@@ -12,9 +12,9 @@
  */
 abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
-    private $_fb_page = null;
+    private $_fb_page;
 
-    private $_access_token = null;
+    private $_access_token;
 
     private $_page_tab_url;
     private $_add_page_tab_url;
@@ -24,17 +24,22 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
     public function getPageData() { return $this->_getPageData(); }
+    public function getPageAccessToken() { return $this->_access_token; }
 
     public function getPageName() { return $this->_getPageValue('name', ''); }
     public function getPageProfileURL() { return $this->_getPageValue('link'); }
+
     public function getPageProfilePicture() {
         $picture = $this->_getPageValue('picture');
-        if (!empty($picture)) $picture = $picture['data']['url'];
+        if (!empty($picture)) {
+            $picture = $picture['data']['url'];
+        } else {
+            $picture = FB_Helper::picture_url($this->getPageID());
+        }
         return $picture;
     }
 
     public function getPageLikes() { return $this->_getPageValue('likes'); }
-    public function getPageCategory() { return $this->_getPageValue('category'); }
     public function getPageWebsite() { return $this->_getPageValue('website'); }
 
     public function getPageTabURL() { return $this->_page_tab_url; }
@@ -42,7 +47,6 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     public function getCanvasAppURL() { return $this->_canvas_app_url; }
 
     public function isPagePublished() { return $this->_getPageValue('is_published'); }
-    public function hasPageAddedApp() { return $this->_getPageValue('has_added_app'); }
     public function hasPageRestrictions() { return $this->_getPageValue('saf_page_restrictions'); }
 
     // used to set the page id only when we are a Canvas or Facebook Connect
@@ -72,11 +76,18 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
                 // note that we don't utilize _getPageData() as this is reserved for calls
                 // when we don't know the page id because the app is a Canvas or Facebook Connect app
                 $this->_fb_page = $this->api('/'.$this->_page_id, 'GET', array(
-                    'fields' => SAF_Config::getGraphPageFields()
+                    'access_token' => $this->getAccessToken(),
+                    'fields' => 'access_token, '.SAF_Config::getGraphPageFields()
                 ));
 
                 // if we have page data
                 if ( !empty($this->_fb_page) ) {
+
+                    // set page access token...only returned if the user is a
+                    // page admin with the 'manage_pages' permission
+                    if ( isset($this->_fb_page['access_token'])) {
+                        $this->_access_token = $this->_fb_page['access_token'];
+                    }
 
                     // inject SAF data, no page restrictions we are aware of
                     $this->_fb_page = $this->_injectSAFData(false);
@@ -149,45 +160,6 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     }
 
     // ------------------------------------------------------------------------
-
-    /**
-     * GET PAGE ACCESS TOKEN
-     *
-     * Returns a long-lived access token which never expires
-     * Only available to a page admin (called from SAF_FacebookUser)
-     *
-     * @access    private
-     * @return    string or null
-     */
-    public function getPageAccessToken() {
-        // if we already have an access token then just return it
-        if ( !empty($this->_access_token) ) return $this->_access_token;
-
-        try {
-
-            // get long-lived access token
-            $response = $this->api('/'.$this->_page_id, 'GET', array(
-                'fields' => 'access_token',
-                'access_token' => $this->getAccessToken()
-            ));
-
-            if ( isset($response['access_token']) ) {
-                $access_token = $response['access_token'];
-                //$this->debug(__METHOD__.':: Page access token:', $access_token);
-            } else {
-                $this->debug(__CLASS__.':: Unable to get the page ('.$this->_page_id.') long-lived access token as user ('.$this->_user_id.').', null, 3, true);
-            }
-
-        } catch (FacebookApiException $e) {
-            $this->debug(__CLASS__.':: Unable to get the page ('.$this->_page_id.') long-lived access token as user ('.$this->_user_id.'). '.$e, null, 3, true);
-        }
-
-        // set access token
-        $this->_access_token = $access_token;
-        return $access_token;
-    }
-
-    // ------------------------------------------------------------------------
     // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
@@ -239,23 +211,17 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
      * @return    array
      */
     private function _injectSAFData($page_restrictions=false) {
-        // page tab url (eg - https://www.facebook.com/XXXXXXXXXX?sk=app_XXXXXXXXXX)
         if ( isset($this->_fb_page['link']) ) {
             $this->_page_tab_url = str_replace( 'http', 'https', $this->_fb_page['link'].'?sk=app_'.SAF_Config::getAppID() );
         }
-
-        // add page tab url (eg - https://www.facebook.com/dialog/pagetab?app_id=XXXXXXXXXX&next=https://www.facebook.com/)
         $this->_add_page_tab_url = SAF_Config::getAddPageTabURL();
-
-        // canvas app url (eg - https://apps.facebook.com/app-namespace)
         $this->_canvas_app_url = SAF_Config::getCanvasURL();
 
         $this->_fb_page['saf_page_tab_url'] = $this->_page_tab_url;
         $this->_fb_page['saf_add_page_tab_url'] = $this->_add_page_tab_url;
         $this->_fb_page['saf_canvas_app_url'] = $this->_canvas_app_url;
         $this->_fb_page['saf_page_restrictions'] = $page_restrictions;
-
-        $this->_fb_page['liked'] = $this->isPageLiked();
+        $this->_fb_page['saf_page_liked'] = $this->isPageLiked();
 
         return $this->_fb_page;
     }

@@ -19,15 +19,6 @@ abstract class SAF_Base extends Facebook {
 
     const SAF_VERSION = '1.0.0';
 
-    protected $_user_id = null; // facebook user id
-    protected $_page_id = null; // facebook page id
-
-    // ------------------------------------------------------------------------
-    // GETTERS / SETTERS
-    // ------------------------------------------------------------------------
-    public function getUserID() { return $this->_user_id; }
-    public function getPageID() { return $this->_page_id; }
-
     // ------------------------------------------------------------------------
 
     /**
@@ -48,7 +39,7 @@ abstract class SAF_Base extends Facebook {
         ));
 
         // push additional allowed session keys into the Facebook SDK
-        array_push(self::$kSupportedKeys, 'saf_fan_gate', 'saf_access_token', 'saf_signed_request', 'saf_user', 'saf_page');
+        array_push(self::$kSupportedKeys, 'saf_fan_gate', 'saf_access_token', 'saf_user', 'saf_page');
     }
 
     // ------------------------------------------------------------------------

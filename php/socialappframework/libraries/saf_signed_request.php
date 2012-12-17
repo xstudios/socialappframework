@@ -12,6 +12,9 @@
  */
 abstract class SAF_Signed_Request extends SAF_Base {
 
+    protected $_user_id;
+    protected $_page_id;
+
     private $_page_admin = false;
 
     private $_page_liked = false;
@@ -23,6 +26,9 @@ abstract class SAF_Signed_Request extends SAF_Base {
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
+    public function getUserID() { return $this->_user_id; }
+    public function getPageID() { return $this->_page_id; }
+
     public function getAppData() { return $this->_app_data; }
 
     public function isPageAdmin() { return $this->_page_admin; }
@@ -59,8 +65,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
             }
 
             // get us an extended access token for a tab or canvas app
-            // add our own useful Social App Framework parameters
-            $signed_request['saf_user_id'] = $this->_user_id;
             $this->setPersistentData('saf_access_token', $this->_getLongLivedAccessToken());
 
             // are we viewing this within a fan page?
@@ -111,15 +115,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
                     $this->debug(__CLASS__.':: App data (passed via \'app_data\' GET param):', $this->_app_data);
                 }
 
-                // add our own useful Social App Framework parameters
-                $signed_request['saf_page_id'] = $this->_page_id;
-                $signed_request['saf_page_liked'] = $this->_page_liked;
-                $signed_request['saf_page_admin'] = $this->_page_admin;
-
             }
-
-            // add our saf data into the session
-            $this->setPersistentData('saf_signed_request', $signed_request);
 
             // if it's a Facebook Connect app the only way we'd have a Signed
             // Request is if the app is also using the Javascript SDK
@@ -131,9 +127,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
         // we are looking at the app outside of the Facebook chrome
         } else {
-
-            // clear all SAF Signed Request data since we can't assume anything is still valid
-            $this->clearPersistentData('saf_signed_request');
 
             $this->_forceFacebookChrome('No signed request. ');
 

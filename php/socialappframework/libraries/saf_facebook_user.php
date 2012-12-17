@@ -12,7 +12,7 @@
  */
 abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
-    private $_fb_user = null;
+    private $_fb_user;
 
     private $_extended_perms = ''; // extended perms we are asking for
     private $_granted_perms  = array(); // extended perms the user granted
@@ -43,7 +43,11 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function getUserProfileURL() { return $this->_getUserValue('link'); }
     public function getUserProfilePicture() {
         $picture = $this->_getUserValue('picture');
-        if (!empty($picture)) $picture = $picture['data']['url'];
+        if (!empty($picture)) {
+            $picture = $picture['data']['url'];
+        } else {
+            $picture = FB_Helper::picture_url($this->getUserID());
+        }
         return $picture;
     }
 
@@ -172,16 +176,10 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
                     // is the user the app developer?
                     $this->_app_developer = $this->_isAppDeveloper();
 
-                    // if user is the admin and authenticated and has the manage_pages perm,
-                    // then let's get the long-lived access token for the page
-                    // only if we actually have a page (eg - a page id)
-                    if ( $this->isPageAdmin() == true && $this->isAuthenticated() == true && $this->hasPermission('manage_pages') == true && !empty($this->_page_id) ) {
-                        $this->getPageAccessToken();
-                    }
-
                     // add our own useful social app framework parameter(s) to the fb_user object
                     $this->_fb_user['saf_perms_granted'] = $this->_granted_perms;
                     $this->_fb_user['saf_perms_revoked'] = $this->_revoked_perms;
+                    $this->_fb_user['saf_page_admin'] = $this->isPageAdmin();
                     $this->_fb_user['saf_app_developer'] = $this->_app_developer;
                     $this->_fb_user['saf_authenticated'] = $this->_authenticated;
 

@@ -2,8 +2,8 @@
 /**
  * Social App Framework Session class
  *
- * Assist with managing SAF Sessions. It is simply a lazy man's method so
- * we get nice code completion for our session.
+ * Assist with managing SAF Sessions when a SAF instance is not directly
+ * accessible. For example, an AJAX request.
  *
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  * @version      1.0
@@ -23,16 +23,6 @@ class SAF_Session {
     // ------------------------------------------------------------------------
 
     public function getAppID() { return $this->_app_id; }
-
-    // ------------------------------------------------------------------------
-
-    // signed request info
-    public function isPageAdmin() {
-        return $this->_getPersistentSignedRequestData('saf_page_admin');
-    }
-    public function isPageLiked() {
-        return $this->_getPersistentSignedRequestData('saf_page_liked');
-    }
 
     // ------------------------------------------------------------------------
 
@@ -57,9 +47,6 @@ class SAF_Session {
     public function getPageLikes() {
         return $this->_getPersistentPageData('likes');
     }
-    public function getPageCategory() {
-        return $this->_getPersistentPageData('category');
-    }
     public function getPageWebsite() {
         return $this->_getPersistentPageData('website');
     }
@@ -74,11 +61,11 @@ class SAF_Session {
         return $this->_getPersistentPageData('saf_canvas_app_url');
     }
 
+    public function isPageLiked() {
+        return $this->_getPersistentPageData('saf_page_liked');
+    }
     public function isPagePublished() {
         return $this->_getPersistentPageData('is_published');
-    }
-    public function hasAddedApp() {
-        return $this->_getPersistentPageData('has_added_app');
     }
     public function hasPageRestrictions() {
         return $this->_getPersistentPageData('saf_page_restrictions');
@@ -124,6 +111,9 @@ class SAF_Session {
         return $this->_getPersistentUserData('saf_perms_revoked', array());
     }
 
+    public function isPageAdmin() {
+        return $this->_getPersistentUserData('saf_page_admin');
+    }
     public function isAppDeveloper() {
         return $this->_getPersistentUserData('saf_app_developer');
     }
