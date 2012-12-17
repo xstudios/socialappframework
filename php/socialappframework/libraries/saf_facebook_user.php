@@ -55,8 +55,8 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function getGrantedPerms() { return $this->_granted_perms; }
     public function getRevokedPerms() { return $this->_revoked_perms; }
 
-    //public function getLoginURL() { return $this->_login_url; }
-    //public function getLogoutURL() { return $this->_logout_url; }
+    public function getFinalLoginURL() { return $this->_login_url; }
+    public function getFinalLogoutURL() { return $this->_logout_url; }
 
     public function getLoginLink() { return $this->_login_link; }
     public function getLogoutLink() { return $this->_logout_link; }
@@ -83,7 +83,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function setRedirectURL($value) {
         $this->_redirect_url = $value;
         // update login url/link too
-        $this->_login_url = $this->_getLoginURL();
+        $this->_login_url = $this->_createLoginURL();
         $this->_login_link = FB_Helper::login_link($this->_login_url);
     }
 
@@ -135,7 +135,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         }
 
         // login URL (always determine this in case we need more permissions later from the user)
-        $this->_login_url = $this->_getLoginURL();
+        $this->_login_url = $this->_createLoginURL();
         $this->_login_link = FB_Helper::login_link($this->_login_url);
 
         // if we have an access token
@@ -314,12 +314,12 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     // ------------------------------------------------------------------------
 
     /**
-     * GET LOGIN URL
+     * CREATE LOGIN URL
      *
      * @access    private
      * @return    string
      */
-    private function _getLoginURL() {
+    private function _createLoginURL() {
         $url = $this->getLoginUrl(array(
             'scope'        => $this->_extended_perms,
             'redirect_uri' => $this->_redirect_url
