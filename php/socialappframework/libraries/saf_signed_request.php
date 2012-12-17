@@ -54,6 +54,9 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
         // get the user id by any available means (signed request, auth code, session)
         $this->_user_id = $this->getUser();
+        if (!empty($this->_user_id)) {
+            $this->debug(__CLASS__.':: User ID ('.$this->_user_id.').');
+        }
 
         // if we have a signed request
         if ( !empty($signed_request) ) {
@@ -73,7 +76,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
                 // get page id
                 $this->_page_id = $signed_request['page']['id'];
-                $this->debug(__CLASS__.':: User is viewing tab on fan page ('.$this->_page_id.').');
+                $this->debug(__CLASS__.':: Fan page ID ('.$this->_page_id.').');
 
                 // does the user like this page?
                 $this->_page_liked = $signed_request['page']['liked'];
