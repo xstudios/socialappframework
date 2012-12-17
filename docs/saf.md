@@ -17,11 +17,17 @@ Usage Example:
 
     require_once 'socialappframework/saf.php';
 
+    // set the framework app type for use with a tab app
+    SAF_Config::setAppType(SAF_Config::APP_TYPE_TAB);
+
+    // create and initialize the SAF instance
     $saf = new SAF();
     $saf->init();
 
-    // to authenticate the user manually, then call
-    // you would use this value in a link the user clicks
-    $this->getLoginURL();
+    // to login and authenticate the user manually, then call
+    $login_url = $this->getLoginURL();
+
+>**NOTE:** You would use the `$login_url` value in as the href value of a link 
+the user clicks.
 
 ***

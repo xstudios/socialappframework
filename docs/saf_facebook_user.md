@@ -101,19 +101,24 @@ string. Usage example:
 
 ***
 
-<!--###getLoginURL()
+###getFinalLoginURL()
 Get the login URL for app authentication. Usage example:
 
-    $saf->getLoginURL();
+    $login_url = $saf->getFinalLoginURL();
+
+>**NOTE:** This method already takes into account the proper redirect URL and 
+desired scope.
 
 ***
 
-###getLogoutURL()
+###getFinalLogoutURL()
 Get the logout URL in order to log the user out of Facebook. Usage example:
 
-    $saf->getLogoutURL();
+    $saf->getFinalLogoutURL();
 
-***-->
+>**NOTE:** This method already takes into account the proper redirect URL.
+
+***
 
 ###getLoginLink()
 Get the login link for app authentication. Returns an anchor tag. Usage example:
