@@ -22,8 +22,8 @@ $dirname .= (substr($dirname, -1) == '/' ? '' : '/');
 $required_files = array(
     'facebook_sdk/facebook',
     'saf_config',
-    'saf_session',
     'saf_base',
+    'saf_session',
     'saf_signed_request',
     'saf_fan_page',
     'saf_facebook_user',

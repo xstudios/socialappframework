@@ -48,12 +48,11 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     }
 
     public function getExtendedPerms() { return $this->_extended_perms; }
-    public function getUserGrantedPerms() { return $this->_granted_perms; }
-    public function getUserRevokedPerms() { return $this->_revoked_perms; }
+    public function getGrantedPerms() { return $this->_granted_perms; }
+    public function getRevokedPerms() { return $this->_revoked_perms; }
 
-    public function getRedirectURL() { return $this->_redirect_url; }
-    public function getLoginURL() { return $this->_login_url; }
-    public function getLogoutURL() { return $this->_logout_url; }
+    //public function getLoginURL() { return $this->_login_url; }
+    //public function getLogoutURL() { return $this->_logout_url; }
 
     public function getLoginLink() { return $this->_login_link; }
     public function getLogoutLink() { return $this->_logout_link; }
@@ -137,13 +136,13 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
         // if we have an access token
         $access_token = $this->getAccessToken();
-        if (!empty($access_token)) {
+        if ( !empty($access_token) ) {
 
             // we have a user id and an access token, so probably a logged in user...
             // if not, we'll get an exception, which we will handle below
             try {
 
-                $this->_fb_user = $this->_facebook->api('/me', 'GET', array(
+                $this->_fb_user = $this->api('/me', 'GET', array(
                     'access_token' => $this->getAccessToken(),
                     'fields' => SAF_Config::getGraphUserFields()
                 ));
@@ -153,7 +152,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
                     // logout URL
                     $params = array( 'next' => $this->_redirect_url );
-                    $this->_logout_url = $this->_facebook->getLogoutUrl($params);
+                    $this->_logout_url = $this->getLogoutUrl($params);
                     $this->_logout_link = FB_Helper::logout_link($this->_logout_url);
 
                     // user is authenticated (obviously since we have user data)
@@ -184,11 +183,10 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
                     $this->_fb_user['saf_perms_granted'] = $this->_granted_perms;
                     $this->_fb_user['saf_perms_revoked'] = $this->_revoked_perms;
                     $this->_fb_user['saf_app_developer'] = $this->_app_developer;
-                    $this->_fb_user['saf_access_token'] = $this->getAccessToken();
                     $this->_fb_user['saf_authenticated'] = $this->_authenticated;
 
                     // add our social app framework user data into the session as well
-                    SAF_Session::setPersistentData('user_obj', $this->_fb_user);
+                    $this->setPersistentData('saf_user', $this->_fb_user);
 
                     $this->debug(__CLASS__.':: User ('.$this->_user_id.') is authenticated with data:', $this->_fb_user);
 
@@ -222,7 +220,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
      */
     private function _handleException() {
         // wipe the 'saf_user_obj' session object
-        SAF_Session::clearPersistentData('user_obj');
+        $this->clearPersistentData('saf_user');
 
         // facebook connect app
         if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
@@ -269,7 +267,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         $developers = explode(',', $developers);
 
         if ( in_array($this->_user_id, $developers) == true ) {
-            $this->debug(__CLASS__.':: User is the app developer');
+            $this->debug(__CLASS__.':: User is the app developer.');
             return true;
         } else {
             return false;
@@ -291,13 +289,16 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
         try {
             // check permissions list
-            $permissions_list = $this->_facebook->api('/me/permissions', 'GET', array(
+            $permissions_list = $this->api('/me/permissions', 'GET', array(
                 'access_token' => $this->getAccessToken()
             ));
 
+            // set permissions equal to the resulting data
+            $permissions = $permissions_list['data'][0];
+
             // loop through all user's permissions and see if they have everything we require
             foreach($extended_perms as $perm) {
-                if( !isset($permissions_list['data'][0][$perm]) || $permissions_list['data'][0][$perm] != 1 ) {
+                if ( !isset($permissions[$perm]) || $permissions[$perm] != 1 ) {
                     array_push($this->_revoked_perms, $perm);
                 } else {
                     array_push($this->_granted_perms, $perm);
@@ -306,7 +307,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
         } catch (FacebookApiException $e) {
 
-            $this->debug(__CLASS__.':: User ('.$this->_user_id.') is authenticated, but can\'t check permissions without a valid access token. '.$e, null, 1, true);
+            $this->debug(__CLASS__.':: Unable to check permissions. '.$e, null, 3, true);
 
         }
 
@@ -321,7 +322,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
      * @return    string
      */
     private function _getLoginURL() {
-        $url = $this->_facebook->getLoginUrl(array(
+        $url = $this->getLoginUrl(array(
             'scope'        => $this->_extended_perms,
             'redirect_uri' => $this->_redirect_url
         ));
@@ -333,12 +334,12 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     /**
      * GET USER VALUE
      *
-     * Return a clean var value (eg - if something doesn't exist, return default value)
+     * Return a clean value whether the key exits or not
      *
      * @access    private
-     * @param     mixed $key key to check for
+     * @param     string $key key to check for
      * @param     mixed $default default value if not set
-     * @return    void
+     * @return    mixed
      */
     private function _getUserValue($key, $default=false) {
         if ( !isset($this->_fb_user[$key]) ) {

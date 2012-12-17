@@ -16,9 +16,9 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
     private $_access_token = null;
 
-    private $_page_tab_url; // url of the page tab
-    private $_add_page_tab_url; // url to add the app to a fan page
-    private $_canvas_app_url; // url of app on facebook (eg - http://apps.facebook.com/app-name)
+    private $_page_tab_url;
+    private $_add_page_tab_url;
+    private $_canvas_app_url;
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
@@ -45,7 +45,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     public function hasPageAddedApp() { return $this->_getPageValue('has_added_app'); }
     public function hasPageRestrictions() { return $this->_getPageValue('saf_page_restrictions'); }
 
-    // used to set the page id only when we are a Canvas app or Facebook Connect
+    // used to set the page id only when we are a Canvas or Facebook Connect
     // app and we need to get page data for a known page ID (eg - our own page)
     public function setPageID($value) { $this->_page_id = $value; }
 
@@ -60,7 +60,10 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     public function __construct() {
         parent::__construct();
 
-        // we may or may not have the page id based on the type of app
+        // we should always have a page id if its a tab app (unless it is being
+        // viewed outside the Facebook chrome). Canvas and Facebook Connect apps
+        // will not have the page id unless we explicitly set it with setPageID()
+        // before calling init()
         if ( !empty($this->_page_id) ) {
 
             try {
@@ -68,7 +71,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
                 // get page data
                 // note that we don't utilize _getPageData() as this is reserved for calls
                 // when we don't know the page id because the app is a Canvas or Facebook Connect app
-                $this->_fb_page = $this->_facebook->api('/'.$this->_page_id, 'GET', array(
+                $this->_fb_page = $this->api('/'.$this->_page_id, 'GET', array(
                     'fields' => SAF_Config::getGraphPageFields()
                 ));
 
@@ -79,46 +82,56 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
                     $this->_fb_page = $this->_injectSAFData(false);
 
                     // add our social app framework page data into the session
-                    SAF_Session::setPersistentData('page_obj', $this->_fb_page);
+                    //$this->setPersistentData('saf_page', $this->_fb_page);
 
-                    $this->debug(__CLASS__.':: Fan page ('.$this->_page_id.') data: ', $this->_fb_page);
+                    //$this->debug(__CLASS__.':: Fan page ('.$this->_page_id.') data: ', $this->_fb_page);
 
                 // probably some sort of page restriction (country/age)
                 } else {
 
                     // clear any existing stored page data
-                    SAF_Session::clearPersistentData('page_obj');
+                    $this->clearPersistentData('saf_page');
 
                     // inject SAF data, some sort of page restriction (country/age)
                     $this->_fb_page = $this->_injectSAFData(true);
 
                     // add our social app framework page data into the session
-                    SAF_Session::setPersistentData('page_obj', $this->_fb_page);
+                    //$this->setPersistentData('saf_page', $this->_fb_page);
 
                     // fall back to default page URL as SAF_FacebookUser will need this value
                     // however, simply trying to force in the page id will cause API errors for some reason
                     // even though navigating to https://www.facebook.com/PAGE_ID resolves to the correct fan page we want
                     $this->_page_tab_url = 'https://www.facebook.com/';
 
-                    //$this->debug(__CLASS__.':: Page ('.$this->_page_id.') may be unpublished or have country/age restrictions', null, 3, true);
+                    $this->debug(__CLASS__.':: Page ('.$this->_page_id.') may be unpublished or have country/age restrictions', null, 3, true);
 
                 }
 
+                // add our social app framework page data into the session
+                $this->setPersistentData('saf_page', $this->_fb_page);
+
+                $this->debug(__CLASS__.':: Fan page ('.$this->_page_id.') data: ', $this->_fb_page);
+
             } catch (FacebookApiException $e) {
 
-                $this->debug(__CLASS__.':: '.$e, null, 3, true);
-
                 // wipe the 'page_obj' session object
-                SAF_Session::clearPersistentData('page_obj');
+                $this->clearPersistentData('saf_page');
+
+                $this->debug(__CLASS__.':: '.$e, null, 3, true);
 
             }
 
         } else {
 
             // wipe the 'page_obj' session object
-            SAF_Session::clearPersistentData('page_obj');
+            $this->clearPersistentData('saf_page');
 
-            // app
+            // tab
+            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
+                $this->debug(__CLASS__.':: No page data. Viewing Tab app outside of Facebook.', null, 3);
+            }
+
+            // canvas
             if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
                 $this->debug(__CLASS__.':: No page data. Viewing Canvas app.', null, 3);
             }
@@ -128,7 +141,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
                 $this->debug(__CLASS__.':: No page data. Viewing Facebook Connect app.', null, 3);
             }
 
-            $this->debug(__CLASS__.':: You can manually call setPageID() before calling init() if public fan page data is required.');
+            $this->debug(__CLASS__.':: Use setPageID() before calling init() if fan page data is required.');
 
         }
 
@@ -153,7 +166,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
         try {
 
             // get long-lived access token
-            $response = $this->_facebook->api('/'.$this->_page_id, 'GET', array(
+            $response = $this->api('/'.$this->_page_id, 'GET', array(
                 'fields' => 'access_token',
                 'access_token' => $this->getAccessToken()
             ));
@@ -199,7 +212,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
         // ok, let's try and get page data
         try {
 
-            $data = $this->_facebook->api('/'.$this->_page_id, 'GET');
+            $data = $this->api('/'.$this->_page_id, 'GET');
 
             if ( !empty($data) ) {
                 return $data;
@@ -252,13 +265,12 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     /**
      * GET PAGE VALUE
      *
-     * Return a clean var value
-     * (eg - if something doesn't exist, return default value)
+     * Return a clean value whether the key exits or not
      *
      * @access    private
-     * @param     mixed $key key to check for
+     * @param     string $key key to check for
      * @param     mixed $default default value if not set
-     * @return    void
+     * @return    mixed
      */
     private function _getPageValue($key, $default=false) {
         if ( !isset($this->_fb_page[$key]) ) {

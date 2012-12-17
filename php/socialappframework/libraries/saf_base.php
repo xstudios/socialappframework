@@ -2,10 +2,10 @@
 /**
  * Social App Framework Base class
  *
- * We could extend Facebook, (eg - SAF_Base extends Facebook), but we
- * only want to see SAF methods for code completion, not Facebook SDK methods
- * Doing it this way means we can access the instance of Faceboook when needed
- * and it stays on its own, we simply 'wrap' it
+ * We extend the Facebook class in order to make Social App Framework
+ * a much more powerful and helpful SDK than the Facebook SDK is alone.
+ * The 'magic' happens here and all your Facebook development woes will be
+ * a thing of the past.
  *
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  * @version      1.0
@@ -15,11 +15,9 @@
  * You should have received a copy of the license along with this program.
  * If not, see <http://socialappframework.com/license/>.
  */
-abstract class SAF_Base {
+abstract class SAF_Base extends Facebook {
 
-    const VERSION = '1.0.0';
-
-    protected $_facebook; // instance of Facebook SDK
+    const SAF_VERSION = '1.0.0';
 
     protected $_user_id = null; // facebook user id
     protected $_page_id = null; // facebook page id
@@ -27,10 +25,6 @@ abstract class SAF_Base {
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
-    public function getFacebook() { return $this->_facebook; }
-    public function getAppID() { return $this->_facebook->getAppId(); }
-    public function getAppSecret() { return $this->_facebook->getAppSecret(); }
-
     public function getUserID() { return $this->_user_id; }
     public function getPageID() { return $this->_page_id; }
 
@@ -46,15 +40,15 @@ abstract class SAF_Base {
         // cookies for iframes in IE fix
         header('P3P: CP="SAF"');
 
-        // init saf session
-        SAF_Session::init(SAF_Config::getAppID());
-
-        // create application instance
-        $this->_facebook = new Facebook(array(
+        // construct Facebook SDK
+        parent::__construct(array(
             'appId'      => SAF_Config::getAppID(),
             'secret'     => SAF_Config::getAppSecret(),
             'fileUpload' => SAF_Config::getFileUpload()
         ));
+
+        // push additional allowed session keys into the Facebook SDK
+        array_push(self::$kSupportedKeys, 'saf_fan_gate', 'saf_access_token', 'saf_signed_request', 'saf_user', 'saf_page');
     }
 
     // ------------------------------------------------------------------------
