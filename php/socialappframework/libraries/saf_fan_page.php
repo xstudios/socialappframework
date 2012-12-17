@@ -219,7 +219,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
         $this->_fb_page['saf_page_tab_url'] = $this->_page_tab_url;
         $this->_fb_page['saf_add_page_tab_url'] = $this->_add_page_tab_url;
-        $this->_fb_page['saf_canvas_app_url'] = $this->_canvas_app_url;
+        $this->_fb_page['saf_canvas_url'] = $this->_canvas_url;
         $this->_fb_page['saf_page_restrictions'] = $page_restrictions;
         $this->_fb_page['saf_page_liked'] = $this->isPageLiked();
 

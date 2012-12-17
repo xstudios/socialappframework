@@ -30,7 +30,7 @@ class SAF_Session {
     public function getPageData() {
         return $this->getPersistentData('page', array());
     }
-    
+
     public function getPageAccessToken() {
         return $this->_getPersistentPageData('access_token');
     }
@@ -61,8 +61,8 @@ class SAF_Session {
     public function getAddPageTabURL() {
         return $this->_getPersistentPageData('saf_add_page_tab_url');
     }
-    public function getCanvasAppURL() {
-        return $this->_getPersistentPageData('saf_canvas_app_url');
+    public function getCanvasURL() {
+        return $this->_getPersistentPageData('saf_canvas_url');
     }
 
     public function isPageLiked() {
@@ -107,7 +107,7 @@ class SAF_Session {
     public function getUserProfilePicture() {
         return FB_Helper::picture_url($this->getUserID());
     }
-
+    
     public function getUserGrantedPerms() {
         return $this->_getPersistentUserData('saf_perms_granted', array());
     }

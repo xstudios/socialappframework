@@ -102,6 +102,13 @@ Get the canvas app URL. Usage example:
 
 ***
 
+###isPageLiked()
+Determine whether the current user likes the fan page or not. Usage example:
+
+    $saf->isPageLiked();
+
+***
+
 ###isPagePublished()
 Determine whether the fan page is published or not. Usage example:
 
