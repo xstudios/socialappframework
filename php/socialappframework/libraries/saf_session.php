@@ -30,6 +30,10 @@ class SAF_Session {
     public function getPageData() {
         return $this->getPersistentData('page', array());
     }
+    
+    public function getPageAccessToken() {
+        return $this->_getPersistentPageData('access_token');
+    }
 
     public function getPageID() {
         return $this->_getPersistentPageData('id');
@@ -139,6 +143,7 @@ class SAF_Session {
      * @return    void
      */
     public function __construct($app_id) {
+        if (!session_id()) session_start();
         // we'll need this for all method calls so we can construct the
         // session key name
         $this->_app_id = $app_id;
