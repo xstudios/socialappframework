@@ -23,7 +23,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
-    public function getPageData() { return $this->_getPageData(); }
+    public function getPageData() { return $this->_fb_page; }
     public function getPageAccessToken() { return $this->_access_token; }
 
     public function getPageName() { return $this->_getPageValue('name', ''); }
@@ -73,8 +73,6 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
             try {
 
                 // get page data
-                // note that we don't utilize _getPageData() as this is reserved for calls
-                // when we don't know the page id because the app is a Canvas or Facebook Connect app
                 $this->_fb_page = $this->api('/'.$this->_page_id, 'GET', array(
                     'access_token' => $this->getAccessToken(),
                     'fields' => 'access_token, '.SAF_Config::getGraphPageFields()
@@ -161,45 +159,6 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
-    // ------------------------------------------------------------------------
-
-    /**
-     * GET PAGE DATA
-     *
-     * @access    private
-     * @return    mixed
-     */
-    private function _getPageData() {
-        // bail out scenario
-        if ( empty($this->_page_id) ) {
-            $this->debug(__CLASS__.':: Unable to access page data without a page ID', null, 3, true);
-            return;
-        }
-
-        // if we already have page data just return it
-        if ( !empty($this->_fb_page) ) {
-            return $this->_fb_page;
-        }
-
-        // ok, let's try and get page data
-        try {
-
-            $data = $this->api('/'.$this->_page_id, 'GET');
-
-            if ( !empty($data) ) {
-                return $data;
-            } else {
-                $this->debug(__CLASS__.':: Fan page ('.$this->_page_id.') data is empty', null, 3, true);
-                return false;
-            }
-
-        } catch (FacebookApiException $e) {
-
-            $this->debug(__CLASS__.':: Unable to access fan page ('.$this->_page_id.') data. '.$e, null, 3, true);
-            return false;
-        }
-    }
-
     // ------------------------------------------------------------------------
 
     /**
