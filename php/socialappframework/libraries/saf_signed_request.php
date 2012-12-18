@@ -56,6 +56,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $this->_user_id = $this->getUser();
         if (!empty($this->_user_id)) {
             $this->debug(__CLASS__.':: User ID ('.$this->_user_id.').');
+            //$this->setPersistentData('saf_user_id', $this->_user_id);
         }
 
         // if we have a signed request
@@ -67,8 +68,11 @@ abstract class SAF_Signed_Request extends SAF_Base {
                 $this->_forceFacebookChrome();
             }
 
-            // immediately exchange the short-lived access token for a long-lived one
-            $this->_exchangeForExtendedAccessToken();
+            // if this is not a Facebook Connect app, get a long-lived access token
+            if (SAF_Config::getAppType() != SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
+                // immediately exchange the short-lived access token for a long-lived one
+                $this->_exchangeForExtendedAccessToken();
+            }
 
             // are we viewing this within a fan page?
             // this key is only present if the app is being loaded within a page tab
@@ -83,12 +87,12 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
                 if ($this->_page_liked == true) {
 
-                    if ( $this->getPersistentData('fan_gate') ) {
+                    if ( $this->getPersistentData('saf_fan_gate') ) {
 
                         $this->_like_via_fan_gate = true;
                         // unset fan gate flag so we don't keep assuming the
                         // user liked this via fan gate
-                        $this->clearPersistentData('fan_gate');
+                        $this->clearPersistentData('saf_fan_gate');
                         $this->debug(__CLASS__.':: User likes this page (via Fan Gate).');
 
                     } else {
@@ -102,7 +106,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
                     $this->debug(__CLASS__.':: User does not like this page.');
                     // set a session flag so we know when the user originally
                     // came here they did not like the page
-                    $this->setPersistentData('fan_gate', true);
+                    $this->setPersistentData('saf_fan_gate', true);
 
                 }
 
@@ -162,6 +166,12 @@ abstract class SAF_Signed_Request extends SAF_Base {
      * @return    void
      */
     private function _exchangeForExtendedAccessToken() {
+        // do not attempt to set the extended token if all we have is a
+        // app access token
+        /*if ($this->getAccessToken() === $this->getApplicationAccessToken()) {
+            return;
+        }*/
+
         $this->setExtendedAccessToken();
         $access_token = $this->getPersistentData('access_token');
         if ( !empty($access_token) ) {

@@ -39,7 +39,7 @@ abstract class SAF_Base extends Facebook {
         ));
 
         // push additional allowed session keys into the Facebook SDK
-        array_push(self::$kSupportedKeys, 'saf_fan_gate', 'saf_access_token', 'saf_user', 'saf_page');
+        array_push(self::$kSupportedKeys, 'saf_fan_gate', 'saf_user', 'saf_page');
     }
 
     // ------------------------------------------------------------------------
