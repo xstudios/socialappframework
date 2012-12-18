@@ -175,7 +175,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
      * Facebook Connect
      *
      * Upon user login (authentication) Facebook Connect apps will have 'state'
-     * and 'code' query string values.  The code must be exchanged for an access
+     * and 'code' parameters passed.  The code must be exchanged for an access
      * token.
      *
      * @access    private
