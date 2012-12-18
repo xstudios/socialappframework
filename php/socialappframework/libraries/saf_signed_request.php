@@ -164,9 +164,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
         // long-lived token for some strange reason so $facebook->getAccessToken()
         // will still return the short-lived token. So we have to get it from
         // the app session where the Facebook SDK stores it.
-        $key = 'fb_'.SAF_Config::getAppID().'_access_token';
-        if (array_key_exists($key, $_SESSION)) {
-            $access_token = $_SESSION[$key];
+        $access_token = $this->getPersistentData('access_token');
+        if ( !empty($access_token) ) {
             // update the Facebook SDK access token to the long-lived one
             $this->setAccessToken($access_token);
         }
