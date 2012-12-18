@@ -151,22 +151,20 @@ abstract class SAF_Signed_Request extends SAF_Base {
     /**
      * EXCHANGE SHORT-LIVED ACCESS TOKEN FOR A LONG-LIVED ACCESS TOKEN
      *
-     * Return a long-lived access token (60 days or more) by exchanging the
-     * short-lived token for a long-lived token
+     * A wrapper-method for the Facebook SDK's setExtendedAccessToken() method.
+     * The Facebook SDK (3.2.2) doesn't set the access token property to the
+     * long-lived token for some strange reason so getAccessToken() will still
+     * return the short-lived token. So we have to get it from the app session
+     * where the Facebook SDK stores it and manually set the access token to the
+     * long-lived one.
      *
      * @access    private
      * @return    void
      */
     private function _exchangeForExtendedAccessToken() {
-        // exchange short-lived token for long-lived one
         $this->setExtendedAccessToken();
-        // the Facebook SDK (3.2.2) doesn't set the access token property to the
-        // long-lived token for some strange reason so $facebook->getAccessToken()
-        // will still return the short-lived token. So we have to get it from
-        // the app session where the Facebook SDK stores it.
         $access_token = $this->getPersistentData('access_token');
         if ( !empty($access_token) ) {
-            // update the Facebook SDK access token to the long-lived one
             $this->setAccessToken($access_token);
         }
     }
