@@ -67,8 +67,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
                 $this->_forceFacebookChrome();
             }
 
-            // get us an extended access token for a tab or canvas app
-            $this->setPersistentData('saf_access_token', $this->_getLongLivedAccessToken());
+            // immediately exchange the short-lived access token for a long-lived one
+            $this->_exchangeForExtendedAccessToken();
 
             // are we viewing this within a fan page?
             // this key is only present if the app is being loaded within a page tab
@@ -149,15 +149,15 @@ abstract class SAF_Signed_Request extends SAF_Base {
     // ------------------------------------------------------------------------
 
     /**
-     * GET LONG-LIVED ACCESS TOKEN
+     * EXCHANGE SHORT-LIVED ACCESS TOKEN FOR A LONG-LIVED ACCESS TOKEN
      *
      * Return a long-lived access token (60 days or more) by exchanging the
      * short-lived token for a long-lived token
      *
      * @access    private
-     * @return    string
+     * @return    void
      */
-    private function _getLongLivedAccessToken() {
+    private function _exchangeForExtendedAccessToken() {
         // exchange short-lived token for long-lived one
         $this->setExtendedAccessToken();
         // the Facebook SDK (3.2.2) doesn't set the access token property to the
@@ -169,8 +169,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
             // update the Facebook SDK access token to the long-lived one
             $this->setAccessToken($access_token);
         }
-
-        return $this->getAccessToken();
     }
 
     // ------------------------------------------------------------------------
@@ -189,7 +187,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         // Dec 5th breaking change fix: we must rely on the access token
         // we already got from exchanging the code as codes are now one-time
         // use and expire within 10 mins.
-        $access_token = $this->getPersistentData('saf_access_token');
+        $access_token = $this->getPersistentData('access_token');
         if ($access_token) {
 
             // set the SDK to use the access token
@@ -212,9 +210,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
                 // set the SDK to use the access token
                 $this->setAccessToken($access_token);
                 // immediately exchange the short-lived access token for a long-lived one
-                $access_token = $this->_getLongLivedAccessToken();
-                // store the access token for future visits
-                $this->setPersistentData('saf_access_token', $access_token);
+                $this->_exchangeForExtendedAccessToken();
 
                 $this->debug(__CLASS__.':: Obtained access token from the request code.');
 
