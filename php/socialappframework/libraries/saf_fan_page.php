@@ -74,7 +74,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
                 // get page data
                 $this->_fb_page = $this->api('/'.$this->_page_id, 'GET', array(
-                    'access_token' => $this->getAccessToken(),
+                    //'access_token' => $this->getAccessToken(),
                     'fields' => 'access_token, '.SAF_Config::getGraphPageFields()
                 ));
 
