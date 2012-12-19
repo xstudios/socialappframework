@@ -157,6 +157,11 @@ abstract class SAF_Signed_Request extends SAF_Base {
      * @return    void
      */
     private function _exchangeForExtendedAccessToken() {
+        // if all we have is the app access token, bail...
+        if ($this->getAccessToken() === $this->getApplicationAccessToken()) {
+            return;
+        }
+
         // setExtendedAccessToken() does not return a value on success, but will
         // return false on an error
         $result = $this->setExtendedAccessToken();
