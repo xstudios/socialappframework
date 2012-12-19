@@ -14,7 +14,7 @@
 # Fan Page Class
 The SAF Fan Page class provides easy access to fan page data. **It is important
 to note that the Fan Page class is only used in Tab applications, unless
-you explicitly call `setPageID()` before calling `init()`.**
+you explicitly call `setPageId()` before calling `init()`.**
 
 ##Public Methods
 
@@ -31,7 +31,7 @@ the app to post as the page when the user is not logged in. Usage example:
 
     $page_access_token = $saf->getPageAccessToken();
 
->**NOTE: This method is only available to a page admin with the `manage_pages` 
+>**NOTE: This method is only available to a page admin with the `manage_pages`
 permission.**
 
 ***
@@ -43,10 +43,10 @@ Get the fan page name. Usage example:
 
 ***
 
-###getPageProfileURL()
+###getPageProfileUrl()
 Get the fan page profile URL. Usage example:
 
-    $profile_url = $saf->getPageProfileURL();
+    $profile_url = $saf->getPageProfileUrl();
 
     // Produces: https://www.facebook.com/SocialAppFramework
 
@@ -75,28 +75,28 @@ Get the page's website. Usage example:
 
 ***
 
-###getPageTabURL()
+###getPageTabUrl()
 Get the page tab URL. Usage example:
 
-    $tab_url = $saf->getPageTabURL();
+    $tab_url = $saf->getPageTabUrl();
 
     // Produces: https://www.facebook.com/SocialAppFramework/app_156875707703556
 
 ***
 
-###getAddPageTabURL()
+###getAddPageTabUrl()
 Get the add page tab URL. Usage example:
 
-    $add_tab_url = $saf->getAddPageTabURL();
+    $add_tab_url = $saf->getAddPageTabUrl();
 
     // Produces: https://www.facebook.com/dialog/pagetab?app_id=156875707703556
 
 ***
 
-###getCanvasURL()
+###getCanvasUrl()
 Get the canvas app URL. Usage example:
 
-    $canvas_url = $saf->getCanvasURL();
+    $canvas_url = $saf->getCanvasUrl();
 
     // Produces: https://apps.facebook.com/social-app-framework/
 
@@ -125,11 +125,11 @@ Determine whether the page has restrictions or not. Usage example:
 
 ***
 
-###setPageID()
-Allows you to set the page id manually, after which you would call `init()`. 
+###setPageId()
+Allows you to set the page id manually, after which you would call `init()`.
 Usage example:
 
-    $saf->setPageID('236913163089998');
+    $saf->setPageId('236913163089998');
     $saf->init();
 
 >**NOTE: This method is useful with a Canvas or Facebook Connect app.**

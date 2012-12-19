@@ -17,16 +17,16 @@ that contains vital fan page and user data.
 
 ##Public Methods
 This document **does not** outline each of the methods available since its methods
-are the same methods available to both the Fan Page and Facebook User classes 
+are the same methods available to both the Fan Page and Facebook User classes
 (with a few exceptions).
 
 The only difference being that all public methods available to SAF Session are
 static methods.
 
 Usage Example:
-    
+
     // start session
-    $saf_session = new SAF_Session(SAF_Config::getAppID());
+    $saf_session = new SAF_Session(SAF_Config::getAppId());
 
     // user
     SAF_Session::getUserData();

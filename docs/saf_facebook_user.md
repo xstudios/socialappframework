@@ -59,10 +59,10 @@ Get the user's email address. Usage example:
 
 ***
 
-###getUserProfileURL()
+###getUserProfileUrl()
 Get the user's profile URL. Usage example:
 
-    $profile_url = $saf->getUserProfileURL();
+    $profile_url = $saf->getUserProfileUrl();
 
     // Produces: https://www.facebook.com/profile.php?id=743687287
 
@@ -101,20 +101,21 @@ string. Usage example:
 
 ***
 
-###getFinalLoginURL()
+###getLoginUrl()
 Get the login URL for app authentication. Usage example:
 
-    $login_url = $saf->getFinalLoginURL();
+    $login_url = $saf->getLoginUrl();
 
->**NOTE:** This method already takes into account the proper redirect URL and 
+>**NOTE:** This method already takes into account the proper redirect URL and
 desired scope.
 
 ***
 
-###getFinalLogoutURL()
-Get the logout URL in order to log the user out of Facebook. Usage example:
+###getLogoutUrl()
+Get the logout URL in order to log the user out of Facebook and your app.
+Usage example:
 
-    $saf->getFinalLogoutURL();
+    $saf->getLogoutUrl();
 
 >**NOTE:** This method already takes into account the proper redirect URL.
 
@@ -140,7 +141,7 @@ Determines whether or not the user is the app developer. Usage example:
 
     $saf->isAppDeveloper();
 
->**NOTE: This method relies on the developer ID(s) being properly set config file.**
+>**NOTE: This method relies on the developer Id(s) being properly set config file.**
 
 ***
 
@@ -162,11 +163,11 @@ Usage Example:
 
 ***
 
-###setRedirectURL()
+###setRedirectUrl()
 Allows you to set the redirect URL. Useful if you need to override the default.
 Usage example:
 
-    $saf->setRedirectURL('http://domain.com/');
+    $saf->setRedirectUrl('http://domain.com/');
 
 >**NOTE: See Facebook documentation for restrictions on Redirect URLs.**
 

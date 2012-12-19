@@ -12,7 +12,7 @@
 * [SAF Session](saf_session.md)
 
 # SAF Base Class
-The SAF Base class is a small class with a simple task: Initialize the 
+The SAF Base class is a small class with a simple task: Initialize the
 Facebook SDK and start a session.
 
 ##Public Methods
@@ -20,11 +20,11 @@ The public methods are the **same** methods available to the Facebook PHP SDK.
 
 ###setAppId()
 Set the application ID. Usage example:
-    
+
     $saf->setAppId('APP_ID');
 
 ***
-    
+
 ###getAppId()
 Get the application ID. Usage example:
 
@@ -83,7 +83,7 @@ for completeness. Usage example:
     $saf->setExtendedAccessToken();
 
 ###getSignedRequest()
-Retrieve the signed request, either from a request parameter or, if not present, 
+Retrieve the signed request, either from a request parameter or, if not present,
 from a cookie. Usage example:
 
     $signed_request = $saf->getSignedRequest();
@@ -92,7 +92,7 @@ from a cookie. Usage example:
 
 
 ###getUser()
-Get the user ID of the connected user, or 0 if the Facebook user is not 
+Get the user ID of the connected user, or 0 if the Facebook user is not
 connected. Usage example:
 
     $user_id = $saf->getUser();
@@ -113,7 +113,7 @@ Usage example:
     );
     $login_url = $saf->getLoginUrl($params);
 
->**NOTE**: See the `getFinalLoginURL()` method of the `Facebook User` class.
+>**NOTE**: See the `getFinalLoginUrl()` method of the `Facebook User` class.
 
 ***
 
@@ -129,7 +129,7 @@ Usage example:
     );
     $logout_url = $saf->getLogoutUrl($params);
 
->**NOTE**: See the `getFinalLogoutURL()` method of the `Facebook User` class.
+>**NOTE**: See the `getFinalLogoutUrl()` method of the `Facebook User` class.
 
 ***
 
@@ -141,7 +141,7 @@ Get a login status URL to fetch the status from Facebook.  The parameters:
 - **no_user**: the URL to go to if the user is not signed into facebook
 
 Usage example:
-    
+
     $params = array(
         'ok_session' => 'https://domain.com/ok-session',
         'no_session' => 'https://domain.com/no-session',
@@ -161,7 +161,7 @@ Make an API call. Usage example:
 ***
 
 ###destroySession()
-Destroy the current session. Only the Facebook and SAF session are destroyed. 
+Destroy the current session. Only the Facebook and SAF session are destroyed.
 Usage example:
 
     $saf->destroySession();
