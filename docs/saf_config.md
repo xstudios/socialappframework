@@ -323,3 +323,29 @@ Get the fields we want to retrive from the Graph API for a page. Usage example:
 
 ***
 
+###setLogoutRoute()
+Set the logout route to be used when the user logs out of Facebook (using a
+logout button/link in the app). This logout URL would be obtained by calling the
+`getLogoutUrl()` or `getLogoutLink()` methods. Usage example:
+    
+    SAF_Config::setLogoutRoute('logout');
+
+***
+
+###getLogoutRoute()
+Gets the logout route. Usage example:
+    
+    SAF_Config::getLogoutRoute();
+
+    // Returns: http://domain.com/logout
+
+Typically, your logout endpoint would do something like this:
+
+    $saf->destroySession();
+    // we use Javascript's top.location.href and not PHP's header location 
+    // because it will work with any type of app: Tab, Canvas or Facebook Connect
+    echo '<script>top.location.href = "https://facebook.com/";</script>';
+    
+
+***
+
