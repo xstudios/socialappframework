@@ -27,7 +27,7 @@ Usage Example:
     // to login and authenticate the user manually, then call
     $login_url = $this->getLoginUrl();
 
->**NOTE:** You would use the `$login_url` value in as the href value of a link
+>**NOTE:** You would use the `$login_url` value as the href value of a link
 the user clicks.
 
 ***

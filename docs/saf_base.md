@@ -113,7 +113,7 @@ Usage example:
     );
     $login_url = $saf->getLoginUrl($params);
 
->**NOTE**: See the `getFinalLoginUrl()` method of the `Facebook User` class.
+>**NOTE**: This method is overridden in the `SAF_Facebook_User` class.
 
 ***
 
@@ -125,11 +125,11 @@ Get a Logout URL suitable for use with redirects. The parameters:
 Usage example:
 
     $params = array(
-        'next' => 'https:://domain.com/logged-out'
+        'next' => 'https:://domain.com/logout'
     );
     $logout_url = $saf->getLogoutUrl($params);
 
->**NOTE**: See the `getFinalLogoutUrl()` method of the `Facebook User` class.
+>**NOTE**: This method is overridden in the `SAF_Facebook_User` class.
 
 ***
 
