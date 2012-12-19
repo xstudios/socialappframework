@@ -138,19 +138,26 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         $this->_login_url = $this->_createLoginURL();
         $this->_login_link = FB_Helper::login_link($this->_login_url);
 
-        // if we have an access token and it's not the app access token
+        // failsafe, use the user id or 'me', which allows us to still
+        // get public user data if we know the user id since all we need
+        // is the app access token and not a user access token
+        $uid = $this->_user_id ? $this->_user_id : 'me';
+
+        // do we have enough info to attempt to get user data?
         $access_token = $this->getAccessToken();
-        //&& $access_token !== $this->getApplicationAccessToken()
-        if ( !empty($access_token) ) {
+        $proceed = true;
+        if ($uid === 'me' && $access_token === $this->getApplicationAccessToken()) {
+            $proceed = false;
+        }
+
+        // if we have an access token and it's not the app access token
+        //$access_token = $this->getAccessToken();
+        //if ( !empty($access_token) ) {
+        if ($proceed === true) {
 
             // we have a user id and an access token, so probably a logged in user...
             // if not, we'll get an exception, which we will handle below
             try {
-
-                // failsafe, use the user id or 'me', which allows us to still
-                // get public user data if we know the user id since all we need
-                // is the app access token and not a user access token
-                $uid = $this->_user_id ? $this->_user_id : 'me';
 
                 $this->_fb_user = $this->api('/'.$uid, 'GET', array(
                     //'access_token' => $access_token,
@@ -205,7 +212,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
         } else {
 
-            $this->debug(__CLASS__.':: No Access Token. Unable to get user data.', null, 3);
+            //$this->debug(__CLASS__.':: No Access Token. Unable to get user data.', null, 3);
             $this->_handleException();
 
         }
