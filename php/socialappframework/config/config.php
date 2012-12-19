@@ -59,13 +59,6 @@ SAF_Config::setExtendedPerms('');
 // Usually the extended permissions above, plus additional permissions (eg - manage_pages)
 SAF_Config::setExtendedPermsAdmin('');
 
-// Auto request permissions upon tab and/or canvas app load
-SAF_Config::setAutoRequestPermsTab(false);
-SAF_Config::setAutoRequestPermsCanvas(false);
-
-// Force admin to auth app upon tab and/or canvas app load
-SAF_Config::setAutoRequestPermsAdmin(false);
-
 // ------------------------------------------------------------------------
 // FACEBOOK SIGNED REQUEST
 // ------------------------------------------------------------------------

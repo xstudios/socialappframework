@@ -33,7 +33,7 @@ abstract class SAF_Base extends Facebook {
 
         // construct Facebook SDK
         parent::__construct(array(
-            'appId'      => SAF_Config::getAppID(),
+            'appId'      => SAF_Config::getAppId(),
             'secret'     => SAF_Config::getAppSecret(),
             'fileUpload' => SAF_Config::getFileUpload()
         ));

@@ -27,14 +27,14 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     public function getPageAccessToken() { return $this->_access_token; }
 
     public function getPageName() { return $this->_getPageValue('name', ''); }
-    public function getPageProfileURL() { return $this->_getPageValue('link'); }
+    public function getPageProfileUrl() { return $this->_getPageValue('link'); }
 
     public function getPageProfilePicture() {
         $picture = $this->_getPageValue('picture');
         if (!empty($picture)) {
             $picture = $picture['data']['url'];
         } else {
-            $picture = FB_Helper::picture_url($this->getPageID());
+            $picture = FB_Helper::picture_url($this->getPageId());
         }
         return $picture;
     }
@@ -42,16 +42,16 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
     public function getPageLikes() { return $this->_getPageValue('likes'); }
     public function getPageWebsite() { return $this->_getPageValue('website'); }
 
-    public function getPageTabURL() { return $this->_page_tab_url; }
-    public function getAddPageTabURL() { return $this->_add_page_tab_url; }
-    public function getCanvasURL() { return $this->_canvas_url; }
+    public function getPageTabUrl() { return $this->_page_tab_url; }
+    public function getAddPageTabUrl() { return $this->_add_page_tab_url; }
+    public function getCanvasUrl() { return $this->_canvas_url; }
 
     public function isPagePublished() { return $this->_getPageValue('is_published'); }
     public function hasPageRestrictions() { return $this->_getPageValue('saf_page_restrictions'); }
 
     // used to set the page id only when we are a Canvas or Facebook Connect
     // app and we need to get page data for a known page ID (eg - our own page)
-    public function setPageID($value) { $this->_page_id = $value; }
+    public function setPageId($value) { $this->_page_id = $value; }
 
     // ------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
         // we should always have a page id if its a tab app (unless it is being
         // viewed outside the Facebook chrome). Canvas and Facebook Connect apps
-        // will not have the page id unless we explicitly set it with setPageID()
+        // will not have the page id unless we explicitly set it with setPageId()
         // before calling init()
         if ( !empty($this->_page_id) ) {
 
@@ -150,7 +150,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
                 $this->debug(__CLASS__.':: No page data. Viewing Facebook Connect app.', null, 3);
             }
 
-            $this->debug(__CLASS__.':: Use setPageID() before calling init() if fan page data is required.');
+            $this->debug(__CLASS__.':: Use setPageId() before calling init() if fan page data is required.');
 
         }
 
@@ -171,10 +171,10 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
      */
     private function _injectSAFData($page_restrictions=false) {
         if ( isset($this->_fb_page['link']) ) {
-            $this->_page_tab_url = str_replace( 'http', 'https', $this->_fb_page['link'].'?sk=app_'.SAF_Config::getAppID() );
+            $this->_page_tab_url = str_replace( 'http', 'https', $this->_fb_page['link'].'?sk=app_'.SAF_Config::getAppId() );
         }
-        $this->_add_page_tab_url = SAF_Config::getAddPageTabURL();
-        $this->_canvas_url = SAF_Config::getCanvasURL();
+        $this->_add_page_tab_url = SAF_Config::getAddPageTabUrl();
+        $this->_canvas_url = SAF_Config::getCanvasUrl();
 
         $this->_fb_page['saf_page_tab_url'] = $this->_page_tab_url;
         $this->_fb_page['saf_add_page_tab_url'] = $this->_add_page_tab_url;

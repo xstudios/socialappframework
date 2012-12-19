@@ -35,13 +35,13 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
     public function getUserEmail() { return $this->_getUserValue('email'); }
 
-    public function getUserProfileURL() { return $this->_getUserValue('link'); }
+    public function getUserProfileUrl() { return $this->_getUserValue('link'); }
     public function getUserProfilePicture() {
         $picture = $this->_getUserValue('picture');
         if (!empty($picture)) {
             $picture = $picture['data']['url'];
         } else {
-            $picture = FB_Helper::picture_url($this->getUserID());
+            $picture = FB_Helper::picture_url($this->getUserId());
         }
         return $picture;
     }
@@ -86,7 +86,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         }
     }
 
-    public function setRedirectURL($value) {
+    public function setRedirectUrl($value) {
         $this->_redirect_url = $value;
     }
 
@@ -206,26 +206,26 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
             // tab
             case SAF_Config::APP_TYPE_TAB:
                 if (SAF_Config::getForceSessionRedirect() == true) {
-                    $redirect_param = '?saf_redirect='.urlencode($this->getPageTabURL());
-                    return SAF_Config::getBaseURL().$redirect_param;
+                    $redirect_param = '?saf_redirect='.urlencode($this->getPageTabUrl());
+                    return SAF_Config::getBaseUrl().$redirect_param;
                 } else {
-                    return $this->getPageTabURL();
+                    return $this->getPageTabUrl();
                 }
                 break;
 
             // canvas app
             case SAF_Config::APP_TYPE_CANVAS:
                 if (SAF_Config::getForceSessionRedirect() == true) {
-                    $redirect_param = '?saf_redirect='.urlencode($this->getCanvasURL());
-                    return SAF_Config::getBaseURL().$redirect_param;
+                    $redirect_param = '?saf_redirect='.urlencode($this->getCanvasUrl());
+                    return SAF_Config::getBaseUrl().$redirect_param;
                 } else {
-                    return $this->getCanvasURL();
+                    return $this->getCanvasUrl();
                 }
                 break;
 
             // facebook connect
             default:
-                return SAF_Config::getBaseURL();
+                return SAF_Config::getBaseUrl();
 
         }
     }
@@ -241,33 +241,6 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     private function _handleException() {
         // wipe the 'saf_user_obj' session object
         $this->clearPersistentData('saf_user');
-
-        // facebook connect app
-        if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
-            $this->debug(__CLASS__.':: No user data. Viewing Facebook Connect app.', null, 3);
-        }
-
-        // force admin to login to the app if desired
-        if ($this->isPageAdmin() == true && SAF_Config::getAutoRequestPermsAdmin() == true) {
-            echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
-            exit;
-        }
-
-        // if it's a tab app and we are auto-requesting perms then direct user to login url
-        if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
-            if (SAF_Config::getAutoRequestPermsTab() == true) {
-                echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
-                exit;
-            }
-        }
-
-        // if it's a canvas app and we are auto-requesting perms then direct user to login url
-        if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
-            if (SAF_Config::getAutoRequestPermsCanvas() == true) {
-                echo '<script>top.location.href = "'.$this->_login_url.'";</script>';
-                exit;
-            }
-        }
 
         // proceed knowing we require user login and/or authentication
         $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);

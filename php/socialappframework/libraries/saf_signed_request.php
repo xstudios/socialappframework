@@ -26,8 +26,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
-    public function getUserID() { return $this->_user_id; }
-    public function getPageID() { return $this->_page_id; }
+    public function getUserId() { return $this->_user_id; }
+    public function getPageId() { return $this->_page_id; }
 
     public function getAppData() { return $this->_app_data; }
 
@@ -207,7 +207,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         if (isset($_REQUEST['code'])) {
 
             // exchange the code for an access token
-            $access_token = $this->getAccessTokenFromCode($_REQUEST['code'], SAF_Config::getBaseURL());
+            $access_token = $this->getAccessTokenFromCode($_REQUEST['code'], SAF_Config::getBaseUrl());
 
             if (!empty($access_token)) {
 
@@ -248,7 +248,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
             $this->debug(__CLASS__.':: '.$reason.'Viewing Tab app outside of Facebook.', null, 3);
             if ( SAF_Config::getForceFacebookView() == true ) {
-                header('Location: '.SAF_Config::getPageTabURL());
+                header('Location: '.SAF_Config::getPageTabUrl());
                 exit;
             }
         }
@@ -257,7 +257,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
             $this->debug(__CLASS__.':: '.$reason.'Viewing Canvas app outside of Facebook.', null, 3);
             if ( SAF_Config::getForceFacebookView() == true ) {
-                header('Location: '.SAF_Config::getCanvasURL());
+                header('Location: '.SAF_Config::getCanvasUrl());
                 exit;
             }
         }

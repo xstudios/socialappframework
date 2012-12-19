@@ -22,7 +22,7 @@ class SAF_Session {
     // GETTERS
     // ------------------------------------------------------------------------
 
-    public function getAppID() { return $this->_app_id; }
+    public function getAppId() { return $this->_app_id; }
 
     // ------------------------------------------------------------------------
 
@@ -35,17 +35,17 @@ class SAF_Session {
         return $this->_getPersistentPageData('access_token');
     }
 
-    public function getPageID() {
+    public function getPageId() {
         return $this->_getPersistentPageData('id');
     }
     public function getPageName() {
         return $this->_getPersistentPageData('name');
     }
-    public function getPageProfileURL() {
+    public function getPageProfileUrl() {
         return $this->_getPersistentPageData('link');
     }
     public function getPageProfilePicture() {
-        return FB_Helper::picture_url($this->getPageID());
+        return FB_Helper::picture_url($this->getPageId());
     }
 
     public function getPageLikes() {
@@ -55,13 +55,13 @@ class SAF_Session {
         return $this->_getPersistentPageData('website');
     }
 
-    public function getPageTabURL() {
+    public function getPageTabUrl() {
         return $this->_getPersistentPageData('saf_page_tab_url');
     }
-    public function getAddPageTabURL() {
+    public function getAddPageTabUrl() {
         return $this->_getPersistentPageData('saf_add_page_tab_url');
     }
-    public function getCanvasURL() {
+    public function getCanvasUrl() {
         return $this->_getPersistentPageData('saf_canvas_url');
     }
 
@@ -82,7 +82,7 @@ class SAF_Session {
         return $this->getPersistentData('user', array());
     }
 
-    public function getUserID() {
+    public function getUserId() {
         return $this->_getPersistentUserData('id');
     }
     public function getUserName() {
@@ -101,11 +101,11 @@ class SAF_Session {
         return $this->_getPersistentUserData('email');
     }
 
-    public function getUserProfileURL() {
+    public function getUserProfileUrl() {
         return $this->_getPersistentUserData('link');
     }
     public function getUserProfilePicture() {
-        return FB_Helper::picture_url($this->getUserID());
+        return FB_Helper::picture_url($this->getUserId());
     }
     
     public function getUserGrantedPerms() {

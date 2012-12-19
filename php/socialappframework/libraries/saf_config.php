@@ -39,9 +39,6 @@ class SAF_Config {
     // permission vars
     private static $_extended_perms            = '';
     private static $_extended_perms_admin      = '';
-    private static $_auto_request_perms_tab    = false;
-    private static $_auto_request_perms_canvas = false;
-    private static $_auto_request_perms_admin  = false;
 
     // signed request vars
     private static $_fan_page_hash       = '';
@@ -84,14 +81,14 @@ class SAF_Config {
      *
      * @param    string  $value
      */
-    public static function setAppID($value) {
+    public static function setAppId($value) {
         self::$_app_id = $value;
     }
 
     /**
      * Get app id
      */
-    public static function getAppID() {
+    public static function getAppId() {
         return self::$_app_id;
     }
 
@@ -212,14 +209,14 @@ class SAF_Config {
      *
      * @param    string  $value
      */
-    public static function setBaseURL($value) {
+    public static function setBaseUrl($value) {
         self::$_base_url = $value;
     }
 
     /**
      * Get base URL
      */
-    public static function getBaseURL() {
+    public static function getBaseUrl() {
         return self::$_base_url;
     }
 
@@ -228,22 +225,22 @@ class SAF_Config {
     /**
      * Get Canvas app URL
      */
-    public static function getCanvasURL() {
+    public static function getCanvasUrl() {
         return 'https://apps.facebook.com/'.self::getAppNamespace().'/';
     }
 
     /**
      * Get Page Tab URL
      */
-    public static function getPageTabURL() {
-        return 'https://www.facebook.com/'.self::getFanPageHash().'?sk=app_'.self::getAppID();
+    public static function getPageTabUrl() {
+        return 'https://www.facebook.com/'.self::getFanPageHash().'?sk=app_'.self::getAppId();
     }
 
     /**
      * Get Add Page Tab URL
      */
-    public static function getAddPageTabURL() {
-        return 'https://www.facebook.com/dialog/pagetab?app_id='.self::getAppID().'&next=https://www.facebook.com/';
+    public static function getAddPageTabUrl() {
+        return 'https://www.facebook.com/dialog/pagetab?app_id='.self::getAppId().'&next=https://www.facebook.com/';
     }
 
     // ------------------------------------------------------------------------
@@ -282,60 +279,6 @@ class SAF_Config {
      */
     public static function getExtendedPermsAdmin() {
         return self::$_extended_perms_admin;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Set auto-request perms for a tab app
-     *
-     * @param    string  $value
-     */
-    public static function setAutoRequestPermsTab($value) {
-        self::$_auto_request_perms_tab = $value;
-    }
-
-    /**
-     * Get auto-request perms for a tab app
-     */
-    public static function getAutoRequestPermsTab() {
-        return self::$_auto_request_perms_tab;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Set auto-request perms for a canvas app
-     *
-     * @param    string  $value
-     */
-    public static function setAutoRequestPermsCanvas($value) {
-        self::$_auto_request_perms_canvas = $value;
-    }
-
-    /**
-     * Get auto-request perms for a canvas app
-     */
-    public static function getAutoRequestPermsCanvas() {
-        return self::$_auto_request_perms_canvas;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Set auto-request perms for the page admin
-     *
-     * @param    string  $value
-     */
-    public static function setAutoRequestPermsAdmin($value) {
-        self::$_auto_request_perms_admin = $value;
-    }
-
-    /**
-     * Get auto-request perms for the page admin
-     */
-    public static function getAutoRequestPermsAdmin() {
-        return self::$_auto_request_perms_admin;
     }
 
     // ------------------------------------------------------------------------
