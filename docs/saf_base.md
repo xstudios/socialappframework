@@ -81,7 +81,7 @@ Gets the access token for API calls. Usage example:
     $access_token = $saf->getAccessToken();
 
 ###getSignedRequest()
-####Returns: _object_
+####Returns: _array_
 Retrieve the signed request, either from a request parameter or, if not present,
 from a cookie. Usage example:
 

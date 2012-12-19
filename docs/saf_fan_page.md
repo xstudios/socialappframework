@@ -19,7 +19,7 @@ you explicitly call `setPageId()` before calling `init()`.**
 ##Public Methods
 
 ###getPageData()
-####Returns: _object_
+####Returns: _array_
 Get the fan page data. Usage example:
 
     $page_data = $saf->getPageData();

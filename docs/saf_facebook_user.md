@@ -18,7 +18,7 @@ provides easy access to user data.
 ##Public Methods
 
 ###getUserData()
-####Returns: _object_
+####Returns: _array_
 Get the user's data. Usage example:
 
     $user_data = $saf->getUserData();
