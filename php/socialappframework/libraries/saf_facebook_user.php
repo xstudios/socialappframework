@@ -19,11 +19,6 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     private $_revoked_perms  = array(); // extended perms the user revoked
 
     private $_redirect_url;
-    private $_login_url;
-    private $_logout_url;
-
-    private $_login_link;
-    private $_logout_link;
 
     private $_app_developer = false;
     private $_authenticated = false;
@@ -55,11 +50,22 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function getGrantedPerms() { return $this->_granted_perms; }
     public function getRevokedPerms() { return $this->_revoked_perms; }
 
-    public function getFinalLoginURL() { return $this->_login_url; }
-    public function getFinalLogoutURL() { return $this->_logout_url; }
+    // override's the SDK's native method
+    public function getLoginUrl() {
+        $params = array(
+            'scope'        => $this->_extended_perms,
+            'redirect_uri' => $this->_redirect_url
+        );
+        return parent::getLoginUrl($params);
+    }
+    // override's the SDK's native method
+    public function getLogoutUrl() {
+        $params = array( 'next' => SAF_Config::getLogoutRoute() );
+        return parent::getLogoutUrl($params);
+    }
 
-    public function getLoginLink() { return $this->_login_link; }
-    public function getLogoutLink() { return $this->_logout_link; }
+    public function getLoginLink() { return FB_Helper::login_link($this->getLoginUrl()); }
+    public function getLogoutLink() { return FB_Helper::logout_link($this->getLogoutUrl()); }
 
     public function isAppDeveloper() { return $this->_app_developer; }
     public function isAuthenticated() { return $this->_authenticated; }
@@ -82,9 +88,6 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
     public function setRedirectURL($value) {
         $this->_redirect_url = $value;
-        // update login url/link too
-        $this->_login_url = $this->_createLoginURL();
-        $this->_login_link = FB_Helper::login_link($this->_login_url);
     }
 
     // ------------------------------------------------------------------------
@@ -99,33 +102,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         parent::__construct();
 
         // determine our redirect url
-        switch (SAF_Config::getAppType()) {
-
-            // tab
-            case SAF_Config::APP_TYPE_TAB:
-                if (SAF_Config::getForceSessionRedirect() == true) {
-                    $redirect_param = '?saf_redirect='.urlencode($this->getPageTabURL());
-                    $this->_redirect_url = SAF_Config::getBaseURL().$redirect_param;
-                } else {
-                    $this->_redirect_url = $this->getPageTabURL();
-                }
-                break;
-
-            // canvas app
-            case SAF_Config::APP_TYPE_CANVAS:
-                if (SAF_Config::getForceSessionRedirect() == true) {
-                    $redirect_param = '?saf_redirect='.urlencode($this->getCanvasAppURL());
-                    $this->_redirect_url = SAF_Config::getBaseURL().$redirect_param;
-                } else {
-                    $this->_redirect_url = $this->getCanvasAppURL();
-                }
-                break;
-
-            // facebook connect
-            default:
-                $this->_redirect_url = SAF_Config::getBaseURL();
-
-        }
+        $this->_redirect_url = $this->_determineRedirectUrl();
 
         // is the user a regular user or page admin and what extended perms should we ask for?
         if ( $this->isPageAdmin() == false ) {
@@ -133,10 +110,6 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         } else {
             $this->_extended_perms = SAF_Config::getExtendedPermsAdmin();
         }
-
-        // login URL (always determine this in case we need more permissions later from the user)
-        $this->_login_url = $this->_createLoginURL();
-        $this->_login_link = FB_Helper::login_link($this->_login_url);
 
         // failsafe, use the user id or 'me', which allows us to still
         // get public user data if we know the user id since all we need
@@ -166,11 +139,6 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
                 // if we have user data
                 if ( !empty($this->_fb_user) ) {
-
-                    // logout URL
-                    $params = array( 'next' => $this->_redirect_url );
-                    $this->_logout_url = $this->getLogoutUrl($params);
-                    $this->_logout_link = FB_Helper::logout_link($this->_logout_url);
 
                     // user is authenticated (obviously since we have user data)
                     $this->_authenticated = true;
@@ -222,6 +190,46 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
     // ------------------------------------------------------------------------
     // PRIVATE METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * DETERMINE REDIRECT URL
+     *
+     * Returns the proper redirect URL for use with getLoginUrl()
+     *
+     * @access    private
+     * @return    string
+     */
+    private function _determineRedirectUrl() {
+        switch (SAF_Config::getAppType()) {
+
+            // tab
+            case SAF_Config::APP_TYPE_TAB:
+                if (SAF_Config::getForceSessionRedirect() == true) {
+                    $redirect_param = '?saf_redirect='.urlencode($this->getPageTabURL());
+                    return SAF_Config::getBaseURL().$redirect_param;
+                } else {
+                    return $this->getPageTabURL();
+                }
+                break;
+
+            // canvas app
+            case SAF_Config::APP_TYPE_CANVAS:
+                if (SAF_Config::getForceSessionRedirect() == true) {
+                    $redirect_param = '?saf_redirect='.urlencode($this->getCanvasAppURL());
+                    return SAF_Config::getBaseURL().$redirect_param;
+                } else {
+                    return $this->getCanvasAppURL();
+                }
+                break;
+
+            // facebook connect
+            default:
+                return SAF_Config::getBaseURL();
+
+        }
+    }
+
     // ------------------------------------------------------------------------
 
     /**
@@ -323,22 +331,6 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
         }
 
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * CREATE LOGIN URL
-     *
-     * @access    private
-     * @return    string
-     */
-    private function _createLoginURL() {
-        $url = $this->getLoginUrl(array(
-            'scope'        => $this->_extended_perms,
-            'redirect_uri' => $this->_redirect_url
-        ));
-        return $url;
     }
 
     // ------------------------------------------------------------------------
