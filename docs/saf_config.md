@@ -18,7 +18,8 @@ easy and allow for code completion in IDEs.
 
 ## Public Methods
 
-###setAppType()
+###setAppType($value)
+####Parameter: _string_
 Set the app type. Possible values are `tab`, `canvas`, or `facebook connect`. It
 is highly recommended to use the constants supplied in SAF_Config. This should
 be set __before__ calling `$saf->init()`. Usage example:
@@ -29,13 +30,15 @@ be set __before__ calling `$saf->init()`. Usage example:
 ***
 
 ###getAppType()
+####Returns: _string_
 Get the app type. Usage example:
 
     SAF_Config::getAppType();
 
 ***
 
-###setAppId()
+###setAppId($value)
+####Parameter: _string_
 Set the Facebook app ID. Usage example:
 
     SAF_Config::setAppId('YOUR_APP_ID');
@@ -43,13 +46,15 @@ Set the Facebook app ID. Usage example:
 ***
 
 ###getAppId()
+####Returns: _string_
 Get the Facebook app ID. Usage example:
 
     SAF_Config::getAppId();
 
 ***
 
-###setAppSecret()
+###setAppSecret($value)
+####Parameter: _string_
 Set the Facebook app secret. Usage example:
 
     SAF_Config::setAppSecret('YOUR_APP_SECRET');
@@ -57,6 +62,7 @@ Set the Facebook app secret. Usage example:
 ***
 
 ###getAppSecret()
+####Returns: _string_
 Get the Facebook app secret. Usage example:
 
     SAF_Config::getAppSecret();
@@ -64,7 +70,8 @@ Get the Facebook app secret. Usage example:
 ***
 
 
-###setFileUpload()
+###setFileUpload($value)
+####Parameter: _bool_
 Set the Facebook SDK to allow file uploads. Usage example:
 
     SAF_Config::setFileUpload(true);
@@ -72,13 +79,15 @@ Set the Facebook SDK to allow file uploads. Usage example:
 ***
 
 ###getFileUpload()
+####Returns: _bool_
 Get the Facebook SDK allow file upload value. Usage example:
 
     SAF_Config::getFileUpload();
 
 ***
 
-###setAppName()
+###setAppName($value)
+####Parameter: _string_
 Set the Facebook app name. Usage example:
 
     SAF_Config::setAppName('APP_NAME');
@@ -86,13 +95,15 @@ Set the Facebook app name. Usage example:
 ***
 
 ###getAppName()
+####Returns: _string_
 Get the Facebook app name. Usage example:
 
     SAF_Config::getAppName();
 
 ***
 
-###setAppNamespace()
+###setAppNamespace($value)
+####Parameter: _string_
 Set the Facebook app namespace. **Canvas apps only**. Usage example:
 
     SAF_Config::setAppNamespace('APP_NAMESPACE');
@@ -100,13 +111,15 @@ Set the Facebook app namespace. **Canvas apps only**. Usage example:
 ***
 
 ###getAppNamespace()
+####Returns: _string_
 Get the Facebook app namespace. Usage example:
 
     SAF_Config::getAppNamespace();
 
 ***
 
-###setAdmins()
+###setAdmins($value)
+####Parameter: _string_
 Set the Facebook fan page admins. The value should be a comma delimited string.
 **Tab apps only**. Usage example:
 
@@ -115,13 +128,15 @@ Set the Facebook fan page admins. The value should be a comma delimited string.
 ***
 
 ###getAdmins()
+####Returns: _string_
 Get the Facebook fan page admins. Usage example:
 
     SAF_Config::getAdmins();
 
 ***
 
-###setDevelopers()
+###setDevelopers($value)
+####Parameter: _string_
 Set the app developers. The value should be a comma delimited string.
 Usage example:
 
@@ -130,13 +145,15 @@ Usage example:
 ***
 
 ###getDevelopers()
+####Returns: _string_
 Get the app developers. Usage example:
 
     SAF_Config::getDevelopers();
 
 ***
 
-###setBaseUrl()
+###setBaseUrl($value)
+####Parameter: _string_
 Set the base URL. Usage example:
 
     SAF_Config::setBaseUrl('BASE_URL');
@@ -144,6 +161,7 @@ Set the base URL. Usage example:
 ***
 
 ###getBaseUrl()
+####Returns: _string_
 Get the base URL. Usage example:
 
     SAF_Config::getBaseUrl();
@@ -151,6 +169,7 @@ Get the base URL. Usage example:
 ***
 
 ###getPageTabUrl()
+####Returns: _string_
 Get the page Tab app URL. Usage example:
 
     SAF_Config::getPageTabUrl();
@@ -158,6 +177,7 @@ Get the page Tab app URL. Usage example:
 ***
 
 ###getCanvasUrl()
+####Returns: _string_
 Get the Canvas app URL. Usage example:
 
     SAF_Config::getCanvasUrl();
@@ -165,13 +185,15 @@ Get the Canvas app URL. Usage example:
 ***
 
 ###getAddPageTabUrl()
+####Returns: _string_
 Get the add page tab URL. Usage example:
 
     SAF_Config::getAddPageTabUrl();
 
 ***
 
-###setExtendedPerms()
+###setExtendedPerms($value)
+####Parameter: _string_
 Set the extended permissions to ask of the user. The value should be a comma
 delimited string. Usage example:
 
@@ -180,13 +202,15 @@ delimited string. Usage example:
 ***
 
 ###getExtendedPerms()
+####Returns: _string_
 Get the extended permissions to ask of the user. Usage example:
 
     SAF_Config::getExtendedPerms();
 
 ***
 
-###setExtendedPermsAdmin()
+###setExtendedPermsAdmin($value)
+####Parameter: _string_
 Set the extended permissions to ask of the admin. This is usually all the permissions
 asked of a normal user, plus some others that are required of the admin. The value
 should be a comma delimited string. Usage example:
@@ -196,13 +220,15 @@ should be a comma delimited string. Usage example:
 ***
 
 ###getExtendedPermsAdmin()
+####Returns: _string_
 Get the extended permissions to ask of the admin. Usage example:
 
     SAF_Config::getExtendedPermsAdmin();
 
 ***
 
-###setFanPageHash()
+###setFanPageHash($value)
+####Parameter: _string_
 Set the fan page URL hash. This is used as a fallback value when the framework
 is unable to determine the fan page URL (when the user has not yet authed the app).
 Usage example:
@@ -213,13 +239,15 @@ Usage example:
 ***
 
 ###getFanPageHash()
+####Returns: _string_
 Get the fan page hash. Usage example:
 
     SAF_Config::getFanPageHash();
 
 ***
 
-###setForceFacebookView()
+###setForceFacebookView($value)
+####Parameter: _bool_
 Set the force Facebook view value. This will force the app to ensure the user is
 viewing the Tab or Canvas app within Facebook. Usage example:
 
@@ -228,13 +256,15 @@ viewing the Tab or Canvas app within Facebook. Usage example:
 ***
 
 ###getForceFacebookView()
+####Returns: _bool_
 Get the force Facebook view value. Usage example:
 
     SAF_Config::getForceFacebookView();
 
 ***
 
-###setForceSessionRedirect()
+###setForceSessionRedirect($value)
+####Parameter: _bool_
 Set the force session redirect value. This will force the app to redirect the user
 to the app's base URL, inititate the session, and then immediately redirect them
 to the app's URL within Facebook. This is a work-around for browsers which like to
@@ -245,13 +275,15 @@ block 3rd party cookies (eg - any app within an iframe). Usage example:
 ***
 
 ###getForceSessionRedirect()
+####Returns: _bool_
 Get the force session redirect value. Usage example:
 
     SAF_Config::getForceSessionRedirect();
 
 ***
 
-###setGraphUserFields()
+###setGraphUserFields($value)
+####Parameter: _string_
 Set the fields we want to retrieve from the Graph API for a user. The value
 should be a comma delimited string. Usage example:
 
@@ -260,13 +292,15 @@ should be a comma delimited string. Usage example:
 ***
 
 ###getGraphUserFields()
+####Returns: _string_
 Get the fields we want to retrive from the Graph API for a user. Usage example:
 
     SAF_Config::getGraphUserFields();
 
 ***
 
-###setGraphPageFields()
+###setGraphPageFields($value)
+####Parameter: _string_
 Set the fields we want to retrieve from the Graph API for a page. The value
 should be a comma delimited string. Usage example:
 
@@ -275,13 +309,15 @@ should be a comma delimited string. Usage example:
 ***
 
 ###getGraphPageFields()
+####Returns: _string_
 Get the fields we want to retrive from the Graph API for a page. Usage example:
 
     SAF_Config::getGraphPageFields();
 
 ***
 
-###setLogoutRoute()
+###setLogoutRoute($value)
+####Parameter: _string_
 Set the logout route to be used when the user logs out of Facebook (using a
 logout button/link in the app). This logout URL would be obtained by calling the
 `getLogoutUrl()` or `getLogoutLink()` methods. Usage example:
@@ -291,11 +327,11 @@ logout button/link in the app). This logout URL would be obtained by calling the
 ***
 
 ###getLogoutRoute()
+####Returns: _string_
 Gets the logout route. Usage example:
 
     SAF_Config::getLogoutRoute();
-
-    // Returns: http://domain.com/logout
+    // Produces: http://domain.com/logout
 
 Typically, your logout endpoint would do something like this:
 

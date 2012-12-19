@@ -18,7 +18,8 @@ Facebook SDK and start a session.
 ##Public Methods
 The public methods are the **same** methods available to the Facebook PHP SDK.
 
-###setAppId()
+###setAppId($value)
+####Parameter: _string_
 Set the application ID. Usage example:
 
     $saf->setAppId('APP_ID');
@@ -26,13 +27,15 @@ Set the application ID. Usage example:
 ***
 
 ###getAppId()
+####Returns: _string_
 Get the application ID. Usage example:
 
     $app_id = $saf->getAppId();
 
 ***
 
-###setAppSecret()
+###setAppSecret($value)
+####Parameter: _string_
 Set the application secret. Usage example:
 
     $saf->setAppSecret('APP_SECRET');
@@ -40,13 +43,15 @@ Set the application secret. Usage example:
 ***
 
 ###getAppSecret()
+####Returns: _string_
 Get the application secret. Usage example:
 
     $app_secret = $saf->getAppSecret();
 
 ***
 
-###setFileUploadSupport()
+###setFileUploadSupport($value)
+####Parameter: _bool_
 Set the file upload support status. Usage example:
 
     $saf->setFileUploadSupport(true);
@@ -54,13 +59,15 @@ Set the file upload support status. Usage example:
 ***
 
 ###getFileUploadSupport()
+####Returns: _bool_
 Get the file upload support status. Usage example:
 
     $file_upload_support = $saf->getFileUploadSupport();
 
 ***
 
-###setAccessToken()
+###setAccessToken($value)
+####Parameter: _string_
 Sets the access token for API calls. Usage example:
 
     $saf->setAccessToken('ACCESS_TOKEN');
@@ -68,21 +75,13 @@ Sets the access token for API calls. Usage example:
 ***
 
 ###getAccessToken()
+####Returns: _string_
 Gets the access token for API calls. Usage example:
 
     $access_token = $saf->getAccessToken();
 
-***
-
-###setExtendedAccessToken()
-Extend an access token. This method is poorly handled by the Facebook SDK.  This
-method **should not** be called manually as Social App Framework handles extending
-access tokens for you automatically when possible. This method is documented solely
-for completeness. Usage example:
-
-    $saf->setExtendedAccessToken();
-
 ###getSignedRequest()
+####Returns: _object_
 Retrieve the signed request, either from a request parameter or, if not present,
 from a cookie. Usage example:
 
@@ -92,6 +91,7 @@ from a cookie. Usage example:
 
 
 ###getUser()
+####Returns: _string_
 Get the user ID of the connected user, or 0 if the Facebook user is not
 connected. Usage example:
 
@@ -99,41 +99,9 @@ connected. Usage example:
 
 ***
 
-###getLoginUrl()
-Get a Login URL suitable for use with redirects. The parameters:
-
-- **redirect_uri**: the url to go to after a successful login
-- **scope**: comma separated list of requested extended perms
-
-Usage example:
-
-    $params = array(
-        'redirect_uri' => 'https:://domain.com/logged-in',
-        'scope' => 'email, publish_stream'
-    );
-    $login_url = $saf->getLoginUrl($params);
-
->**NOTE**: This method is overridden in the `SAF_Facebook_User` class.
-
-***
-
-###getLogoutUrl()
-Get a Logout URL suitable for use with redirects. The parameters:
-
-- **next**: the url to go to after a successful logout
-
-Usage example:
-
-    $params = array(
-        'next' => 'https:://domain.com/logout'
-    );
-    $logout_url = $saf->getLogoutUrl($params);
-
->**NOTE**: This method is overridden in the `SAF_Facebook_User` class.
-
-***
-
-###getLoginStatusUrl()
+###getLoginStatusUrl($params)
+####Parameter: _array_
+####Returns: _string_
 Get a login status URL to fetch the status from Facebook.  The parameters:
 
 - **ok_session**: the URL to go to if a session is found

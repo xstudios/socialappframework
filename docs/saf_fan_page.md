@@ -19,6 +19,7 @@ you explicitly call `setPageId()` before calling `init()`.**
 ##Public Methods
 
 ###getPageData()
+####Returns: _object_
 Get the fan page data. Usage example:
 
     $page_data = $saf->getPageData();
@@ -26,6 +27,7 @@ Get the fan page data. Usage example:
 ***
 
 ###getPageAccessToken()
+####Returns: _string_
 Get the page access token for use with Facebook Graph API requests. This will allow
 the app to post as the page when the user is not logged in. Usage example:
 
@@ -37,6 +39,7 @@ permission.**
 ***
 
 ###getPageName()
+####Returns: _string_
 Get the fan page name. Usage example:
 
     $page_name = $saf->getPageName();
@@ -44,6 +47,7 @@ Get the fan page name. Usage example:
 ***
 
 ###getPageProfileUrl()
+####Returns: _string_
 Get the fan page profile URL. Usage example:
 
     $profile_url = $saf->getPageProfileUrl();
@@ -53,6 +57,7 @@ Get the fan page profile URL. Usage example:
 ***
 
 ###getPageProfilePicture()
+####Returns: _string_
 Get the fan page profile picture URL. Usage example:
 
     $picture = $saf->getPageProfilePicture();
@@ -62,6 +67,7 @@ Get the fan page profile picture URL. Usage example:
 ***
 
 ###getPageLikes()
+####Returns: _string_
 Get the total number of likes for the fan page. Usage example:
 
     $likes = $saf->getPageLikes();
@@ -69,6 +75,7 @@ Get the total number of likes for the fan page. Usage example:
 ***
 
 ###getPageWebsite()
+####Returns: _string_
 Get the page's website. Usage example:
 
     $website_url = $saf->getPageWebsite();
@@ -76,6 +83,7 @@ Get the page's website. Usage example:
 ***
 
 ###getPageTabUrl()
+####Returns: _string_
 Get the page tab URL. Usage example:
 
     $tab_url = $saf->getPageTabUrl();
@@ -85,6 +93,7 @@ Get the page tab URL. Usage example:
 ***
 
 ###getAddPageTabUrl()
+####Returns: _string_
 Get the add page tab URL. Usage example:
 
     $add_tab_url = $saf->getAddPageTabUrl();
@@ -94,6 +103,7 @@ Get the add page tab URL. Usage example:
 ***
 
 ###getCanvasUrl()
+####Returns: _string_
 Get the canvas app URL. Usage example:
 
     $canvas_url = $saf->getCanvasUrl();
@@ -103,6 +113,7 @@ Get the canvas app URL. Usage example:
 ***
 
 ###isPageLiked()
+####Returns: _bool_
 Determine whether the current user likes the fan page or not. Usage example:
 
     $saf->isPageLiked();
@@ -110,6 +121,7 @@ Determine whether the current user likes the fan page or not. Usage example:
 ***
 
 ###isPagePublished()
+####Returns: _bool_
 Determine whether the fan page is published or not. Usage example:
 
     $saf->isPagePublished();
@@ -117,6 +129,7 @@ Determine whether the fan page is published or not. Usage example:
 ***
 
 ###hasPageRestrictions()
+####Returns: _bool_
 Determine whether the page has restrictions or not. Usage example:
 
     $saf->hasPageRestrictions();
@@ -125,7 +138,8 @@ Determine whether the page has restrictions or not. Usage example:
 
 ***
 
-###setPageId()
+###setPageId($value)
+####Parameter: _string_
 Allows you to set the page id manually, after which you would call `init()`.
 Usage example:
 
