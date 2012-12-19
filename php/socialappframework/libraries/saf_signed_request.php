@@ -132,10 +132,13 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
                 } else {
 
-                    $this->debug(__CLASS__.':: User does not like this page.');
-                    // set a session flag so we know when the user originally
-                    // came here they did not like the page
-                    $this->setPersistentData('saf_fan_gate', true);
+                    // if we have a user id
+                    if (!empty($this->_user_id)) {
+                        $this->debug(__CLASS__.':: User does not like this page.');
+                        // set a session flag so we know when the user originally
+                        // came here they did not like the page
+                        $this->setPersistentData('saf_fan_gate', true);
+                    }
 
                 }
 
