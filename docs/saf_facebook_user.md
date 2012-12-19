@@ -129,8 +129,8 @@ Get the login link for app authentication. Returns an anchor tag. Usage example:
 ***
 
 ###getLogoutLink()
-Get the logout link in order to log the user out of Faceboo. Returns an anchor
-tag. Usage example:
+Get the logout link in order to log the user out of Facebook and the app. Returns
+an anchor tag. Usage example:
 
     $logout_link = $saf->getLogoutLink();
 
