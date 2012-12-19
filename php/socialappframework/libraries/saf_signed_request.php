@@ -54,9 +54,12 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
         // get the user id by any available means (signed request, auth code, session)
         $this->_user_id = $this->getUser();
+
+        // immediately exchange the short-lived access token for a long-lived one
+        $this->_exchangeForExtendedAccessToken();
+
         if (!empty($this->_user_id)) {
             $this->debug(__CLASS__.':: User ID ('.$this->_user_id.').');
-            //$this->setPersistentData('saf_user_id', $this->_user_id);
         }
 
         // if we have a signed request
@@ -67,12 +70,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
             if ( isset($signed_request['code']) ) {
                 $this->_forceFacebookChrome();
             }
-
-            // if this is not a Facebook Connect app, get a long-lived access token
-            /*if (SAF_Config::getAppType() != SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
-                // immediately exchange the short-lived access token for a long-lived one
-                $this->_exchangeForExtendedAccessToken();
-            }*/
 
             // are we viewing this within a fan page?
             // this key is only present if the app is being loaded within a page tab
@@ -124,18 +121,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
             }
 
-            // if it's a Facebook Connect app the only way we'd have a Signed
-            // Request is if the app is also using the Javascript SDK
-            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
-                $this->debug(__CLASS__.':: We have a Signed Request thanks to the Javascript SDK.');
-            } else {
-                // immediately exchange the short-lived access token for a long-lived one
-                //$this->_exchangeForExtendedAccessToken();
-            }
-
-            // immediately exchange the short-lived access token for a long-lived one
-            $this->_exchangeForExtendedAccessToken();
-
             $this->debug(__CLASS__.':: SAF Signed request data:', $signed_request);
 
         // we are looking at the app outside of the Facebook chrome
@@ -172,13 +157,17 @@ abstract class SAF_Signed_Request extends SAF_Base {
      * @return    void
      */
     private function _exchangeForExtendedAccessToken() {
-        $this->setExtendedAccessToken();
-        $access_token = $this->getPersistentData('access_token');
-        if ( !empty($access_token) ) {
-            $this->setAccessToken($access_token);
-            // store it for future reference
-            //$this->setPersistentData('saf_extended_access_token', $access_token);
+        // setExtendedAccessToken() does not return a value on success, but will
+        // return false on an error
+        $result = $this->setExtendedAccessToken();
+        if ($result === false) {
+            $this->debug(__CLASS__.':: Error trying to extend the Access Token.');
+            return;
         }
+
+        $access_token = $this->getPersistentData('access_token');
+        $this->setAccessToken($access_token);
+        $this->debug(__CLASS__.':: Set extended Access Token.');
     }
 
     // ------------------------------------------------------------------------

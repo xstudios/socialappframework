@@ -147,7 +147,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
             try {
 
                 $this->_fb_user = $this->api('/me', 'GET', array(
-                    'access_token' => $this->getAccessToken(),
+                    'access_token' => $access_token,
                     'fields' => SAF_Config::getGraphUserFields()
                 ));
 
@@ -199,6 +199,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
         } else {
 
+            $this->debug(__CLASS__.':: No Access Token. Unable to get user data.', null, 3);
             $this->_handleException();
 
         }
