@@ -69,10 +69,10 @@ abstract class SAF_Signed_Request extends SAF_Base {
             }
 
             // if this is not a Facebook Connect app, get a long-lived access token
-            if (SAF_Config::getAppType() != SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
+            /*if (SAF_Config::getAppType() != SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
                 // immediately exchange the short-lived access token for a long-lived one
                 $this->_exchangeForExtendedAccessToken();
-            }
+            }*/
 
             // are we viewing this within a fan page?
             // this key is only present if the app is being loaded within a page tab
@@ -128,7 +128,13 @@ abstract class SAF_Signed_Request extends SAF_Base {
             // Request is if the app is also using the Javascript SDK
             if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
                 $this->debug(__CLASS__.':: We have a Signed Request thanks to the Javascript SDK.');
+            } else {
+                // immediately exchange the short-lived access token for a long-lived one
+                //$this->_exchangeForExtendedAccessToken();
             }
+
+            // immediately exchange the short-lived access token for a long-lived one
+            $this->_exchangeForExtendedAccessToken();
 
             $this->debug(__CLASS__.':: SAF Signed request data:', $signed_request);
 
@@ -170,6 +176,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $access_token = $this->getPersistentData('access_token');
         if ( !empty($access_token) ) {
             $this->setAccessToken($access_token);
+            // store it for future reference
+            //$this->setPersistentData('saf_extended_access_token', $access_token);
         }
     }
 
