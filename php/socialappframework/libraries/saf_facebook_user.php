@@ -216,10 +216,10 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
             // canvas app
             case SAF_Config::APP_TYPE_CANVAS:
                 if (SAF_Config::getForceSessionRedirect() == true) {
-                    $redirect_param = '?saf_redirect='.urlencode($this->getCanvasAppURL());
+                    $redirect_param = '?saf_redirect='.urlencode($this->getCanvasURL());
                     return SAF_Config::getBaseURL().$redirect_param;
                 } else {
-                    return $this->getCanvasAppURL();
+                    return $this->getCanvasURL();
                 }
                 break;
 
