@@ -20,7 +20,7 @@ SAF_Config::setAppType(SAF_Config::APP_TYPE_FACEBOOK_CONNECT);
 // FACEBOOK CONFIG SETTINGS
 // ------------------------------------------------------------------------
 // App ID and secret
-SAF_Config::setAppID('APP_ID');
+SAF_Config::setAppId('APP_ID');
 SAF_Config::setAppSecret('APP_SECRET');
 SAF_Config::setFileUpload(false);
 
