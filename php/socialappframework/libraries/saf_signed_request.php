@@ -36,6 +36,38 @@ abstract class SAF_Signed_Request extends SAF_Base {
     public function isPageLiked() { return $this->_page_liked; }
     public function isPageLikeViaFanGate() { return $this->_like_via_fan_gate; }
 
+    /**
+     * EXCHANGE SHORT-LIVED ACCESS TOKEN FOR A LONG-LIVED ACCESS TOKEN
+     *
+     * Overrides the Facebook SDK's setExtendedAccessToken() method.
+     * The Facebook SDK (3.2.2) doesn't set the access token property to the
+     * long-lived token for some strange reason so getAccessToken() will still
+     * return the short-lived token. So we have to get it from the app session
+     * where the Facebook SDK stores it and manually set the access token to the
+     * long-lived one.
+     *
+     * @access    public
+     * @return    void
+     */
+    public function setExtendedAccessToken() {
+        // if all we have is the app access token, bail...
+        if ($this->getAccessToken() === $this->getApplicationAccessToken()) {
+            return;
+        }
+
+        // setExtendedAccessToken() does not return a value on success, but will
+        // return false on an error
+        $result = parent::setExtendedAccessToken();
+        if ($result === false) {
+            $this->debug(__CLASS__.':: Error trying to extend the Access Token.');
+            return;
+        }
+
+        $access_token = $this->getPersistentData('access_token');
+        $this->setAccessToken($access_token);
+        $this->debug(__CLASS__.':: Set extended Access Token.');
+    }
+
     // ------------------------------------------------------------------------
 
     /**
@@ -56,7 +88,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $this->_user_id = $this->getUser();
 
         // immediately exchange the short-lived access token for a long-lived one
-        $this->_exchangeForExtendedAccessToken();
+        $this->setExtendedAccessToken();
 
         if (!empty($this->_user_id)) {
             $this->debug(__CLASS__.':: User ID ('.$this->_user_id.').');
@@ -140,42 +172,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
     }
 
     // ------------------------------------------------------------------------
-    // PRIVATE METHODS
-    // ------------------------------------------------------------------------
-
-    /**
-     * EXCHANGE SHORT-LIVED ACCESS TOKEN FOR A LONG-LIVED ACCESS TOKEN
-     *
-     * A wrapper-method for the Facebook SDK's setExtendedAccessToken() method.
-     * The Facebook SDK (3.2.2) doesn't set the access token property to the
-     * long-lived token for some strange reason so getAccessToken() will still
-     * return the short-lived token. So we have to get it from the app session
-     * where the Facebook SDK stores it and manually set the access token to the
-     * long-lived one.
-     *
-     * @access    private
-     * @return    void
-     */
-    private function _exchangeForExtendedAccessToken() {
-        // if all we have is the app access token, bail...
-        if ($this->getAccessToken() === $this->getApplicationAccessToken()) {
-            return;
-        }
-
-        // setExtendedAccessToken() does not return a value on success, but will
-        // return false on an error
-        $result = $this->setExtendedAccessToken();
-        if ($result === false) {
-            $this->debug(__CLASS__.':: Error trying to extend the Access Token.');
-            return;
-        }
-
-        $access_token = $this->getPersistentData('access_token');
-        $this->setAccessToken($access_token);
-        $this->debug(__CLASS__.':: Set extended Access Token.');
-    }
-
-    // ------------------------------------------------------------------------
 
     /**
      * Facebook Connect
@@ -214,7 +210,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
                 // set the SDK to use the access token
                 $this->setAccessToken($access_token);
                 // immediately exchange the short-lived access token for a long-lived one
-                $this->_exchangeForExtendedAccessToken();
+                $this->setExtendedAccessToken();
 
                 $this->debug(__CLASS__.':: Obtained access token from the request code.');
 
