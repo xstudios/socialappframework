@@ -54,6 +54,9 @@ class SAF_Config {
     private static $_user_fields = '';
     private static $_page_fields = '';
 
+    // logout route
+    private static $_logout_route;
+
     // ------------------------------------------------------------------------
 
     /**
@@ -436,6 +439,26 @@ class SAF_Config {
      */
     public static function getGraphPageFields() {
         return self::$_page_fields;
+    }
+
+    // ------------------------------------------------------------------------
+    // LOGOUT
+    // ------------------------------------------------------------------------
+
+    /**
+     * Set logout route
+     *
+     * @param    string  $value
+     */
+    public static function setLogoutRoute($value) {
+        self::$_logout_route = $value;
+    }
+
+    /**
+     * Get logout route
+     */
+    public static function getLogoutRoute() {
+        return self::$_base_url.self::$_logout_route;
     }
 
     // ------------------------------------------------------------------------
