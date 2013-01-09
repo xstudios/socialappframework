@@ -263,22 +263,22 @@ Get the force Facebook view value. Usage example:
 
 ***
 
-###setForceSessionRedirect($value)
+###setThirdPartyCookieFix($value)
 ####Parameter: _bool_
-Set the force session redirect value. This will force the app to redirect the user
+Set the 3rd party cookie fix value. This will force the app to redirect the user
 to the app's base URL, inititate the session, and then immediately redirect them
 to the app's URL within Facebook. This is a work-around for browsers which like to
 block 3rd party cookies (eg - any app within an iframe). Usage example:
 
-    SAF_Config::setForceSessionRedirect(true);
+    SAF_Config::setThirdPartyCookieFix(true);
 
 ***
 
-###getForceSessionRedirect()
+###getThirdPartyCookieFix()
 ####Returns: _bool_
-Get the force session redirect value. Usage example:
+Get the 3rd party cookie fix value. Usage example:
 
-    SAF_Config::getForceSessionRedirect();
+    SAF_Config::getThirdPartyCookieFix();
 
 ***
 
