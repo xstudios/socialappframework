@@ -304,7 +304,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         try {
             // check permissions list
             $permissions_list = $this->api('/me/permissions', 'GET', array(
-                //'access_token' => $this->getAccessToken()
+                'access_token' => $this->getAccessToken()
             ));
 
             // set permissions equal to the resulting data
