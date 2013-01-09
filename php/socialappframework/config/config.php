@@ -70,12 +70,13 @@ SAF_Config::setFanPageHash('FAN_PAGE_HASH');
 SAF_Config::setForceFacebookView(true);
 
 // ------------------------------------------------------------------------
-// SESSION REDIRECT - 3RD PARTY COOKIE BLOCK WORK-AROUND
+// 3RD PARTY COOKIE FIX
 // ------------------------------------------------------------------------
-// Force the app to redirect to the base url (where the app is hosted) before
-// redirecting back to the app tab (allows session to be started on the app domain)
+// force the app to redirect to the base url (where the app is hosted) before
+// redirecting back to the app (allows session to be started on the app domain)
 // this is used as a work around for browsers which block 3rd party cookies
-SAF_Config::setForceSessionRedirect(false);
+// only needed for tab and canvas apps
+SAF_Config::setThirdPartyCookieFix(true);
 
 // ------------------------------------------------------------------------
 // LOGOUT ROUTE

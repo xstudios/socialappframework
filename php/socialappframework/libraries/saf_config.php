@@ -44,15 +44,15 @@ class SAF_Config {
     private static $_fan_page_hash       = '';
     private static $_force_facebook_view = false;
 
-    // session redirect
-    private static $_force_session_redirect = false;
-
     // graph fields
     private static $_user_fields = '';
     private static $_page_fields = '';
 
     // logout route
     private static $_logout_route;
+
+    // 3rd party cookie fix
+    private static $_third_party_cookie_fix = false;
 
     // ------------------------------------------------------------------------
 
@@ -324,26 +324,25 @@ class SAF_Config {
     }
 
     // ------------------------------------------------------------------------
-    // SAF REDIRECT
+    // 3RD PARTY COOKIE FIX
     // ------------------------------------------------------------------------
 
     /**
      * Set force session redirect
      *
-     * Fixes an issue with browsers that block 3rd party cookies which
-     * prevents us from accessing the session
+     * Fixes an issue with browsers that block 3rd party cookies
      *
      * @param    bool  $value
      */
-    public static function setForceSessionRedirect($value) {
-        self::$_force_session_redirect = $value;
+    public static function setThirdPartyCookieFix($value) {
+        self::$_third_party_cookie_fix = $value;
     }
 
     /**
      * Get force session redirect
      */
-    public static function getForceSessionRedirect() {
-        return self::$_force_session_redirect;
+    public static function getThirdPartyCookieFix() {
+        return self::$_third_party_cookie_fix;
     }
 
     // ------------------------------------------------------------------------

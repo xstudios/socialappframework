@@ -104,6 +104,9 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
         // determine our redirect url
         $this->_redirect_url = $this->_determineRedirectUrl();
 
+        // 3rd party cookie fix
+        $this->_thirdPartyCookieFix();
+
         // is the user a regular user or page admin and what extended perms should we ask for?
         if ( $this->isPageAdmin() == false ) {
             $this->_extended_perms = SAF_Config::getExtendedPerms();
@@ -193,6 +196,34 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     // ------------------------------------------------------------------------
 
     /**
+     * THIRD PARTY COOKIE FIX
+     *
+     * Checks if a session cookie is not set and if so, automatically redirects
+     * the user to the base URL with a 'saf_redirect' URL param. The app then
+     * starts the session on the 'real' server and immediately redirects back
+     * to the proper URL (tab or convas);
+     *
+     * @access    private
+     * @return    string
+     */
+    private function _thirdPartyCookieFix() {
+        if (SAF_Config::getThirdPartyCookieFix() == true) {
+            // if the app is anything other than a Facebook Connect app
+            if (SAF_Config::getAppType() != SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
+                // if there is no cookie set then we have 3rd party cookie problem
+                if ( !isset($_COOKIE[session_name()]) ) {
+                    // redirect the user to the real server
+                    $redirect_param = '?saf_redirect='.urlencode($this->_determineRedirectUrl());
+                    echo '<script>top.location.href = "'.SAF_Config::getBaseUrl().$redirect_param.'";</script>';
+                    exit();
+                }
+            }
+        }
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
      * DETERMINE REDIRECT URL
      *
      * Returns the proper redirect URL for use with getLoginUrl()
@@ -205,22 +236,12 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
 
             // tab
             case SAF_Config::APP_TYPE_TAB:
-                if (SAF_Config::getForceSessionRedirect() == true) {
-                    $redirect_param = '?saf_redirect='.urlencode($this->getPageTabUrl());
-                    return SAF_Config::getBaseUrl().$redirect_param;
-                } else {
-                    return $this->getPageTabUrl();
-                }
+                return $this->getPageTabUrl();
                 break;
 
             // canvas app
             case SAF_Config::APP_TYPE_CANVAS:
-                if (SAF_Config::getForceSessionRedirect() == true) {
-                    $redirect_param = '?saf_redirect='.urlencode($this->getCanvasUrl());
-                    return SAF_Config::getBaseUrl().$redirect_param;
-                } else {
-                    return $this->getCanvasUrl();
-                }
+                return $this->getCanvasUrl();
                 break;
 
             // facebook connect
