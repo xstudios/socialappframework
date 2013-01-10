@@ -1,14 +1,18 @@
-<?php if ( ! defined('SOCIAL_APP_FRAMEWORK') ) exit('No direct script access allowed');
+<?php
+/*
+ * This file is part of the Social App Framework package.
+ * (c) 2011-2013 X Studios
+ *
+ * You should have received a copy of the license (license.txt) distributed
+ * with this package. If not, see <http://socialappframework.com/license/>.
+ */
+
 /**
  * Social App Framework Signed Request class
  *
+ * @package      Social App Framework
+ * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
- * @version      1.0
- * @copyright    2012 X Studios
- * @link         http://www.xstudiosinc.com
- *
- * You should have received a copy of the license along with this program.
- * If not, see <http://socialappframework.com/license/>.
  */
 abstract class SAF_Signed_Request extends SAF_Base {
 

@@ -1,19 +1,22 @@
 <?php
+/*
+ * This file is part of the Social App Framework package.
+ * (c) 2011-2013 X Studios
+ *
+ * You should have received a copy of the license (license.txt) distributed
+ * with this package. If not, see <http://socialappframework.com/license/>.
+ */
+
 /**
  * Social App Framework Session class
  *
  * Assist with managing SAF Sessions when a SAF instance is not directly
  * accessible. For example, an AJAX request.
  *
+ * @package      Social App Framework
+ * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
- * @version      1.0
- * @copyright    2012 X Studios
- * @link         http://www.xstudiosinc.com
- *
- * You should have received a copy of the license along with this program.
- * If not, see <http://socialappframework.com/license/>.
  */
-
 class SAF_Session {
 
     private $_app_id;
@@ -107,7 +110,7 @@ class SAF_Session {
     public function getUserProfilePicture() {
         return FB_Helper::picture_url($this->getUserId());
     }
-    
+
     public function getUserGrantedPerms() {
         return $this->_getPersistentUserData('saf_perms_granted', array());
     }

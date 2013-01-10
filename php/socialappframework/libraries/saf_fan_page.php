@@ -1,16 +1,22 @@
-<?php if ( ! defined('SOCIAL_APP_FRAMEWORK') ) exit('No direct script access allowed');
+<?php
+/*
+ * This file is part of the Social App Framework package.
+ * (c) 2011-2013 X Studios
+ *
+ * You should have received a copy of the license (license.txt) distributed
+ * with this package. If not, see <http://socialappframework.com/license/>.
+ */
+
 /**
  * Social App Framework Fan Page class
  *
+ * @package      Social App Framework
+ * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
- * @version      1.0
- * @copyright    2012 X Studios
- * @link         http://www.xstudiosinc.com
- *
- * You should have received a copy of the license along with this program.
- * If not, see <http://socialappframework.com/license/>.
  */
 abstract class SAF_Fan_Page extends SAF_Signed_Request {
+
+    const RSS = 'https://www.facebook.com/feeds/page.php?id=%s&format=rss20';
 
     private $_fb_page;
 
@@ -48,6 +54,10 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
 
     public function isPagePublished() { return $this->_getPageValue('is_published'); }
     public function hasPageRestrictions() { return $this->_getPageValue('saf_page_restrictions'); }
+
+    public function getRssUrl() {
+        return sprintf(self::RSS, $this->_page_id);
+    }
 
     // used to set the page id only when we are a Canvas or Facebook Connect
     // app and we need to get page data for a known page ID (eg - our own page)
@@ -181,6 +191,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
         $this->_fb_page['saf_canvas_url'] = $this->_canvas_url;
         $this->_fb_page['saf_page_restrictions'] = $page_restrictions;
         $this->_fb_page['saf_page_liked'] = $this->isPageLiked();
+        $this->_fb_page['saf_rss_url'] = $this->getRssUrl();
 
         return $this->_fb_page;
     }
