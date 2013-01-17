@@ -7,7 +7,7 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
-require_once dirname(__FILE__).'/facebook_sdk/facebook.php';
+require_once dirname(__FILE__).'/facebook/sdk/facebook.php';
 require_once dirname(__FILE__).'/saf_config.php';
 require_once dirname(__FILE__).'/saf_base.php';
 require_once dirname(__FILE__).'/saf_signed_request.php';
@@ -28,6 +28,8 @@ require_once dirname(__FILE__).'/../helpers/fb_helper.php';
  */
 class SAF extends SAF_Facebook_User {
 
+    protected static $_instance = null;
+
     // ------------------------------------------------------------------------
 
     /**
@@ -44,6 +46,24 @@ class SAF extends SAF_Facebook_User {
             header('Location: '.$_GET['saf_redirect']);
             exit;
         }
+
+        parent::__construct();
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Get instance
+     *
+     * @access    public
+     * @return    SAF instance
+     */
+    final public static function instance() {
+        if (null === self::$_instance) {
+            self::$_instance = new self();
+        }
+
+        return self::$_instance;
     }
 
     // ------------------------------------------------------------------------
@@ -59,7 +79,16 @@ class SAF extends SAF_Facebook_User {
      * @return    void
      */
     public function init() {
-        parent::__construct();
+        //parent::__construct();
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Disallow cloning
+     */
+    final public function __clone() {
+        return false;
     }
 
     // ------------------------------------------------------------------------
