@@ -213,7 +213,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         $signed_request = $this->getSignedRequest();
         $code = null;
         if (!empty($signed_request)) {
-            $code = $signed_request['code'];
+            $code = isset($signed_request['code']) ? $signed_request['code'] : null;
         } else {
             $code = isset($_REQUEST['code']) ? $_REQUEST['code'] : null;
         }
