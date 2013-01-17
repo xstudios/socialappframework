@@ -17,7 +17,7 @@ require_once dirname(__FILE__).'/../config/config.php';
 require_once dirname(__FILE__).'/../helpers/fb_helper.php';
 
 /**
- * Instantiates the entire SAF Core.
+ * SAF class
  * We don't really do anything here but load all required files
  * and give ourselves a nice way to instantiate with new SAF:instance()
  *
@@ -32,7 +32,7 @@ class SAF extends SAF_Signed_Request {
     // ------------------------------------------------------------------------
 
     /**
-     * CONSTRUCTOR
+     * Constructor
      *
      * @access    public
      * @return    void
@@ -55,7 +55,7 @@ class SAF extends SAF_Signed_Request {
      * Get instance
      *
      * @access    public
-     * @return    SAF instance
+     * @return    SAF
      */
     final public static function instance() {
         if (null === self::$_instance) {

@@ -1,17 +1,21 @@
 <?php
+/*
+ * This file is part of the Social App Framework package.
+ * (c) 2011-2013 X Studios
+ *
+ * You should have received a copy of the license (license.txt) distributed
+ * with this package. If not, see <http://socialappframework.com/license/>.
+ */
+
 /**
  * Social App Framework Config class
  *
  * Helps manage the SAF config so we have a nice and easy get/set methods
- * as well as helpful code completion in IDEs
+ * as well as helpful code completion in IDEs.
  *
+ * @package      Social App Framework
+ * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
- * @version      1.0
- * @copyright    2012 X Studios
- * @link         http://www.xstudiosinc.com
- *
- * You should have received a copy of the license along with this program.
- * If not, see <http://socialappframework.com/license/>.
  */
 class SAF_Config {
 

@@ -11,9 +11,7 @@
  * Social App Framework Base class
  *
  * We extend the Facebook class in order to make Social App Framework
- * a much more powerful and helpful SDK than the Facebook SDK is alone.
- * The 'magic' happens here and all your Facebook development woes will be
- * a thing of the past.
+ * a much more powerful and helpful library than the Facebook SDK is alone.
  *
  * @package      Social App Framework
  * @category     Facebook
