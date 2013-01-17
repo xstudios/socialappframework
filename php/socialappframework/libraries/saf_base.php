@@ -29,7 +29,7 @@ abstract class SAF_Base extends Facebook {
      * Get app access token
      *
      * @access    public
-     * @return    void
+     * @return    string
      */
     public function getAppAccessToken() {
         // url
