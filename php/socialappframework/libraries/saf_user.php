@@ -264,7 +264,7 @@ abstract class SAF_User extends SAF_Page {
      */
     private function _handleException() {
         // wipe the 'saf_user_obj' session object
-        $this->clearPersistentData('saf_user');
+        //$this->clearPersistentData('saf_user');
 
         // proceed knowing we require user login and/or authentication
         $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);

@@ -109,7 +109,7 @@ abstract class SAF_Page extends SAF_Signed_Request {
                 } else {
 
                     // clear any existing stored page data
-                    $this->clearPersistentData('saf_page');
+                    //$this->clearPersistentData('saf_page');
 
                     // inject SAF data, some sort of page restriction (country/age)
                     $this->_fb_page = $this->_injectSAFData(true);
@@ -134,7 +134,7 @@ abstract class SAF_Page extends SAF_Signed_Request {
             } catch (FacebookApiException $e) {
 
                 // wipe the 'page_obj' session object
-                $this->clearPersistentData('saf_page');
+                //$this->clearPersistentData('saf_page');
 
                 $this->debug(__CLASS__.':: '.$e, null, 3, true);
 
@@ -143,7 +143,7 @@ abstract class SAF_Page extends SAF_Signed_Request {
         } else {
 
             // wipe the 'page_obj' session object
-            $this->clearPersistentData('saf_page');
+            //$this->clearPersistentData('saf_page');
 
             // tab
             if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
