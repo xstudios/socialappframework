@@ -220,6 +220,52 @@ abstract class SAF_Page extends SAF_Signed_Request {
     // CONNECTIONS
     // ------------------------------------------------------------------------
 
+    public function getPageConnection($connection) {
+        $connection = '/'.$connection;
+
+        // call the api
+        $result = $this->api('/'.$this->_page_id.$connection, 'GET', array(
+            'access_token' => $this->getPageAccessToken()
+        ));
+
+        return $result['data'];
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Get the page's wall
+     *
+     * @access    public
+     * @return    array  of Post objects
+     */
+    public function getPageFeed() {
+        // call the api
+        $result = $this->api('/'.$this->_page_id.'/feed');
+        return $result['data'];
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Get the page's profile picture
+     *
+     * @access    public
+     * @param     string   $type      square, small, normal, large
+     * @param     boolean  $redirect  return URL without 302 redirect
+     * @return    string   URL of the page's profile picture
+     */
+    public function getPagePicture($type='square', $redirect=true) {
+        // call the api
+        $result = $this->api('/'.$this->_page_id.'/picture', 'GET', array(
+            'type'     => $type,
+            'redirect' => $redirect
+        ));
+        return $result['data'];
+    }
+
+    // ------------------------------------------------------------------------
+
     /**
      * Get tabs
      *
@@ -234,6 +280,7 @@ abstract class SAF_Page extends SAF_Signed_Request {
 
         return $result['data'];
     }
+
 
     // ------------------------------------------------------------------------
 
