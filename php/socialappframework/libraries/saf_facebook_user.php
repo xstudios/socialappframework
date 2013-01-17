@@ -85,9 +85,8 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
     public function hasPermission($perm) {
         if ( in_array($perm, $this->_granted_perms) ) {
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     public function setRedirectUrl($value) {
@@ -157,9 +156,9 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
                     }
 
                     // check user permissions if we are asking for any
-                    if ( !empty($this->_extended_perms) ) {
+                    //if ( !empty($this->_extended_perms) ) {
                         $this->_checkPermissions();
-                    }
+                    //}
 
                     // is the user the app developer?
                     $this->_app_developer = $this->_isAppDeveloper();
@@ -172,7 +171,7 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
                     $this->_fb_user['saf_authenticated'] = $this->_authenticated;
 
                     // add our social app framework user data into the session as well
-                    $this->setPersistentData('saf_user', $this->_fb_user);
+                    //$this->setPersistentData('saf_user', $this->_fb_user);
 
                     $this->debug(__CLASS__.':: User ('.$this->_user_id.') is authenticated with data:', $this->_fb_user);
 
@@ -314,14 +313,21 @@ abstract class SAF_Facebook_User extends SAF_Fan_Page {
             // set permissions equal to the resulting data
             $permissions = $permissions_list['data'][0];
 
+            // add each permission to our granted permissions
+            foreach($permissions as $key => $value) {
+                array_push($this->_granted_perms, $key);
+            }
+
+            //$this->_granted_perms = $permissions;
+
             // loop through all user's permissions and see if they have everything we require
-            foreach($extended_perms as $perm) {
+            /*foreach($extended_perms as $perm) {
                 if ( !isset($permissions[$perm]) || $permissions[$perm] != 1 ) {
                     array_push($this->_revoked_perms, $perm);
                 } else {
                     array_push($this->_granted_perms, $perm);
                 }
-            }
+            }*/
 
         } catch (FacebookApiException $e) {
 
