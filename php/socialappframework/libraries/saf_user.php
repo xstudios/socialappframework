@@ -530,9 +530,9 @@ class SAF_User {
     private function _getValue($key, $default=false) {
         if ( !isset($this->_data[$key]) ) {
             return $default;
-        } else {
-            return $this->_data[$key];
         }
+        
+        return $this->_data[$key];
     }
 
     // ------------------------------------------------------------------------
