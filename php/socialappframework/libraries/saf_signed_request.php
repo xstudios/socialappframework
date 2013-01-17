@@ -56,6 +56,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
     public function setExtendedAccessToken() {
         // if all we have is the app access token, bail...
         if ($this->getAccessToken() === $this->getApplicationAccessToken()) {
+            //$this->debug(__CLASS__.':: Can\'t set extended access token, we only have an app access token.');
             return;
         }
 
@@ -63,13 +64,13 @@ abstract class SAF_Signed_Request extends SAF_Base {
         // return false on an error
         $result = parent::setExtendedAccessToken();
         if ($result === false) {
-            $this->debug(__CLASS__.':: Error trying to extend the Access Token.');
+            $this->debug(__CLASS__.':: Error trying to extend the access token.');
             return;
         }
 
         $access_token = $this->getPersistentData('access_token');
         $this->setAccessToken($access_token);
-        $this->debug(__CLASS__.':: Set extended Access Token.');
+        $this->debug(__CLASS__.':: Set extended access token.');
     }
 
     // ------------------------------------------------------------------------
@@ -87,6 +88,10 @@ abstract class SAF_Signed_Request extends SAF_Base {
         // however, it will exist on Facebook Connect apps if using the
         // Javascript SDK.
         $signed_request = $this->getSignedRequest();
+
+        // TEMP FIX, ALLOWS US TO MAKE AJAX CALLS FROM OUR APP BY GETTING
+        // THE CODE FROM THE SR AND EXCHANGING IT FOR AN ACCESS TOKEN
+        $this->_facebookConnect();
 
         // get the user id by any available means (signed request, auth code, session)
         $this->_user_id = $this->getUser();
@@ -205,12 +210,20 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
         }
 
+        $signed_request = $this->getSignedRequest();
+        $code = null;
+        if (!empty($signed_request)) {
+            $code = $signed_request['code'];
+        } else {
+            $code = isset($_REQUEST['code']) ? $_REQUEST['code'] : null;
+        }
+
         // if we have a code we need to exhange it for an access token
         // this is a one-time deal so we need to store it for future visits
-        if (isset($_REQUEST['code'])) {
+        if (!empty($code)) {
 
             // exchange the code for an access token
-            $access_token = $this->getAccessTokenFromCode($_REQUEST['code'], SAF_Config::getBaseUrl());
+            $access_token = $this->getAccessTokenFromCode($code, SAF_Config::getBaseUrl());
 
             if (!empty($access_token)) {
 
