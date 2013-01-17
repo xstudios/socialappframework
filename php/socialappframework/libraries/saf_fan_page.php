@@ -127,7 +127,7 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
                 }
 
                 // add our social app framework page data into the session
-                $this->setPersistentData('saf_page', $this->_fb_page);
+                //$this->setPersistentData('saf_page', $this->_fb_page);
 
                 $this->debug(__CLASS__.':: Fan page ('.$this->_page_id.') data: ', $this->_fb_page);
 
@@ -146,17 +146,17 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
             $this->clearPersistentData('saf_page');
 
             // tab
-            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
+            if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
                 $this->debug(__CLASS__.':: No page data. Viewing Tab app outside of Facebook.', null, 3);
             }
 
             // canvas
-            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
+            if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_CANVAS) {
                 $this->debug(__CLASS__.':: No page data. Viewing Canvas app.', null, 3);
             }
 
             // facebook connect
-            if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
+            if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
                 $this->debug(__CLASS__.':: No page data. Viewing Facebook Connect app.', null, 3);
             }
 
