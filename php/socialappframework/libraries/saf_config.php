@@ -58,6 +58,9 @@ class SAF_Config {
     // 3rd party cookie fix
     private static $_third_party_cookie_fix = false;
 
+    // page id
+    private static $_page_id;
+
     // ------------------------------------------------------------------------
 
     /**
@@ -405,6 +408,29 @@ class SAF_Config {
      */
     public static function getLogoutRoute() {
         return self::$_base_url.self::$_logout_route;
+    }
+
+    // ------------------------------------------------------------------------
+    // SPECIAL CASE USAGE
+    // ------------------------------------------------------------------------
+
+    /**
+     * Set page ID
+     *
+     * Only use this if you need page data on a Canvas, Facebook Connect app
+     * or AJAX request where the Page data is not known.
+     *
+     * @param    string  $value
+     */
+    public static function setPageId($value) {
+        self::$_page_id = $value;
+    }
+
+    /**
+     * Get page ID
+     */
+    public static function getPageId() {
+        return self::$_page_id;
     }
 
     // ------------------------------------------------------------------------
