@@ -1,5 +1,5 @@
 # Social App Framework
-Copyright (c) 2011-2012, X Studios, Inc.
+Copyright (c) 2011-2013, X Studios, Inc.
 All rights reserved.
 
 This license is a legal agreement between you and X Studios Inc. for the use
