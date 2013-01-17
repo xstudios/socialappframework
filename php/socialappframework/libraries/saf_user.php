@@ -8,13 +8,13 @@
  */
 
 /**
- * Social App Framework Facebook User class
+ * Social App Framework User class
  *
  * @package      Social App Framework
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class SAF_Facebook_User extends SAF_Fan_Page {
+abstract class SAF_User extends SAF_Page {
 
     private $_fb_user;
 

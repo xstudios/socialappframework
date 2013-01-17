@@ -8,13 +8,13 @@
  */
 
 /**
- * Social App Framework Fan Page class
+ * Social App Framework Page class
  *
  * @package      Social App Framework
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class SAF_Fan_Page extends SAF_Signed_Request {
+abstract class SAF_Page extends SAF_Signed_Request {
 
     const RSS = 'https://www.facebook.com/feeds/page.php?id=%s&format=rss20';
 
@@ -214,6 +214,25 @@ abstract class SAF_Fan_Page extends SAF_Signed_Request {
         } else {
             return $this->_fb_page[$key];
         }
+    }
+
+    // ------------------------------------------------------------------------
+    // CONNECTIONS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Get tabs
+     *
+     * @access    public
+     * @return    array
+     */
+    public function getPageTabs() {
+        // call the api
+        $result = $this->api('/'.$this->_page_id.'/tabs', 'GET', array(
+            'access_token' => $this->getPageAccessToken()
+        ));
+
+        return $result['data'];
     }
 
     // ------------------------------------------------------------------------
