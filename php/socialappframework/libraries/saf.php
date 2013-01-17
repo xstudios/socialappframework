@@ -11,8 +11,8 @@ require_once dirname(__FILE__).'/facebook/sdk/facebook.php';
 require_once dirname(__FILE__).'/saf_config.php';
 require_once dirname(__FILE__).'/saf_base.php';
 require_once dirname(__FILE__).'/saf_signed_request.php';
-require_once dirname(__FILE__).'/saf_fan_page.php';
-require_once dirname(__FILE__).'/saf_facebook_user.php';
+require_once dirname(__FILE__).'/saf_page.php';
+require_once dirname(__FILE__).'/saf_user.php';
 require_once dirname(__FILE__).'/saf_session.php';
 require_once dirname(__FILE__).'/../config/config.php';
 require_once dirname(__FILE__).'/../helpers/fb_helper.php';
@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../helpers/fb_helper.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF extends SAF_Facebook_User {
+class SAF extends SAF_User {
 
     protected static $_instance = null;
 
@@ -64,22 +64,6 @@ class SAF extends SAF_Facebook_User {
         }
 
         return self::$_instance;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * INIT SAF
-     *
-     * Must be called to init the framework. Manual call to allow us to have
-     * finer control over when the framework actually initializes after it's
-     * been constructed.
-     *
-     * @access    public
-     * @return    void
-     */
-    public function init() {
-        //parent::__construct();
     }
 
     // ------------------------------------------------------------------------
