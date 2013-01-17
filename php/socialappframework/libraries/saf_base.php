@@ -26,6 +26,32 @@ abstract class SAF_Base extends Facebook {
     // ------------------------------------------------------------------------
 
     /**
+     * Get app access token
+     *
+     * @access    public
+     * @return    void
+     */
+    public function getAppAccessToken() {
+        // url
+        //$url   = '/oauth/access_token';
+        $query = array(
+            'grant_type'    => 'client_credentials',
+            'client_id'     => SAF_Config::getAppId(),
+            'client_secret' => SAF_Config::getAppSecret()
+        );
+        //$url  .= '?'.http_build_query($query);
+
+        $result = $this->api('/oauth/access_token', 'get', $query);
+
+        // parse query string result
+        parse_str($result);
+
+        return $access_token;
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
      * CONSTRUCTOR
      *
      * @access    public
