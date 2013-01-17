@@ -14,73 +14,263 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class SAF_User extends SAF_Page {
+class SAF_User {
 
-    private $_fb_user;
+    // ------------------------------------------------------------------------
+    // PRIVATE VARS
+    // ------------------------------------------------------------------------
 
-    private $_extended_perms = ''; // extended perms we are asking for
-    private $_granted_perms  = array(); // extended perms the user granted
-    private $_revoked_perms  = array(); // extended perms the user revoked
+    /**
+     * Facebook instance
+     *
+     * @access    private
+     * @var       SAF
+     */
+    private $_facebook;
 
+    /**
+     * User ID
+     *
+     * @access    private
+     * @var       string|int
+     */
+    private $_id;
+
+    /**
+     * User data
+     *
+     * @access    private
+     * @var       array
+     */
+    private $_data;
+
+    /**
+     * The permissions the app is asking for
+     *
+     * @access    private
+     * @var       string
+     */
+    private $_extended_perms = '';
+
+    /**
+     * The permissions granted
+     *
+     * @access    private
+     * @var       array
+     */
+    private $_granted_perms  = array();
+
+    /**
+     * The permissions revoked
+     *
+     * @access    private
+     * @var       array
+     */
+    private $_revoked_perms  = array();
+
+    /**
+     * Redirect URL used for login URL
+     *
+     * @var    string
+     */
     private $_redirect_url;
-
-    private $_app_developer = false;
-    private $_authenticated = false;
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
-    public function getUserData() { return $this->_fb_user; }
 
-    public function getUserName() { return $this->_getUserValue('name', ''); }
-    public function getUserFirstName() { return $this->_getUserValue('first_name', ''); }
-    public function getUserLastName() { return $this->_getUserValue('last_name', ''); }
-    public function getUserGender() { return $this->_getUserValue('gender'); }
-
-    public function getUserEmail() { return $this->_getUserValue('email'); }
-
-    public function getUserProfileUrl() { return $this->_getUserValue('link'); }
-    public function getUserProfilePicture() {
-        $picture = $this->_getUserValue('picture');
-        if (!empty($picture)) {
-            $picture = $picture['data']['url'];
-        } else {
-            $picture = FB_Helper::picture_url($this->getUserId());
-        }
-        return $picture;
+    /**
+     * Returns the user ID
+     *
+     * @access    public
+     * @return    string|int
+     */
+    public function getId() {
+        return $this->_id;
     }
 
-    public function getExtendedPerms() { return $this->_extended_perms; }
-    public function getGrantedPerms() { return $this->_granted_perms; }
-    public function getRevokedPerms() { return $this->_revoked_perms; }
+    /**
+     * Returns the user data
+     *
+     * @access    public
+     * @return    array
+     */
+    public function getData() {
+        return $this->_data;
+    }
 
-    // override's the SDK's native method
+    /**
+     * Returns the user's full name
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getName() {
+        return $this->_getValue('name', '');
+    }
+
+    /**
+     * Returns the user's first name
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getFirstName() {
+        return $this->_getValue('first_name', '');
+    }
+
+    /**
+     * Returns the user's last name
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getLastName() {
+        return $this->_getValue('last_name', '');
+    }
+
+    /**
+     * Returns the user's gender
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getGender() {
+        return $this->_getValue('gender');
+    }
+
+    /**
+     * Returns the user's email
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getEmail() {
+        return $this->_getValue('email');
+    }
+
+    /**
+     * Returns the user's profile URL
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getProfileUrl() {
+        return $this->_getValue('link');
+    }
+
+    /**
+     * Returns the user's profile picture URL
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getProfilePicture() {
+        $picture = $this->_getValue('picture');
+        if (!empty($picture)) {
+            if (isset($picture['data']['url'])) {
+                return $picture['data']['url'];
+            }
+        }
+
+        return FB_Helper::picture_url($this->_id);
+    }
+
+    /**
+     * Returns the permissions the app requested
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getExtendedPerms() {
+        return $this->_extended_perms;
+    }
+
+    /**
+     * Returns the granted permissions
+     *
+     * @access    public
+     * @return    array
+     */
+    public function getGrantedPerms() {
+        return $this->_granted_perms;
+    }
+
+    /**
+     * Returns the revoked permissions
+     *
+     * @access    public
+     * @return    array
+     */
+    public function getRevokedPerms() {
+        return $this->_revoked_perms;
+    }
+
+    /**
+     * Returns the login URL
+     *
+     * Override's the Facebook SDK's native method
+     *
+     * @access    public
+     * @return    string
+     */
     public function getLoginUrl() {
         $params = array(
             'scope'        => $this->_extended_perms,
             'redirect_uri' => $this->_redirect_url
         );
-        return parent::getLoginUrl($params);
+        return $this->_facebook->getLoginUrl($params);
     }
-    // override's the SDK's native method
-    public function getLogoutUrl() {
-        $params = array( 'next' => SAF_Config::getLogoutRoute() );
-        return parent::getLogoutUrl($params);
-    }
-
-    public function getLoginLink() { return FB_Helper::login_link($this->getLoginUrl()); }
-    public function getLogoutLink() { return FB_Helper::logout_link($this->getLogoutUrl()); }
-
-    public function isAppDeveloper() { return $this->_app_developer; }
-    public function isAuthenticated() { return $this->_authenticated; }
 
     /**
-     * CHECK IF USER HAS PERMISSION
-     * Determine if a user has allowed a specific permission
+     * Returns the logout URL
+     *
+     * Override's the Facebook SDK's native method
      *
      * @access    public
-     * @param     string $perm permission to check
-     * @return    bool
+     * @return    string
+     */
+    public function getLogoutUrl() {
+        $params = array( 'next' => SAF_Config::getLogoutRoute() );
+        return $this->_facebook->getLogoutUrl($params);
+    }
+
+    /**
+     * Returns the login link (anchor tag)
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getLoginLink() {
+        return FB_Helper::login_link($this->getLoginUrl());
+    }
+
+    /**
+     * Returns the logout link (anchor tag)
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getLogoutLink() {
+        return FB_Helper::logout_link($this->getLogoutUrl());
+    }
+
+    /**
+     * Returns true if the user is the app developer
+     *
+     * @access    public
+     * @return    string
+     */
+    public function isAppDeveloper() {
+        return $this->_getValue('saf_app_developer');
+    }
+
+    /**
+     * Returns true if a user has permission
+     *
+     * @access    public
+     * @param     string  $perm  permission to check
+     * @return    boolean
      */
     public function hasPermission($perm) {
         if ( in_array($perm, $this->_granted_perms) ) {
@@ -89,6 +279,12 @@ abstract class SAF_User extends SAF_Page {
         return false;
     }
 
+    /**
+     * Sets the redirect URL to be used with getLoginUrl()
+     *
+     * @access    public
+     * @return    void
+     */
     public function setRedirectUrl($value) {
         $this->_redirect_url = $value;
     }
@@ -96,14 +292,31 @@ abstract class SAF_User extends SAF_Page {
     // ------------------------------------------------------------------------
 
     /**
-     * CONSTRUCTOR
+     * Constructor
      *
      * @access    public
+     * @param     SAF         $facebook
+     * @param     string|int  $user_id
      * @return    void
      */
-    public function __construct() {
-        parent::__construct();
+    public function __construct($facebook, $user_id) {
+        $this->_facebook = $facebook;
+        $this->_id  = $user_id;
 
+        $this->_init();
+    }
+
+    // ------------------------------------------------------------------------
+    // PRIVATE METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Init
+     *
+     * @access    private
+     * @return    void
+     */
+    private function _init() {
         // determine our redirect url
         $this->_redirect_url = $this->_determineRedirectUrl();
 
@@ -111,7 +324,7 @@ abstract class SAF_User extends SAF_Page {
         $this->_thirdPartyCookieFix();
 
         // is the user a regular user or page admin and what extended perms should we ask for?
-        if ( $this->isPageAdmin() == false ) {
+        if ( $this->_facebook->isPageAdmin() == false ) {
             $this->_extended_perms = SAF_Config::getExtendedPerms();
         } else {
             $this->_extended_perms = SAF_Config::getExtendedPermsAdmin();
@@ -120,12 +333,12 @@ abstract class SAF_User extends SAF_Page {
         // failsafe, use the user id or 'me', which allows us to still
         // get public user data if we know the user id since all we need
         // is the app access token and not a user access token
-        $uid = $this->_user_id ? $this->_user_id : 'me';
+        $uid = $this->_facebook->getUserId() ? $this->_facebook->getUserId() : 'me';
 
         // do we have enough info to attempt to get user data?
-        $access_token = $this->getAccessToken();
+        $access_token = $this->_facebook->getAccessToken();
         $proceed = true;
-        if ($uid === 'me' && $access_token === $this->getApplicationAccessToken()) {
+        if ($uid === 'me' && $access_token === $this->_facebook->getAppAccessToken()) {
             $proceed = false;
         }
 
@@ -138,56 +351,47 @@ abstract class SAF_User extends SAF_Page {
             // if not, we'll get an exception, which we will handle below
             try {
 
-                $this->_fb_user = $this->api('/'.$uid, 'GET', array(
+                $this->_data = $this->_facebook->api('/'.$uid, 'GET', array(
                     //'access_token' => $access_token,
                     'fields' => SAF_Config::getGraphUserFields()
                 ));
 
                 // if we have user data
-                if ( !empty($this->_fb_user) ) {
+                if ( !empty($this->_data) ) {
 
-                    // user is authenticated (obviously since we have user data)
-                    $this->_authenticated = true;
+                    // set user ID
+                    $this->_id = $this->_data['id'];
 
                     // if this is a facebook connect app this is where we will
                     // finally get a user id as there is no signed request
                     if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
-                        $this->_user_id = $this->_fb_user['id'];
+                        $this->_id = $this->_data['id'];
                     }
 
-                    // check user permissions if we are asking for any
-                    //if ( !empty($this->_extended_perms) ) {
-                        $this->_checkPermissions();
-                    //}
-
-                    // is the user the app developer?
-                    $this->_app_developer = $this->_isAppDeveloper();
+                    // check user permissions
+                    $this->_checkPermissions();
 
                     // add our own useful social app framework parameter(s) to the fb_user object
-                    $this->_fb_user['saf_perms_granted'] = $this->_granted_perms;
-                    $this->_fb_user['saf_perms_revoked'] = $this->_revoked_perms;
-                    $this->_fb_user['saf_page_admin'] = $this->isPageAdmin();
-                    $this->_fb_user['saf_app_developer'] = $this->_app_developer;
-                    $this->_fb_user['saf_authenticated'] = $this->_authenticated;
+                    $this->_data['saf_perms_granted'] = $this->_granted_perms;
+                    $this->_data['saf_perms_revoked'] = $this->_revoked_perms;
+                    $this->_data['saf_page_admin']    = $this->_facebook->isPageAdmin();
+                    $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
 
-                    // add our social app framework user data into the session as well
-                    //$this->setPersistentData('saf_user', $this->_fb_user);
-
-                    $this->debug(__CLASS__.':: User ('.$this->_user_id.') is authenticated with data:', $this->_fb_user);
+                    $this->debug(__CLASS__.':: User ('.$this->_id.') is authenticated with data:', $this->_data);
 
                 }
 
             } catch (FacebookApiException $e) {
 
                 $this->debug(__CLASS__.':: '.$e, null, 3);
-                $this->_handleException();
+                $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
 
             }
 
         } else {
 
             //$this->debug(__CLASS__.':: No Access Token. Unable to get user data.', null, 3);
-            $this->_handleException();
+            $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
 
         }
 
@@ -195,12 +399,8 @@ abstract class SAF_User extends SAF_Page {
     }
 
     // ------------------------------------------------------------------------
-    // PRIVATE METHODS
-    // ------------------------------------------------------------------------
 
     /**
-     * THIRD PARTY COOKIE FIX
-     *
      * Checks if a session cookie is not set and if so, automatically redirects
      * the user to the base URL with a 'saf_redirect' URL param. The app then
      * starts the session on the 'real' server and immediately redirects back
@@ -227,8 +427,6 @@ abstract class SAF_User extends SAF_Page {
     // ------------------------------------------------------------------------
 
     /**
-     * DETERMINE REDIRECT URL
-     *
      * Returns the proper redirect URL for use with getLoginUrl()
      *
      * @access    private
@@ -239,12 +437,12 @@ abstract class SAF_User extends SAF_Page {
 
             // tab
             case SAF_Config::APP_TYPE_TAB:
-                return $this->getPageTabUrl();
+                return $this->page->getTabUrl();
                 break;
 
             // canvas app
             case SAF_Config::APP_TYPE_CANVAS:
-                return $this->getCanvasUrl();
+                return $this->page->getCanvasUrl();
                 break;
 
             // facebook connect
@@ -257,23 +455,7 @@ abstract class SAF_User extends SAF_Page {
     // ------------------------------------------------------------------------
 
     /**
-     * HANDLE EXCEPTION
-     *
-     * @access    private
-     * @return    void
-     */
-    private function _handleException() {
-        // wipe the 'saf_user_obj' session object
-        //$this->clearPersistentData('saf_user');
-
-        // proceed knowing we require user login and/or authentication
-        $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * DETERMINE IF USER IS THE APP DEVELOPER
+     * Returns true if the user is the app developer
      *
      * @access    private
      * @return    boolean
@@ -283,7 +465,7 @@ abstract class SAF_User extends SAF_Page {
         $developers = preg_replace('/\s+/', '', SAF_Config::getDevelopers());
         $developers = explode(',', $developers);
 
-        if ( in_array($this->_user_id, $developers) == true ) {
+        if ( in_array($this->_id, $developers) === true ) {
             $this->debug(__CLASS__.':: User is the app developer.');
             return true;
         } else {
@@ -294,7 +476,7 @@ abstract class SAF_User extends SAF_Page {
     // ------------------------------------------------------------------------
 
     /**
-     * CHECK PERMISSIONS
+     * Check permissions
      *
      * @access    private
      * @return    void
@@ -302,32 +484,30 @@ abstract class SAF_User extends SAF_Page {
     private function _checkPermissions() {
         // explode our comma seperated perms into an array
         $extended_perms = preg_replace('/\s+/', '', $this->_extended_perms);
-        $extended_perms = explode(',', $extended_perms);
+        $required_perms = explode(',', $extended_perms);
 
         try {
-            // check permissions list
-            $permissions_list = $this->api('/me/permissions', 'GET', array(
-                'access_token' => $this->getAccessToken()
+            // call api
+            $result = $this->_facebook->api('/me/permissions', 'GET', array(
+                'access_token' => $this->_facebook->getAccessToken()
             ));
 
-            // set permissions equal to the resulting data
-            $permissions = $permissions_list['data'][0];
+            // set granted permissions
+            $permissions = $result['data'][0];
 
             // add each permission to our granted permissions
-            foreach($permissions as $key => $value) {
+            foreach ($permissions as $key => $value) {
                 array_push($this->_granted_perms, $key);
             }
 
-            //$this->_granted_perms = $permissions;
-
-            // loop through all user's permissions and see if they have everything we require
-            /*foreach($extended_perms as $perm) {
-                if ( !isset($permissions[$perm]) || $permissions[$perm] != 1 ) {
-                    array_push($this->_revoked_perms, $perm);
-                } else {
-                    array_push($this->_granted_perms, $perm);
+            // loop through all required permissions and see if they granted
+            // everything we require
+            foreach ($required_perms as $key => $value) {
+                if ( in_array($key, $this->_granted_perms) === false ) {
+                    $this->debug('Added revoked perm:', $key);
+                    array_push($this->_revoked_perms, $key);
                 }
-            }*/
+            }
 
         } catch (FacebookApiException $e) {
 
@@ -340,20 +520,39 @@ abstract class SAF_User extends SAF_Page {
     // ------------------------------------------------------------------------
 
     /**
-     * GET USER VALUE
-     *
-     * Return a clean value whether the key exits or not
+     * Returns a user key value whether it exists or not
      *
      * @access    private
      * @param     string $key key to check for
      * @param     mixed $default default value if not set
      * @return    mixed
      */
-    private function _getUserValue($key, $default=false) {
-        if ( !isset($this->_fb_user[$key]) ) {
+    private function _getValue($key, $default=false) {
+        if ( !isset($this->_data[$key]) ) {
             return $default;
         } else {
-            return $this->_fb_user[$key];
+            return $this->_data[$key];
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // WRAPPER METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Wrapper around an external class so we can do a simple check if the
+     * class (XS_Debug) is avaliable before we attempt to use its method.
+     *
+     * @access    protected
+     * @param     string  $name  name, label, message
+     * @param     var     $var   a variable
+     * @param     int     $type  (1)log, (2)info, (3)warn, (4)error
+     * @param     bool    $log   log to text file
+     * @return    void
+     */
+    protected function debug($name, $var=null, $type=1, $log=false) {
+        if (class_exists('XS_Debug')) {
+            XS_Debug::addMessage($name, $var, $type, $log);
         }
     }
 

@@ -13,20 +13,19 @@ require_once dirname(__FILE__).'/saf_base.php';
 require_once dirname(__FILE__).'/saf_signed_request.php';
 require_once dirname(__FILE__).'/saf_page.php';
 require_once dirname(__FILE__).'/saf_user.php';
-require_once dirname(__FILE__).'/saf_session.php';
 require_once dirname(__FILE__).'/../config/config.php';
 require_once dirname(__FILE__).'/../helpers/fb_helper.php';
 
 /**
  * Instantiates the entire SAF Core.
  * We don't really do anything here but load all required files
- * and give ourselves a nice way to instantiate with new SAF()
+ * and give ourselves a nice way to instantiate with new SAF:instance()
  *
  * @package      Social App Framework
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF extends SAF_User {
+class SAF extends SAF_Signed_Request {
 
     protected static $_instance = null;
 

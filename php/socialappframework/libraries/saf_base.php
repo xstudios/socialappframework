@@ -26,33 +26,7 @@ abstract class SAF_Base extends Facebook {
     // ------------------------------------------------------------------------
 
     /**
-     * Get app access token
-     *
-     * @access    public
-     * @return    string
-     */
-    public function getAppAccessToken() {
-        // url
-        //$url   = '/oauth/access_token';
-        $query = array(
-            'grant_type'    => 'client_credentials',
-            'client_id'     => SAF_Config::getAppId(),
-            'client_secret' => SAF_Config::getAppSecret()
-        );
-        //$url  .= '?'.http_build_query($query);
-
-        $result = $this->api('/oauth/access_token', 'get', $query);
-
-        // parse query string result
-        parse_str($result);
-
-        return $access_token;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * CONSTRUCTOR
+     * Constructor
      *
      * @access    public
      * @return    void
@@ -83,16 +57,14 @@ abstract class SAF_Base extends Facebook {
     // ------------------------------------------------------------------------
 
     /**
-     * DEBUG
-     *
      * Wrapper around an external class so we can do a simple check if the
-     * class (XS_Debug) is even loaded before we attempt to use its method
+     * class (XS_Debug) is avaliable before we attempt to use its method.
      *
      * @access    protected
-     * @param     string $name name, label, message
-     * @param     var $var a variable/array/object
-     * @param     int $type (1)log, (2)info, (3)warn, (4)error
-     * @param     bool $log log to text file
+     * @param     string  $name  name, label, message
+     * @param     var     $var   a variable
+     * @param     int     $type  (1)log, (2)info, (3)warn, (4)error
+     * @param     bool    $log   log to text file
      * @return    void
      */
     protected function debug($name, $var=null, $type=1, $log=false) {

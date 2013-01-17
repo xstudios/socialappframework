@@ -14,157 +14,214 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class SAF_Page extends SAF_Signed_Request {
+class SAF_Page {
 
     const RSS = 'https://www.facebook.com/feeds/page.php?id=%s&format=rss20';
 
-    private $_fb_page;
+    // ------------------------------------------------------------------------
+    // PRIVATE VARS
+    // ------------------------------------------------------------------------
 
-    private $_access_token;
+    /**
+     * Facebook instance
+     *
+     * @access    private
+     * @var       SAF
+     */
+    private $_facebook;
 
-    private $_page_tab_url;
-    private $_add_page_tab_url;
-    private $_canvas_url;
+    /**
+     * Page ID
+     *
+     * @access    private
+     * @var       string|int
+     */
+    private $_id;
+
+    /**
+     * Page data
+     *
+     * @access    private
+     * @var       array
+     */
+    private $_data;
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
-    public function getPageData() { return $this->_fb_page; }
-    public function getPageAccessToken() { return $this->_access_token; }
 
-    public function getPageName() { return $this->_getPageValue('name', ''); }
-    public function getPageProfileUrl() { return $this->_getPageValue('link'); }
+    /**
+     * Returns the page ID
+     *
+     * @access    public
+     * @return    string|int
+     */
+    public function getId() {
+        return $this->_getValue('id');
+    }
 
-    public function getPageProfilePicture() {
-        $picture = $this->_getPageValue('picture');
+    /**
+     * Returns the page data
+     *
+     * @access    public
+     * @return    array
+     */
+    public function getData() {
+        return $this->_data;
+    }
+
+    /**
+     * Returns the page's access token
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getAccessToken() {
+        return $this->_getValue('access_token');
+    }
+
+    /**
+     * Returns the page's name
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getName() {
+        return $this->_getValue('name', '');
+    }
+
+    /**
+     * Returns the page's profile URL
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getProfileUrl() {
+        return $this->_getValue('link');
+    }
+
+    /**
+     * Returns the page's profile picture
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getProfilePicture() {
+        $picture = $this->_getValue('picture');
         if (!empty($picture)) {
-            $picture = $picture['data']['url'];
-        } else {
-            $picture = FB_Helper::picture_url($this->getPageId());
+            if (isset($picture['data']['url'])) {
+                return $picture['data']['url'];
+            }
         }
-        return $picture;
+
+        return FB_Helper::picture_url($this->_id);
     }
 
-    public function getPageLikes() { return $this->_getPageValue('likes'); }
-    public function getPageWebsite() { return $this->_getPageValue('website'); }
+    /**
+     * Returns the page's like count
+     *
+     * @access    public
+     * @return    string|int
+     */
+    public function getLikes() {
+        return $this->_getValue('likes');
+    }
 
-    public function getPageTabUrl() { return $this->_page_tab_url; }
-    public function getAddPageTabUrl() { return $this->_add_page_tab_url; }
-    public function getCanvasUrl() { return $this->_canvas_url; }
+    /**
+     * Returns the page's website
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getWebsite() {
+        return $this->_getValue('website');
+    }
 
-    public function isPagePublished() { return $this->_getPageValue('is_published'); }
-    public function hasPageRestrictions() { return $this->_getPageValue('saf_page_restrictions'); }
+    /**
+     * Returns the tab URL
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getTabUrl() {
+        return $this->_getValue('saf_page_tab_url');
+    }
 
+    /**
+     * Returns the URL needed to add the app to a page
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getAddTabUrl() {
+        return $this->_getValue('saf_add_page_tab_url');
+    }
+
+    /**
+     * Returns the app's Canvas URL (if it has one)
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getCanvasUrl() {
+        return $this->_getValue('saf_canvas_url');
+    }
+
+    /**
+     * Returns true if the page is published
+     *
+     * @access    public
+     * @return    boolean
+     */
+    public function isPublished() {
+        return $this->_getValue('is_published');
+    }
+
+    /**
+     * Returns true if the user likes this page
+     *
+     * @access    public
+     * @return    boolean
+     */
+    public function isLiked() {
+        return $this->_getValue('saf_page_liked');
+    }
+
+    /**
+     * Returns true if the page has restrictions
+     *
+     * @access    public
+     * @return    boolean
+     */
+    public function hasRestrictions() {
+        return $this->_getValue('saf_page_restrictions');
+    }
+
+    /**
+     * Returns the page's RSS URL
+     *
+     * @access    public
+     * @return    string
+     */
     public function getRssUrl() {
-        return sprintf(self::RSS, $this->_page_id);
+        return sprintf(self::RSS, $this->_id);
     }
-
-    // used to set the page id only when we are a Canvas or Facebook Connect
-    // app and we need to get page data for a known page ID (eg - our own page)
-    public function setPageId($value) { $this->_page_id = $value; }
 
     // ------------------------------------------------------------------------
 
     /**
-     * CONSTRUCTOR
+     * Constructor
      *
      * @access    public
+     * @param     SAF         $facebook
+     * @param     string|int  $page_id
      * @return    void
      */
-    public function __construct() {
-        parent::__construct();
+    public function __construct($facebook, $page_id) {
+        $this->_facebook = $facebook;
+        $this->_id       = $page_id;
 
-        // we should always have a page id if its a tab app (unless it is being
-        // viewed outside the Facebook chrome). Canvas and Facebook Connect apps
-        // will not have the page id unless we explicitly set it with setPageId()
-        // before calling init()
-        if ( !empty($this->_page_id) ) {
-
-            try {
-
-                // get page data
-                $this->_fb_page = $this->api('/'.$this->_page_id, 'GET', array(
-                    //'access_token' => $this->getAccessToken(),
-                    'fields' => 'access_token, '.SAF_Config::getGraphPageFields()
-                ));
-
-                // if we have page data
-                if ( !empty($this->_fb_page) ) {
-
-                    // set page access token...only returned if the user is a
-                    // page admin with the 'manage_pages' permission
-                    if ( isset($this->_fb_page['access_token'])) {
-                        $this->_access_token = $this->_fb_page['access_token'];
-                    }
-
-                    // inject SAF data, no page restrictions we are aware of
-                    $this->_fb_page = $this->_injectSAFData(false);
-
-                    // add our social app framework page data into the session
-                    //$this->setPersistentData('saf_page', $this->_fb_page);
-
-                    //$this->debug(__CLASS__.':: Fan page ('.$this->_page_id.') data: ', $this->_fb_page);
-
-                // probably some sort of page restriction (country/age)
-                } else {
-
-                    // clear any existing stored page data
-                    //$this->clearPersistentData('saf_page');
-
-                    // inject SAF data, some sort of page restriction (country/age)
-                    $this->_fb_page = $this->_injectSAFData(true);
-
-                    // add our social app framework page data into the session
-                    //$this->setPersistentData('saf_page', $this->_fb_page);
-
-                    // fall back to default page URL as SAF_FacebookUser will need this value
-                    // however, simply trying to force in the page id will cause API errors for some reason
-                    // even though navigating to https://www.facebook.com/PAGE_ID resolves to the correct fan page we want
-                    $this->_page_tab_url = 'https://www.facebook.com/';
-
-                    $this->debug(__CLASS__.':: Page ('.$this->_page_id.') may be unpublished or have country/age restrictions', null, 3, true);
-
-                }
-
-                // add our social app framework page data into the session
-                //$this->setPersistentData('saf_page', $this->_fb_page);
-
-                $this->debug(__CLASS__.':: Fan page ('.$this->_page_id.') data: ', $this->_fb_page);
-
-            } catch (FacebookApiException $e) {
-
-                // wipe the 'page_obj' session object
-                //$this->clearPersistentData('saf_page');
-
-                $this->debug(__CLASS__.':: '.$e, null, 3, true);
-
-            }
-
-        } else {
-
-            // wipe the 'page_obj' session object
-            //$this->clearPersistentData('saf_page');
-
-            // tab
-            if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
-                $this->debug(__CLASS__.':: No page data. Viewing Tab app outside of Facebook.', null, 3);
-            }
-
-            // canvas
-            if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_CANVAS) {
-                $this->debug(__CLASS__.':: No page data. Viewing Canvas app.', null, 3);
-            }
-
-            // facebook connect
-            if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
-                $this->debug(__CLASS__.':: No page data. Viewing Facebook Connect app.', null, 3);
-            }
-
-            $this->debug(__CLASS__.':: Use setPageId() before calling init() if fan page data is required.');
-
-        }
-
-        $this->debug('--------------------');
+        $this->_init();
     }
 
     // ------------------------------------------------------------------------
@@ -172,47 +229,109 @@ abstract class SAF_Page extends SAF_Signed_Request {
     // ------------------------------------------------------------------------
 
     /**
-     * INJECT SAF DATA
-     *
-     * Add our own useful social app framework parameter(s) to the fb_page object
+     * Init
      *
      * @access    private
-     * @return    array
+     * @return    void
      */
-    private function _injectSAFData($page_restrictions=false) {
-        if ( isset($this->_fb_page['link']) ) {
-            $this->_page_tab_url = str_replace( 'http', 'https', $this->_fb_page['link'].'?sk=app_'.SAF_Config::getAppId() );
+    private function _init() {
+        try {
+
+            // get page data
+            $this->_data = $this->_facebook->api('/'.$this->_id, 'GET', array(
+                //'access_token' => $this->getAccessToken(),
+                'fields' => 'access_token, '.SAF_Config::getGraphPageFields()
+            ));
+
+            // if we have page data
+            if ( !empty($this->_data) ) {
+
+                // inject SAF data, no page restrictions we are aware of
+                $this->_data = $this->_injectSAFData(false);
+
+            // probably some sort of page restriction (country/age)
+            } else {
+
+                // inject SAF data, some sort of page restriction (country/age)
+                $this->_data = $this->_injectSAFData(true);
+
+                // fall back to default page URL as SAF_User will need this value
+                $this->_tab_url = 'https://www.facebook.com/';
+
+                $this->debug(__CLASS__.':: Page ('.$this->_id.') may be unpublished or have country/age restrictions', null, 3, true);
+
+            }
+
+            $this->debug(__CLASS__.':: Page ('.$this->_id.') data: ', $this->_data);
+
+        } catch (FacebookApiException $e) {
+
+            $this->debug(__CLASS__.':: '.$e, null, 3, true);
+
         }
-        $this->_add_page_tab_url = SAF_Config::getAddPageTabUrl();
-        $this->_canvas_url = SAF_Config::getCanvasUrl();
 
-        $this->_fb_page['saf_page_tab_url'] = $this->_page_tab_url;
-        $this->_fb_page['saf_add_page_tab_url'] = $this->_add_page_tab_url;
-        $this->_fb_page['saf_canvas_url'] = $this->_canvas_url;
-        $this->_fb_page['saf_page_restrictions'] = $page_restrictions;
-        $this->_fb_page['saf_page_liked'] = $this->isPageLiked();
-        $this->_fb_page['saf_rss_url'] = $this->getRssUrl();
-
-        return $this->_fb_page;
+        $this->debug('--------------------');
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * GET PAGE VALUE
-     *
-     * Return a clean value whether the key exits or not
+     * Add our own useful social app framework parameter(s) to the page data
      *
      * @access    private
-     * @param     string $key key to check for
-     * @param     mixed $default default value if not set
+     * @return    array
+     */
+    private function _injectSAFData($page_restrictions=false) {
+        if ( isset($this->_data['link']) ) {
+            $url = str_replace( 'http', 'https', $this->_data['link'].'?sk=app_'.SAF_Config::getAppId() );
+            $this->_data['saf_page_tab_url'] = $url;
+        }
+
+        $this->_data['saf_add_page_tab_url']  = SAF_Config::getAddPageTabUrl();
+        $this->_data['saf_canvas_url']        = SAF_Config::getCanvasUrl();
+        $this->_data['saf_page_restrictions'] = $page_restrictions;
+        $this->_data['saf_page_liked']        = $this->_facebook->isPageLiked();
+        $this->_data['saf_rss_url']           = $this->getRssUrl();
+
+        return $this->_data;
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Returns a page key value whether it exists or not
+     *
+     * @access    private
+     * @param     string  $key      key to check for
+     * @param     mixed   $default  default value if not set
      * @return    mixed
      */
-    private function _getPageValue($key, $default=false) {
-        if ( !isset($this->_fb_page[$key]) ) {
+    private function _getValue($key, $default=false) {
+        if ( !isset($this->_data[$key]) ) {
             return $default;
         } else {
-            return $this->_fb_page[$key];
+            return $this->_data[$key];
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // WRAPPER METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Wrapper around an external class so we can do a simple check if the
+     * class (XS_Debug) is avaliable before we attempt to use its method.
+     *
+     * @access    protected
+     * @param     string  $name  name, label, message
+     * @param     var     $var   a variable
+     * @param     int     $type  (1)log, (2)info, (3)warn, (4)error
+     * @param     bool    $log   log to text file
+     * @return    void
+     */
+    protected function debug($name, $var=null, $type=1, $log=false) {
+        if (class_exists('XS_Debug')) {
+            XS_Debug::addMessage($name, $var, $type, $log);
         }
     }
 
@@ -220,12 +339,12 @@ abstract class SAF_Page extends SAF_Signed_Request {
     // CONNECTIONS
     // ------------------------------------------------------------------------
 
-    public function getPageConnection($connection) {
+    public function getConnection($connection) {
         $connection = '/'.$connection;
 
         // call the api
-        $result = $this->api('/'.$this->_page_id.$connection, 'GET', array(
-            'access_token' => $this->getPageAccessToken()
+        $result = $this->_facebook->api('/'.$this->_id.$connection, 'GET', array(
+            'access_token' => $this->getAccessToken()
         ));
 
         return $result['data'];
@@ -239,9 +358,9 @@ abstract class SAF_Page extends SAF_Signed_Request {
      * @access    public
      * @return    array  of Post objects
      */
-    public function getPageFeed() {
+    public function getFeed() {
         // call the api
-        $result = $this->api('/'.$this->_page_id.'/feed');
+        $result = $this->_facebook->api('/'.$this->_id.'/feed');
         return $result['data'];
     }
 
@@ -251,15 +370,13 @@ abstract class SAF_Page extends SAF_Signed_Request {
      * Get the page's profile picture
      *
      * @access    public
-     * @param     string   $type      square, small, normal, large
-     * @param     boolean  $redirect  return URL without 302 redirect
-     * @return    string   URL of the page's profile picture
+     * @param     string  $type  square, small, normal, large
+     * @return    string  URL of the page's profile picture
      */
-    public function getPagePicture($type='square', $redirect=true) {
+    public function getPicture($type='square') {
         // call the api
-        $result = $this->api('/'.$this->_page_id.'/picture', 'GET', array(
-            'type'     => $type,
-            'redirect' => $redirect
+        $result = $this->_facebook->api('/'.$this->_id.'/picture', 'GET', array(
+            'type' => $type
         ));
         return $result['data'];
     }
@@ -267,20 +384,34 @@ abstract class SAF_Page extends SAF_Signed_Request {
     // ------------------------------------------------------------------------
 
     /**
-     * Get tabs
+     * Get the page's settings
+     *
+     * @access    public
+     * @return    array  of objects containing setting and value fields
+     */
+    public function getSettings() {
+        // call the api
+        $result = $this->_facebook->api('/'.$this->_id.'/settings', 'GET', array(
+            'access_token' => $this->getAccessToken()
+        ));
+        return $result['data'];
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Get the page's tabs
      *
      * @access    public
      * @return    array
      */
-    public function getPageTabs() {
+    public function getTabs() {
         // call the api
-        $result = $this->api('/'.$this->_page_id.'/tabs', 'GET', array(
-            'access_token' => $this->getPageAccessToken()
+        $result = $this->_facebook->api('/'.$this->_id.'/tabs', 'GET', array(
+            'access_token' => $this->getAccessToken()
         ));
-
         return $result['data'];
     }
-
 
     // ------------------------------------------------------------------------
 

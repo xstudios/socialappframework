@@ -16,33 +16,147 @@
  */
 abstract class SAF_Signed_Request extends SAF_Base {
 
-    protected $_user_id;
-    protected $_page_id;
+    // ------------------------------------------------------------------------
+    // PUBLIC VARS
+    // ------------------------------------------------------------------------
 
+    /**
+     * @var    SAF_Page
+     */
+    public $page;
+
+    /**
+     * @var    SAF_User
+     */
+    public $user;
+
+    // ------------------------------------------------------------------------
+    // PRIVATE VARS
+    // ------------------------------------------------------------------------
+
+    /**
+     * The user ID
+     *
+     * @access    private
+     * @var       string|int
+     */
+    private $_user_id;
+
+    /**
+     * The page ID
+     *
+     * @access    private
+     * @var       string|int
+     */
+    private $_page_id;
+
+    /**
+     * Is the user the page admin?
+     *
+     * @access    private
+     * @var       boolean
+     */
     private $_page_admin = false;
 
+    /**
+     * Does the user like this page?
+     *
+     * @access    private
+     * @var       boolean
+     */
     private $_page_liked = false;
+
+    /**
+     * Was the page liked via a Fan Gate?
+     *
+     * @access    private
+     * @var       boolean
+     */
     private $_like_via_fan_gate = false;
 
-    // holds data we pass to the app tab via &app_data=something
+    /**
+     * App data passed to the app tab via &app_data=something
+     *
+     * @access    private
+     * @var       mixed
+     */
     private $_app_data;
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
-    public function getUserId() { return $this->_user_id; }
-    public function getPageId() { return $this->_page_id; }
-
-    public function getAppData() { return $this->_app_data; }
-
-    public function isPageAdmin() { return $this->_page_admin; }
-
-    public function isPageLiked() { return $this->_page_liked; }
-    public function isPageLikeViaFanGate() { return $this->_like_via_fan_gate; }
 
     /**
-     * EXCHANGE SHORT-LIVED ACCESS TOKEN FOR A LONG-LIVED ACCESS TOKEN
+     * Returns the user ID
      *
+     * @access    public
+     * @return    string|int
+     */
+    public function getUserId() {
+        return $this->_user_id;
+    }
+
+    /**
+     * Returns the page ID
+     *
+     * @access    public
+     * @return    string|int
+     */
+    public function getPageId() {
+        return $this->_page_id;
+    }
+
+     /**
+     * Returns the app's access token
+     *
+     * @access    public
+     * @return    string|int
+     */
+    public function getAppAccessToken() {
+        return $this->getApplicationAccessToken();
+    }
+
+    /**
+     * Returns the app data
+     *
+     * @access    public
+     * @return    mixed
+     */
+    public function getAppData() {
+        return $this->_app_data;
+    }
+
+    /**
+     * Returns true if the user is the page admin
+     *
+     * @access    public
+     * @return    boolean
+     */
+    public function isPageAdmin() {
+        return $this->_page_admin;
+    }
+
+    /**
+     * Returns true if the user likes this page
+     *
+     * @access    public
+     * @return    boolean
+     */
+    public function isPageLiked() {
+        return $this->_page_liked;
+    }
+
+    /**
+     * Returns true if the page was liked via fan gate
+     *
+     * @access    public
+     * @return    boolean
+     */
+    public function isPageLikeViaFanGate() {
+        return $this->_like_via_fan_gate;
+    }
+
+    /**
      * Overrides the Facebook SDK's setExtendedAccessToken() method.
      * The Facebook SDK (3.2.2) doesn't set the access token property to the
      * long-lived token for some strange reason so getAccessToken() will still
@@ -56,7 +170,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
     public function setExtendedAccessToken() {
         // if all we have is the app access token, bail...
         if ($this->getAccessToken() === $this->getApplicationAccessToken()) {
-            //$this->debug(__CLASS__.':: Can\'t set extended access token, we only have an app access token.');
             return;
         }
 
@@ -76,7 +189,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
     // ------------------------------------------------------------------------
 
     /**
-     * CONSTRUCTOR
+     * Constructor
      *
      * @access    public
      * @return    void
@@ -118,7 +231,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
                 // get page id
                 $this->_page_id = $signed_request['page']['id'];
-                $this->debug(__CLASS__.':: Fan page ID ('.$this->_page_id.').');
+                $this->debug(__CLASS__.':: Page ID ('.$this->_page_id.').');
 
                 // does the user like this page?
                 $this->_page_liked = $signed_request['page']['liked'];
@@ -181,13 +294,27 @@ abstract class SAF_Signed_Request extends SAF_Base {
         }
 
         $this->debug('--------------------');
+
+        // if we have a user id, create a new user
+        if (!empty($this->_user_id)) {
+            $this->user = new SAF_User($this, $this->_user_id);
+        }
+
+        // check if config forced a page ID
+        $this->_page_id = SAF_Config::getPageId();
+
+        // if we have a page id, create a new page
+        if (!empty($this->_page_id)) {
+            $this->page = new SAF_Page($this, $this->_page_id);
+        }
+
     }
 
     // ------------------------------------------------------------------------
+    // PRIVATE METHODS
+    // ------------------------------------------------------------------------
 
     /**
-     * Facebook Connect
-     *
      * Upon user login (authentication) Facebook Connect apps will have 'state'
      * and 'code' parameters passed.  The code must be exchanged for an access
      * token.
@@ -250,8 +377,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
     // ------------------------------------------------------------------------
 
     /**
-     * FORCE FACEBOOK CHROME
-     *
      * Ensure the user is viewing the tab or canvas app within the
      * Facebook chrome.
      *
