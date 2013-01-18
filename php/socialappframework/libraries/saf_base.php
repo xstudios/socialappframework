@@ -22,6 +22,26 @@ abstract class SAF_Base extends Facebook {
     const SAF_VERSION = '1.0.0';
 
     // ------------------------------------------------------------------------
+    // PUBLIC VARS
+    // ------------------------------------------------------------------------
+
+    /**
+     * SAF_Page object
+     *
+     * @access    public
+     * @var       SAF_Page
+     */
+    public $page;
+
+    /**
+     * SAF_User object
+     *
+     * @access    public
+     * @var       SAF_User
+     */
+    public $user;
+
+    // ------------------------------------------------------------------------
 
     /**
      * Constructor
@@ -44,9 +64,7 @@ abstract class SAF_Base extends Facebook {
         array_push(
             self::$kSupportedKeys,
             'saf_fan_gate',
-            'saf_extended_access_token',
-            'saf_user',
-            'saf_page'
+            'saf_extended_access_token'
         );
     }
 

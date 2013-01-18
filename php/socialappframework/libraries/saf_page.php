@@ -14,7 +14,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF_Page {
+class SAF_Page extends SAF_Debug {
 
     const RSS = 'https://www.facebook.com/feeds/page.php?id=%s&format=rss20';
 
@@ -312,27 +312,6 @@ class SAF_Page {
         }
 
         return $this->_data[$key];
-    }
-
-    // ------------------------------------------------------------------------
-    // WRAPPER METHODS
-    // ------------------------------------------------------------------------
-
-    /**
-     * Wrapper around an external class so we can do a simple check if the
-     * class (XS_Debug) is avaliable before we attempt to use its method.
-     *
-     * @access    protected
-     * @param     string  $name  name, label, message
-     * @param     var     $var   a variable
-     * @param     int     $type  (1)log, (2)info, (3)warn, (4)error
-     * @param     bool    $log   log to text file
-     * @return    void
-     */
-    protected function debug($name, $var=null, $type=1, $log=false) {
-        if (class_exists('XS_Debug')) {
-            XS_Debug::addMessage($name, $var, $type, $log);
-        }
     }
 
     // ------------------------------------------------------------------------

@@ -10,6 +10,7 @@
 require_once dirname(__FILE__).'/facebook/sdk/facebook.php';
 require_once dirname(__FILE__).'/saf_config.php';
 require_once dirname(__FILE__).'/saf_base.php';
+require_once dirname(__FILE__).'/saf_debug.php';
 require_once dirname(__FILE__).'/saf_signed_request.php';
 require_once dirname(__FILE__).'/saf_page.php';
 require_once dirname(__FILE__).'/saf_user.php';
@@ -27,6 +28,12 @@ require_once dirname(__FILE__).'/../helpers/fb_helper.php';
  */
 class SAF extends SAF_Signed_Request {
 
+    /**
+     * SAF object
+     *
+     * @access    protected
+     * @var       SAF
+     */
     protected static $_instance = null;
 
     // ------------------------------------------------------------------------
