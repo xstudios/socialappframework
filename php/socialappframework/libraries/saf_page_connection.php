@@ -380,7 +380,7 @@ class SAF_Page_Connection {
     /**
      * Get the page's access token.
      *
-     * @access    public
+     * @access    private
      * @throws    FacebookApiException
      * @return    string
      */
