@@ -13,6 +13,7 @@
  * @package      Social App Framework
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
+ * @link         https://developers.facebook.com/docs/reference/api/page/
  */
 class SAF_Page_Connection {
 
