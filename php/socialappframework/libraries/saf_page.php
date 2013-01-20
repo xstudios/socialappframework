@@ -46,6 +46,14 @@ class SAF_Page extends SAF_Debug {
      */
     private $_data;
 
+    /**
+     * Page connection
+     *
+     * @access    private
+     * @var       SAF_Page_Connection
+     */
+    public $connection;
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
@@ -262,6 +270,9 @@ class SAF_Page extends SAF_Debug {
 
             }
 
+            // create page connection
+            $this->connection = new SAF_Page_Connection($this, $this->_facebook);
+
             $this->debug(__CLASS__.':: Page ('.$this->_id.') data: ', $this->_data);
 
         } catch (FacebookApiException $e) {
@@ -312,84 +323,6 @@ class SAF_Page extends SAF_Debug {
         }
 
         return $this->_data[$key];
-    }
-
-    // ------------------------------------------------------------------------
-    // CONNECTIONS
-    // ------------------------------------------------------------------------
-
-    public function getConnection($connection) {
-        $connection = '/'.$connection;
-
-        // call the api
-        $result = $this->_facebook->api('/'.$this->_id.$connection, 'GET', array(
-            'access_token' => $this->getAccessToken()
-        ));
-
-        return $result['data'];
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Get the page's wall
-     *
-     * @access    public
-     * @return    array  of Post objects
-     */
-    public function getFeed() {
-        // call the api
-        $result = $this->_facebook->api('/'.$this->_id.'/feed');
-        return $result['data'];
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Get the page's profile picture
-     *
-     * @access    public
-     * @param     string  $type  square, small, normal, large
-     * @return    string  URL of the page's profile picture
-     */
-    public function getPicture($type='square') {
-        // call the api
-        $result = $this->_facebook->api('/'.$this->_id.'/picture', 'GET', array(
-            'type' => $type
-        ));
-        return $result['data'];
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Get the page's settings
-     *
-     * @access    public
-     * @return    array  of objects containing setting and value fields
-     */
-    public function getSettings() {
-        // call the api
-        $result = $this->_facebook->api('/'.$this->_id.'/settings', 'GET', array(
-            'access_token' => $this->getAccessToken()
-        ));
-        return $result['data'];
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Get the page's tabs
-     *
-     * @access    public
-     * @return    array
-     */
-    public function getTabs() {
-        // call the api
-        $result = $this->_facebook->api('/'.$this->_id.'/tabs', 'GET', array(
-            'access_token' => $this->getAccessToken()
-        ));
-        return $result['data'];
     }
 
     // ------------------------------------------------------------------------
