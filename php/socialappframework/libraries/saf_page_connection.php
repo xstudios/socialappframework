@@ -14,7 +14,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF_Page_Connection extends SAF_Debug {
+class SAF_Page_Connection {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS
