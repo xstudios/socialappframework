@@ -12,6 +12,7 @@ require_once dirname(__FILE__).'/saf_config.php';
 require_once dirname(__FILE__).'/saf_base.php';
 require_once dirname(__FILE__).'/saf_debug.php';
 require_once dirname(__FILE__).'/saf_signed_request.php';
+require_once dirname(__FILE__).'/saf_page_connection.php';
 require_once dirname(__FILE__).'/saf_page.php';
 require_once dirname(__FILE__).'/saf_user.php';
 require_once dirname(__FILE__).'/../config/config.php';
