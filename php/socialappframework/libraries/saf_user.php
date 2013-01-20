@@ -75,6 +75,14 @@ class SAF_User extends SAF_Debug {
      */
     private $_redirect_url;
 
+    /**
+     * User connection
+     *
+     * @access    private
+     * @var       SAF_User_Connection
+     */
+    public $connection;
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
@@ -376,6 +384,9 @@ class SAF_User extends SAF_Debug {
                     $this->_data['saf_perms_revoked'] = $this->_revoked_perms;
                     $this->_data['saf_page_admin']    = $this->_facebook->isPageAdmin();
                     $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
+
+                    // create user connection
+                    $this->connection = new SAF_User_Connection($this, $this->_facebook);
 
                     $this->debug(__CLASS__.':: User ('.$this->_id.') is authenticated with data:', $this->_data);
 
