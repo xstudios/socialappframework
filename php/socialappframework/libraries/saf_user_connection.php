@@ -13,6 +13,7 @@
  * @package      Social App Framework
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
+ * @link         https://developers.facebook.com/docs/reference/api/user/
  */
 class SAF_User_Connection {
 
@@ -243,13 +244,13 @@ class SAF_User_Connection {
     /**
      * Returns the user's incoming friend requests.
      *
-     * Permissions: user_requests
+     * Permissions: read_requests
      *
      * @access    public
      * @return    array  of objects
      */
     public function getFriendRequests() {
-        $this->_checkPermission('user_requests');
+        $this->_checkPermission('read_requests');
         return $this->getConnection('friendrequests');
     }
 
@@ -450,10 +451,13 @@ class SAF_User_Connection {
     /**
      * Returns the app notifications for the user.
      *
+     * Permissions: manage_notifications
+     *
      * @access    public
      * @return    array  of objects
      */
     public function getNotifications() {
+        $this->_checkPermission('manage_notifications');
         return $this->getConnection('notifications');
     }
 
@@ -476,13 +480,17 @@ class SAF_User_Connection {
 
     /**
      * Returns the Facebook Credits orders the user placed with
-     * an application.
+     * an application. Requires application to be payments enabled.
+     *
+     * Permissions: app access token
      *
      * @access    public
      * @return    array  of objects
      */
     public function getPayments() {
-        return $this->getConnection('ayments');
+        return $this->getConnection('payments', array(
+            'access_token' => $this->_facebook->getAppAccessToken()
+        ));
     }
 
     // ------------------------------------------------------------------------
@@ -502,13 +510,10 @@ class SAF_User_Connection {
     /**
      * Returns the photos the user (or friend) is tagged in.
      *
-     * Permissions: user_photo_video_tags or friends_photo_video_tags
-     *
      * @access    public
      * @return    array  of photo objects
      */
     public function getPhotos() {
-        $this->_checkPermission('user_photo_video_tags');
         return $this->getConnection('photos');
     }
 
