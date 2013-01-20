@@ -183,6 +183,20 @@ abstract class SAF_Signed_Request extends SAF_Base {
     public function __construct() {
         parent::__construct();
 
+        $this->_init();
+    }
+
+    // ------------------------------------------------------------------------
+    // PRIVATE METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Init
+     *
+     * @access    private
+     * @return    void
+     */
+    private function _init() {
         // get the signed request (only available for tab or canvas apps)
         // however, it will exist on Facebook Connect apps if using the
         // Javascript SDK.
@@ -293,11 +307,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
         if (!empty($this->_page_id)) {
             $this->page = new SAF_Page($this, $this->_page_id);
         }
-
     }
 
-    // ------------------------------------------------------------------------
-    // PRIVATE METHODS
     // ------------------------------------------------------------------------
 
     /**
@@ -353,11 +364,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
             }
 
-        } else {
-
-            $this->debug(__CLASS__.':: Request code is not present. Prompt user to login...', null, 3);
-
-        }
+        } 
     }
 
     // ------------------------------------------------------------------------
