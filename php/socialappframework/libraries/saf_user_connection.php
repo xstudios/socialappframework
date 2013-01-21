@@ -227,6 +227,18 @@ class SAF_User_Connection {
     // ------------------------------------------------------------------------
 
     /**
+     * Returns the user's friends.
+     *
+     * @access    public
+     * @return    array  of objects
+     */
+    public function getFriends() {
+        return $this->getConnection('friends');
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
      * Returns the user's friend lists.
      *
      * Permissions: read_friendlists
@@ -252,18 +264,6 @@ class SAF_User_Connection {
     public function getFriendRequests() {
         $this->_checkPermission('read_requests');
         return $this->getConnection('friendrequests');
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Returns the user's friends.
-     *
-     * @access    public
-     * @return    array  of objects
-     */
-    public function getFriends() {
-        return $this->getConnection('friends');
     }
 
     // ------------------------------------------------------------------------
@@ -307,7 +307,7 @@ class SAF_User_Connection {
      * @access    public
      * @return    array  of post objects
      */
-    public function getNews() {
+    public function getNewsFeed() {
         $this->_checkPermission('read_stream');
         return $this->getConnection('home');
     }
@@ -535,7 +535,7 @@ class SAF_User_Connection {
     // ------------------------------------------------------------------------
 
     /**
-     * Get the user's profile picture
+     * Get the user's profile picture.
      *
      * @access    public
      * @param     string  $type  square, small, normal, large
@@ -550,7 +550,7 @@ class SAF_User_Connection {
     // ------------------------------------------------------------------------
 
     /**
-     * Returns theuser's pokes.
+     * Returns the user's pokes.
      *
      * Permissions: read_mailbox
      *
