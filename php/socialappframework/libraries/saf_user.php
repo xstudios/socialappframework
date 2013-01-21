@@ -343,65 +343,46 @@ class SAF_User extends SAF_Debug {
         // is the app access token and not a user access token
         $uid = $this->_facebook->getUserId() ? $this->_facebook->getUserId() : 'me';
 
-        // do we have enough info to attempt to get user data?
-        $access_token = $this->_facebook->getAccessToken();
-        $proceed = true;
-        if ($uid === 'me' && $access_token === $this->_facebook->getAppAccessToken()) {
-            $proceed = false;
-        }
+        // we have a user id and an access token, so probably a logged in user...
+        // if not, we'll get an exception, which we will handle below
+        try {
 
-        // if we have an access token and it's not the app access token
-        //$access_token = $this->getAccessToken();
-        //if ( !empty($access_token) ) {
-        if ($proceed === true) {
+            $this->_data = $this->_facebook->api('/'.$uid, 'GET', array(
+                //'access_token' => $access_token,
+                'fields' => SAF_Config::getGraphUserFields()
+            ));
 
-            // we have a user id and an access token, so probably a logged in user...
-            // if not, we'll get an exception, which we will handle below
-            try {
+            // if we have user data
+            if ( !empty($this->_data) ) {
 
-                $this->_data = $this->_facebook->api('/'.$uid, 'GET', array(
-                    //'access_token' => $access_token,
-                    'fields' => SAF_Config::getGraphUserFields()
-                ));
+                // set user ID
+                $this->_id = $this->_data['id'];
 
-                // if we have user data
-                if ( !empty($this->_data) ) {
-
-                    // set user ID
+                // if this is a facebook connect app this is where we will
+                // finally get a user id as there is no signed request
+                if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
                     $this->_id = $this->_data['id'];
-
-                    // if this is a facebook connect app this is where we will
-                    // finally get a user id as there is no signed request
-                    if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
-                        $this->_id = $this->_data['id'];
-                    }
-
-                    // check user permissions
-                    $this->_checkPermissions();
-
-                    // add our own useful social app framework parameter(s) to the fb_user object
-                    $this->_data['saf_perms_granted'] = $this->_granted_perms;
-                    $this->_data['saf_perms_revoked'] = $this->_revoked_perms;
-                    $this->_data['saf_page_admin']    = $this->_facebook->isPageAdmin();
-                    $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
-
-                    // create user connection
-                    $this->connection = new SAF_User_Connection($this, $this->_facebook);
-
-                    $this->debug(__CLASS__.':: User ('.$this->_id.') is authenticated with data:', $this->_data);
-
                 }
 
-            } catch (FacebookApiException $e) {
+                // check user permissions
+                $this->_checkPermissions();
 
-                $this->debug(__CLASS__.':: '.$e, null, 3);
-                $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
+                // add our own useful social app framework parameter(s) to the fb_user object
+                $this->_data['saf_perms_granted'] = $this->_granted_perms;
+                $this->_data['saf_perms_revoked'] = $this->_revoked_perms;
+                $this->_data['saf_page_admin']    = $this->_facebook->isPageAdmin();
+                $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
+
+                // create user connection
+                $this->connection = new SAF_User_Connection($this, $this->_facebook);
+
+                $this->debug(__CLASS__.':: User ('.$this->_id.') is authenticated with data:', $this->_data);
 
             }
 
-        } else {
+        } catch (FacebookApiException $e) {
 
-            //$this->debug(__CLASS__.':: No Access Token. Unable to get user data.', null, 3);
+            $this->debug(__CLASS__.':: '.$e, null, 3);
             $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
 
         }
