@@ -195,7 +195,7 @@ class SAF_User extends SAF_Debug {
     }
 
     /**
-     * Returns the granted permissions
+     * Returns the permissions the user granted
      *
      * @access    public
      * @return    array
@@ -205,7 +205,7 @@ class SAF_User extends SAF_Debug {
     }
 
     /**
-     * Returns the revoked permissions
+     * Returns the permissions the user revoked
      *
      * @access    public
      * @return    array
