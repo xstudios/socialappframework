@@ -166,16 +166,6 @@ class SAF_Page extends SAF_Debug {
     }
 
     /**
-     * Returns the app's Canvas URL (if it has one)
-     *
-     * @access    public
-     * @return    string
-     */
-    public function getCanvasUrl() {
-        return $this->_getValue('saf_canvas_url');
-    }
-
-    /**
      * Returns true if the page is published
      *
      * @access    public
@@ -299,7 +289,6 @@ class SAF_Page extends SAF_Debug {
         }
 
         $this->_data['saf_add_page_tab_url']  = SAF_Config::getAddPageTabUrl();
-        $this->_data['saf_canvas_url']        = SAF_Config::getCanvasUrl();
         $this->_data['saf_page_restrictions'] = $page_restrictions;
         $this->_data['saf_page_liked']        = $this->_facebook->isPageLiked();
         $this->_data['saf_rss_url']           = $this->getRssUrl();
