@@ -16,8 +16,8 @@
 The SAF Page class provides easy access to Page data and all a Page's available
 connections as well as to the Page Access Token (only if the User is the Page
 admin). See API docs on a [Page](https://developers.facebook.com/docs/reference/api/page/).
-**It is important to note that the Page class is only available in Tab 
-applications, unless you explicitly call `SAF_Config::setPageId('PAGE_ID')` 
+**It is important to note that the Page class is only available in Tab
+applications, unless you explicitly call `SAF_Config::setPageId('PAGE_ID')`
 before calling `SAF::instance()`.**
 
 ##Public Methods
@@ -110,16 +110,6 @@ Returns the URL needed to add the app to a page. Usage example:
     $saf->page->getAddTabUrl();
 
     // Produces: https://www.facebook.com/dialog/pagetab?app_id=156875707703556
-
-***
-
-###getCanvasUrl()
-####Returns: _string_
-Returns the app's Canvas URL (if it has one). Usage example:
-
-    $saf->page->getCanvasUrl();
-
-    // Produces: https://apps.facebook.com/social-app-framework/
 
 ***
 
