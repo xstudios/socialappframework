@@ -295,17 +295,22 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
         $this->debug('--------------------');
 
-        // if we have a user id, create a new user
-        if (!empty($this->_user_id)) {
-            $this->user = new SAF_User($this, $this->_user_id);
-        }
+        // NOTE: Page must be created before User as User will reference Page
+        // methods for Tab and Canvas apps
 
         // check if config forced a page ID
-        $this->_page_id = SAF_Config::getPageId();
+        if (empty($this->_page_id)) {
+            $this->_page_id = SAF_Config::getPageId();
+        }
 
         // if we have a page id, create a new page
         if (!empty($this->_page_id)) {
             $this->page = new SAF_Page($this, $this->_page_id);
+        }
+
+        // if we have a user id, create a new user
+        if (!empty($this->_user_id)) {
+            $this->user = new SAF_User($this, $this->_user_id);
         }
     }
 
@@ -364,7 +369,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
             }
 
-        } 
+        }
     }
 
     // ------------------------------------------------------------------------
