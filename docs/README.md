@@ -20,11 +20,11 @@ your config file of course):
 
 ## Table of Contents
 
-* [SAF Config](saf_config.md)
-* [SAF Class](saf.md)
-* [SAF Base Class](saf_base.md)
-* [SAF Signed Request Class](saf_signed_request.md)
-* [SAF Page Class](saf_page.md)
-* [SAF Page Connection Class](saf_page_connection.md)
-* [SAF User Class](saf_user.md)
-* [SAF User Connection Class](saf_user_connection.md)
+* [SAF Config](docs/saf_config.md)
+* [SAF Class](docs/saf.md)
+* [SAF Base Class](docs/saf_base.md)
+* [SAF Signed Request Class](docs/saf_signed_request.md)
+* [SAF Page Class](docs/saf_page.md)
+* [SAF Page Connection Class](docs/saf_page_connection.md)
+* [SAF User Class](docs/saf_user.md)
+* [SAF User Connection Class](docs/saf_user_connection.md)
