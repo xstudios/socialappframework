@@ -133,7 +133,7 @@ class SAF_Page_Connection {
     /**
      * Returns a list of the page's conversations.
      *
-     * Permissions: Page admin access token with read_mailbox permission
+     * Permissions: Page access token with read_mailbox permission
      *
      * @access    public
      * @return    array  of checkin objects
@@ -159,7 +159,7 @@ class SAF_Page_Connection {
     // ------------------------------------------------------------------------
 
     /**
-     * Get the page's wall
+     * Get the page's wall.
      *
      * @access    public
      * @return    array  of Post objects
@@ -195,7 +195,7 @@ class SAF_Page_Connection {
     // ------------------------------------------------------------------------
 
     /**
-     * Get the page's Insights data
+     * Get the page's Insights data.
      *
      * Permissions: read_insights permission
      *
@@ -259,7 +259,7 @@ class SAF_Page_Connection {
     // ------------------------------------------------------------------------
 
     /**
-     * Get the page's profile picture
+     * Returns the page's profile picture.
      *
      * @access    public
      * @param     string  $type  square, small, normal, large
@@ -311,7 +311,7 @@ class SAF_Page_Connection {
     // ------------------------------------------------------------------------
 
     /**
-     * Get the page's settings
+     * Returns the page's settings.
      *
      * @access    public
      * @return    array  of objects containing setting and value fields
@@ -337,9 +337,9 @@ class SAF_Page_Connection {
     // ------------------------------------------------------------------------
 
     /**
-     * Get the page's tabs
+     * Returns the page's tabs.
      *
-     * Permissions: Page admin access token
+     * Permissions: Page access token
      *
      * @access    public
      * @return    array  of tab objects
