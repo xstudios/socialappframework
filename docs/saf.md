@@ -7,9 +7,10 @@
 * [SAF Class](saf.md)
 * [SAF Base Class](saf_base.md)
 * [SAF Signed Request Class](saf_signed_request.md)
-* [SAF Fan Page Class](saf_fan_page.md)
-* [SAF Facebook User Class](saf_facebook_user.md)
-* [SAF Session](saf_session.md)
+* [SAF Page Class](saf_page.md)
+* [SAF Page Connection Class](saf_page_connection.md)
+* [SAF User Class](saf_user.md)
+* [SAF User Connection Class](saf_user_connection.md)
 
 # SAF Class
 The SAF class is a small class with a simple task: Initialize the framework.
@@ -21,11 +22,10 @@ Usage Example:
     SAF_Config::setAppType(SAF_Config::APP_TYPE_TAB);
 
     // create and initialize the SAF instance
-    $saf = new SAF();
-    $saf->init();
+    $saf = SAF::instance();
 
     // to login and authenticate the user manually, then call
-    $login_url = $this->getLoginUrl();
+    $login_url = $saf->user->getLoginUrl();
 
 >**NOTE:** You would use the `$login_url` value as the href value of a link
 the user clicks.

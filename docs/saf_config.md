@@ -7,14 +7,15 @@
 * [SAF Class](saf.md)
 * [SAF Base Class](saf_base.md)
 * [SAF Signed Request Class](saf_signed_request.md)
-* [SAF Fan Page Class](saf_fan_page.md)
-* [SAF Facebook User Class](saf_facebook_user.md)
-* [SAF Session](saf_session.md)
+* [SAF Page Class](saf_page.md)
+* [SAF Page Connection Class](saf_page_connection.md)
+* [SAF User Class](saf_user.md)
+* [SAF User Connection Class](saf_user_connection.md)
 
 # SAF Config Class
 The SAF class is a small class with a simple task: Configure the framework. All
-of its methods are static. This class exists purely to make configuration very
-easy and allow for code completion in IDEs.
+of its methods are static. This class exists purely to make configuration 
+extremely easy and allow for code completion in IDEs.
 
 ## Public Methods
 
@@ -22,7 +23,7 @@ easy and allow for code completion in IDEs.
 ####Parameter: _string_
 Set the app type. Possible values are `tab`, `canvas`, or `facebook connect`. It
 is highly recommended to use the constants supplied in SAF_Config. This should
-be set __before__ calling `$saf->init()`. Usage example:
+be set __before__ calling `SAF::instance()`. Usage example:
 
     // set the framework app type for use with a tab app
     SAF_Config::setAppType(SAF_Config::APP_TYPE_TAB);
@@ -31,7 +32,7 @@ be set __before__ calling `$saf->init()`. Usage example:
 
 ###getAppType()
 ####Returns: _string_
-Get the app type. Usage example:
+Returns the app type. Usage example:
 
     SAF_Config::getAppType();
 
@@ -47,7 +48,7 @@ Set the Facebook app ID. Usage example:
 
 ###getAppId()
 ####Returns: _string_
-Get the Facebook app ID. Usage example:
+Returns the Facebook app ID. Usage example:
 
     SAF_Config::getAppId();
 
@@ -63,7 +64,7 @@ Set the Facebook app secret. Usage example:
 
 ###getAppSecret()
 ####Returns: _string_
-Get the Facebook app secret. Usage example:
+Returns the Facebook app secret. Usage example:
 
     SAF_Config::getAppSecret();
 
@@ -80,7 +81,7 @@ Set the Facebook SDK to allow file uploads. Usage example:
 
 ###getFileUpload()
 ####Returns: _bool_
-Get the Facebook SDK allow file upload value. Usage example:
+Returns the Facebook SDK allow file upload value. Usage example:
 
     SAF_Config::getFileUpload();
 
@@ -96,7 +97,7 @@ Set the Facebook app name. Usage example:
 
 ###getAppName()
 ####Returns: _string_
-Get the Facebook app name. Usage example:
+Returns the Facebook app name. Usage example:
 
     SAF_Config::getAppName();
 
@@ -112,7 +113,7 @@ Set the Facebook app namespace. **Canvas apps only**. Usage example:
 
 ###getAppNamespace()
 ####Returns: _string_
-Get the Facebook app namespace. Usage example:
+Returns the Facebook app namespace. Usage example:
 
     SAF_Config::getAppNamespace();
 
@@ -129,7 +130,7 @@ Set the Facebook fan page admins. The value should be a comma delimited string.
 
 ###getAdmins()
 ####Returns: _string_
-Get the Facebook fan page admins. Usage example:
+Returns the Facebook fan page admins. Usage example:
 
     SAF_Config::getAdmins();
 
@@ -146,7 +147,7 @@ Usage example:
 
 ###getDevelopers()
 ####Returns: _string_
-Get the app developers. Usage example:
+Returns the app developers. Usage example:
 
     SAF_Config::getDevelopers();
 
@@ -162,7 +163,7 @@ Set the base URL. Usage example:
 
 ###getBaseUrl()
 ####Returns: _string_
-Get the base URL. Usage example:
+Returns the base URL. Usage example:
 
     SAF_Config::getBaseUrl();
 
@@ -170,7 +171,7 @@ Get the base URL. Usage example:
 
 ###getPageTabUrl()
 ####Returns: _string_
-Get the page Tab app URL. Usage example:
+Returns the page Tab app URL. Usage example:
 
     SAF_Config::getPageTabUrl();
 
@@ -178,7 +179,7 @@ Get the page Tab app URL. Usage example:
 
 ###getCanvasUrl()
 ####Returns: _string_
-Get the Canvas app URL. Usage example:
+Returns the Canvas app URL. Usage example:
 
     SAF_Config::getCanvasUrl();
 
@@ -186,7 +187,7 @@ Get the Canvas app URL. Usage example:
 
 ###getAddPageTabUrl()
 ####Returns: _string_
-Get the add page tab URL. Usage example:
+Returns the add page tab URL. Usage example:
 
     SAF_Config::getAddPageTabUrl();
 
@@ -203,7 +204,7 @@ delimited string. Usage example:
 
 ###getExtendedPerms()
 ####Returns: _string_
-Get the extended permissions to ask of the user. Usage example:
+Returns the extended permissions to ask of the user. Usage example:
 
     SAF_Config::getExtendedPerms();
 
@@ -221,7 +222,7 @@ should be a comma delimited string. Usage example:
 
 ###getExtendedPermsAdmin()
 ####Returns: _string_
-Get the extended permissions to ask of the admin. Usage example:
+Returns the extended permissions to ask of the admin. Usage example:
 
     SAF_Config::getExtendedPermsAdmin();
 
@@ -240,7 +241,7 @@ Usage example:
 
 ###getFanPageHash()
 ####Returns: _string_
-Get the fan page hash. Usage example:
+Returns the fan page hash. Usage example:
 
     SAF_Config::getFanPageHash();
 
@@ -257,7 +258,7 @@ viewing the Tab or Canvas app within Facebook. Usage example:
 
 ###getForceFacebookView()
 ####Returns: _bool_
-Get the force Facebook view value. Usage example:
+Returns the force Facebook view value. Usage example:
 
     SAF_Config::getForceFacebookView();
 
@@ -276,7 +277,7 @@ block 3rd party cookies (eg - any app within an iframe). Usage example:
 
 ###getThirdPartyCookieFix()
 ####Returns: _bool_
-Get the 3rd party cookie fix value. Usage example:
+Returns the 3rd party cookie fix value. Usage example:
 
     SAF_Config::getThirdPartyCookieFix();
 
@@ -293,7 +294,7 @@ should be a comma delimited string. Usage example:
 
 ###getGraphUserFields()
 ####Returns: _string_
-Get the fields we want to retrive from the Graph API for a user. Usage example:
+Returns the fields we want to retrive from the Graph API for a user. Usage example:
 
     SAF_Config::getGraphUserFields();
 
@@ -310,7 +311,7 @@ should be a comma delimited string. Usage example:
 
 ###getGraphPageFields()
 ####Returns: _string_
-Get the fields we want to retrive from the Graph API for a page. Usage example:
+Returns the fields we want to retrive from the Graph API for a page. Usage example:
 
     SAF_Config::getGraphPageFields();
 
@@ -328,7 +329,7 @@ logout button/link in the app). This logout URL would be obtained by calling the
 
 ###getLogoutRoute()
 ####Returns: _string_
-Gets the logout route. Usage example:
+Returns the logout route. Usage example:
 
     SAF_Config::getLogoutRoute();
     // Produces: http://domain.com/logout
@@ -340,5 +341,24 @@ Typically, your logout endpoint would do something like this:
     // because it will work with any type of app: Tab, Canvas or Facebook Connect
     echo '<script>top.location.href = "https://facebook.com/";</script>';
 
+
+***
+
+###setPageId($value)
+####Parameter: _string_
+Set the Page ID. Usage example:
+
+    SAF_Config::setPageId('PAGE_ID');
+
+>**NOTE: Only use this if you need page data on a Canvas, Facebook Connect app
+or AJAX request where Page data is not available (by default).**
+
+***
+
+###getPageId()
+####Returns: _string_
+Returns the Page ID. Usage example:
+
+    SAF_Config::getPageId();
 
 ***

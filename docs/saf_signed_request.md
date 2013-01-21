@@ -7,21 +7,21 @@
 * [SAF Class](saf.md)
 * [SAF Base Class](saf_base.md)
 * [SAF Signed Request Class](saf_signed_request.md)
-* [SAF Fan Page Class](saf_fan_page.md)
-* [SAF Facebook User Class](saf_facebook_user.md)
-* [SAF Session](saf_session.md)
+* [SAF Page Class](saf_page.md)
+* [SAF Page Connection Class](saf_page_connection.md)
+* [SAF User Class](saf_user.md)
+* [SAF User Connection Class](saf_user_connection.md)
 
-# Signed Request Class
+# SAF Signed Request Class
 The SAF Signed Request class gathers info from the signed request and does a lot
-of leg work for you such as extending access tokens, obtaining data passed to the
-application, etc. **It is important to note thatthe Signed Request class is
-only used in Tab and Canvas applications.**
+of leg work for you such as getting an access token via any means available, 
+extending access tokens, obtaining data passed to the application, etc. 
 
 ##Public Methods
 
 ###getUserId()
 ####Returns: _string_
-Get the user id of the logged in user. An alias for `getUser()`. Usage example:
+Returns the user id of the logged in user. An alias for `getUser()`. Usage example:
 
     $user_id = $saf->getUserId();
 
@@ -29,7 +29,7 @@ Get the user id of the logged in user. An alias for `getUser()`. Usage example:
 
 ###getPageId()
 ####Returns: _string_
-Get the page ID. Usage example:
+Returns the page ID. Usage example:
 
     $page_id = $saf->getPageId();
 
@@ -37,9 +37,17 @@ Get the page ID. Usage example:
 
 ***
 
+###getAppAccessToken()
+####Returns: _string_
+Returns the app access token. Usage example:
+
+    $page_id = $saf->getAppAccessToken();
+
+***
+
 ###getAppData()
 ####Returns: _string_
-Get any data passed to the app via the signed request. Usage example:
+Returns any data passed to the app via the signed request. Usage example:
 
     $app_data = $saf->getAppData();
 
@@ -49,7 +57,7 @@ Get any data passed to the app via the signed request. Usage example:
 
 ###isPageAdmin()
 ####Returns: _bool_
-Allows you to determine if the current user is the page admin. Usage example:
+Returns true if the current user is the page admin. Usage example:
 
     $saf->isPageAdmin();
 
@@ -69,8 +77,8 @@ Allows you to determine if the current user likes the fan page. Usage example:
 
 ###isPageLikeViaFanGate()
 ####Returns: _bool_
-Allows you to determine if the current user liked the fan page via a fan-gate
-method. Usage example:
+Returns true if the current user liked the fan page via a fan-gate method. 
+Usage example:
 
     $saf->isPageLikeViaFanGate();
 
@@ -85,3 +93,5 @@ access tokens for you automatically when possible. This method is documented sol
 for completeness. Usage example:
 
     $saf->setExtendedAccessToken();
+
+***
