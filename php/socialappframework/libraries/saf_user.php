@@ -429,12 +429,12 @@ class SAF_User extends SAF_Debug {
 
             // tab
             case SAF_Config::APP_TYPE_TAB:
-                return $this->page->getTabUrl();
+                return $this->_facebook->page->getTabUrl();
                 break;
 
             // canvas app
             case SAF_Config::APP_TYPE_CANVAS:
-                return $this->page->getCanvasUrl();
+                return SAF_Config::getCanvasUrl();
                 break;
 
             // facebook connect
