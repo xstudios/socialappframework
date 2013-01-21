@@ -2,24 +2,29 @@
 ### Version 1.0.0
 
 **Everything you need to know about Social App Framework**. While the framework
-does have individual classes, once instatiated and inited, all of it's methods
+does have individual classes, once instatiated and inited, all of its methods
 are available to you.  Here's a simple up and running example (after setting 
 your config file of course):
     
     require_once 'socialappframework/saf.php';
 
-    $saf = new SAF();
-    $saf->init();
+    $saf = SAF::instance();
 
-    // call a method
-    $saf->getUserFirstName(); 
+    // call any user methods
+    $name = $saf->user->getName();
+    $friends = $saf->user->connection->getFriends();
+
+    // call any page methods
+    $page_name = $saf->page->getName();
+    $photos = $saf->page->connection->getPhotos();
 
 ## Table of Contents
 
-* [SAF Config](docs/saf_config.md)
-* [SAF Class](docs/saf.md)
-* [SAF Base Class](docs/saf_base.md)
-* [SAF Signed Request Class](docs/saf_signed_request.md)
-* [SAF Fan Page Class](docs/saf_fan_page.md)
-* [SAF Facebook User Class](docs/saf_facebook_user.md)
-* [SAF Session](docs/saf_session.md)
+* [SAF Config](saf_config.md)
+* [SAF Class](saf.md)
+* [SAF Base Class](saf_base.md)
+* [SAF Signed Request Class](saf_signed_request.md)
+* [SAF Page Class](saf_page.md)
+* [SAF Page Connection Class](saf_page_connection.md)
+* [SAF User Class](saf_user.md)
+* [SAF User Connection Class](saf_user_connection.md)
