@@ -10,6 +10,11 @@ your config file of course):
 
     $saf = SAF::instance();
 
+    // authenticate the user
+    $login_url = $saf->getLoginUrl();
+
+    // once the user is authenticated...
+
     // call any user methods
     $name = $saf->user->getName();
     $friends = $saf->user->connection->getFriends();
