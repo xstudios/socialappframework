@@ -234,23 +234,23 @@ class SAF_Config {
     // ------------------------------------------------------------------------
 
     /**
-     * Get Canvas app URL
+     * Get Canvas URL
      */
     public static function getCanvasUrl() {
         return sprintf(self::URL_CANVAS, self::getAppNamespace());
     }
 
     /**
-     * Get Page Tab URL
+     * Get Tab URL
      */
-    public static function getPageTabUrl() {
+    public static function getTabUrl() {
         return sprintf(self::URL_PAGE_TAB, self::getFanPageHash(), self::getAppId());
     }
 
     /**
-     * Get Add Page Tab URL
+     * Get Add Tab URL
      */
-    public static function getAddPageTabUrl() {
+    public static function getAddTabUrl() {
         return sprintf(self::URL_ADD_PAGE_TAB, self::getAppId(), 'https://www.facebook.com/');
     }
 
