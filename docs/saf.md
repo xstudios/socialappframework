@@ -25,7 +25,7 @@ Usage Example:
     $saf = SAF::instance();
 
     // to login and authenticate the user manually, then call
-    $login_url = $saf->user->getLoginUrl();
+    $login_url = $saf->getLoginUrl();
 
 >**NOTE:** You would use the `$login_url` value as the href value of a link
 the user clicks.
