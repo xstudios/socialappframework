@@ -146,13 +146,13 @@ class SAF_Page extends SAF_Debug {
     }
 
     /**
-     * Returns the tab URL
+     * Returns the app tab URL
      *
      * @access    public
      * @return    string
      */
     public function getTabUrl() {
-        return $this->_getValue('saf_page_tab_url');
+        return $this->_getValue('saf_app_tab_url');
     }
 
     /**
@@ -162,7 +162,7 @@ class SAF_Page extends SAF_Debug {
      * @return    string
      */
     public function getAddTabUrl() {
-        return $this->_getValue('saf_add_page_tab_url');
+        return $this->_getValue('saf_add_tab_url');
     }
 
     /**
@@ -182,7 +182,7 @@ class SAF_Page extends SAF_Debug {
      * @return    boolean
      */
     public function isLiked() {
-        return $this->_getValue('saf_page_liked');
+        return $this->_getValue('saf_liked');
     }
 
     /**
@@ -192,7 +192,7 @@ class SAF_Page extends SAF_Debug {
      * @return    boolean
      */
     public function hasRestrictions() {
-        return $this->_getValue('saf_page_restrictions');
+        return $this->_getValue('saf_restrictions');
     }
 
     /**
@@ -247,6 +247,11 @@ class SAF_Page extends SAF_Debug {
                 // inject SAF data, no page restrictions we are aware of
                 $this->_data = $this->_injectSAFData(false);
 
+                // if this is an app tab set the redirect URL to this tab
+                if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
+                    $this->_facebook->setRedirectUrl($this->getTabUrl());
+                }
+
             // probably some sort of page restriction (country/age)
             } else {
 
@@ -254,7 +259,12 @@ class SAF_Page extends SAF_Debug {
                 $this->_data = $this->_injectSAFData(true);
 
                 // fall back to default page URL as SAF_User will need this value
-                $this->_tab_url = 'https://www.facebook.com/';
+                $this->_data['saf_app_tab_url'] = 'https://www.facebook.com/';
+
+                // if this is an app tab set the redirect URL to this tab
+                if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
+                    $this->_facebook->setRedirectUrl($this->getTabUrl());
+                }
 
                 $this->debug(__CLASS__.':: Page ('.$this->_id.') may be unpublished or have country/age restrictions', null, 3, true);
 
@@ -285,13 +295,13 @@ class SAF_Page extends SAF_Debug {
     private function _injectSAFData($page_restrictions=false) {
         if ( isset($this->_data['link']) ) {
             $url = str_replace( 'http', 'https', $this->_data['link'].'?sk=app_'.SAF_Config::getAppId() );
-            $this->_data['saf_page_tab_url'] = $url;
+            $this->_data['saf_app_tab_url'] = $url;
         }
 
-        $this->_data['saf_add_page_tab_url']  = SAF_Config::getAddPageTabUrl();
-        $this->_data['saf_page_restrictions'] = $page_restrictions;
-        $this->_data['saf_page_liked']        = $this->_facebook->isPageLiked();
-        $this->_data['saf_rss_url']           = $this->getRssUrl();
+        $this->_data['saf_add_tab_url']  = SAF_Config::getAddTabUrl();
+        $this->_data['saf_restrictions'] = $page_restrictions;
+        $this->_data['saf_liked']        = $this->_facebook->isPageLiked();
+        $this->_data['saf_rss_url']      = $this->getRssUrl();
 
         return $this->_data;
     }
