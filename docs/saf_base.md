@@ -88,7 +88,7 @@ Returns true if file upload support has been enabled in the SDK. Usage example:
 ####Returns: _string_
 Returns the app access token. Usage example:
 
-    $page_id = $saf->getAppAccessToken();
+    $saf->getAppAccessToken();
 
 ***
 
@@ -114,7 +114,7 @@ connected. Usage example:
 ####Returns: _string_
 Returns the permissions the app requested. Usage example:
 
-    $saf->user->getExtendedPerms();
+    $saf->getExtendedPerms();
 
 ***
 
@@ -122,7 +122,7 @@ Returns the permissions the app requested. Usage example:
 ####Returns: _string_
 Returns the login URL. Usage example:
 
-    $saf->user->getLoginUrl();
+    $saf->getLoginUrl();
 
 >**NOTE:** This method already takes into account the proper redirect URL and
 desired scope.
@@ -133,7 +133,7 @@ desired scope.
 ####Returns: _string_
 Returns the logout URL. Usage example:
 
-    $saf->user->getLogoutUrl();
+    $saf->getLogoutUrl();
 
 >**NOTE:** This method already takes into account the proper redirect URL.
 
@@ -143,7 +143,7 @@ Returns the logout URL. Usage example:
 ####Returns: _string_
 Returns the login link (anchor tag). Usage example:
 
-    $saf->user->getLoginLink();
+    $saf->getLoginLink();
 
 ***
 
@@ -151,7 +151,7 @@ Returns the login link (anchor tag). Usage example:
 ####Returns: _string_
  Returns the logout link (anchor tag). Usage example:
 
-    $saf->user->getLogoutLink();
+    $saf->getLogoutLink();
 
 ***
 
