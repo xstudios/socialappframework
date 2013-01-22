@@ -98,6 +98,16 @@ abstract class SAF_Base extends Facebook {
     // ------------------------------------------------------------------------
 
     /**
+     * Returns the app's access token
+     *
+     * @access    public
+     * @return    string|int
+     */
+    public function getAppAccessToken() {
+        return $this->getApplicationAccessToken();
+    }
+
+    /**
      * Returns the login URL
      *
      * Override's the Facebook SDK's native method
