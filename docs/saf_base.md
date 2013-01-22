@@ -17,7 +17,8 @@ The SAF Base class is a small class with a simple task: Initialize the
 Facebook SDK and start a session.
 
 ##Public Methods
-The public methods are the **same** methods available to the Facebook PHP SDK.
+The public methods are the **same** methods available to the Facebook PHP SDK
+with some other useful methods thrown in.
 
 ###setAppId($value)
 ####Parameter: _string_
