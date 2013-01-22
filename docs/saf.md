@@ -24,7 +24,7 @@ Usage Example:
     // create and initialize the SAF instance
     $saf = SAF::instance();
 
-    // to login and authenticate the user manually, then call
+    // login and authenticate the user (this URL would be the href of your link)
     $login_url = $saf->getLoginUrl();
 
 >**NOTE:** You would use the `$login_url` value as the href value of a link
