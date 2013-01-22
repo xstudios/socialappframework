@@ -51,6 +51,22 @@ Returns the app secret that the SDK is currently using. Usage example:
 
 ***
 
+###setAccessToken($value)
+####Parameter: _string_
+Sets the current access token being used by the SDK. Usage example:
+
+    $saf->setAccessToken('ACCESS_TOKEN');
+
+***
+
+###getAccessToken()
+####Returns: _string_
+Returns the current access token being used by the SDK. Usage example:
+
+    $saf->getAccessToken();
+
+***
+
 ###setFileUploadSupport($value)
 ####Parameter: _bool_
 Set the file upload support status. Usage example:
@@ -67,19 +83,13 @@ Returns true if file upload support has been enabled in the SDK. Usage example:
 
 ***
 
-###setAccessToken($value)
-####Parameter: _string_
-Sets the current access token being used by the SDK. Usage example:
+###getAppAccessToken()
+####Returns: _string_
+Returns the app access token. Usage example:
 
-    $saf->setAccessToken('ACCESS_TOKEN');
+    $page_id = $saf->getAppAccessToken();
 
 ***
-
-###getAccessToken()
-####Returns: _string_
-Returns the current access token being used by the SDK. Usage example:
-
-    $saf->getAccessToken();
 
 ###getSignedRequest()
 ####Returns: _array_
@@ -96,6 +106,51 @@ Returns the user ID of the connected user, or 0 if the Facebook user is not
 connected. Usage example:
 
     $saf->getUser();
+
+***
+
+###getExtendedPerms()
+####Returns: _string_
+Returns the permissions the app requested. Usage example:
+
+    $saf->user->getExtendedPerms();
+
+***
+
+###getLoginUrl()
+####Returns: _string_
+Returns the login URL. Usage example:
+
+    $saf->user->getLoginUrl();
+
+>**NOTE:** This method already takes into account the proper redirect URL and
+desired scope.
+
+***
+
+###getLogoutUrl()
+####Returns: _string_
+Returns the logout URL. Usage example:
+
+    $saf->user->getLogoutUrl();
+
+>**NOTE:** This method already takes into account the proper redirect URL.
+
+***
+
+###getLoginLink()
+####Returns: _string_
+Returns the login link (anchor tag). Usage example:
+
+    $saf->user->getLoginLink();
+
+***
+
+###getLogoutLink()
+####Returns: _string_
+ Returns the logout link (anchor tag). Usage example:
+
+    $saf->user->getLogoutLink();
 
 ***
 

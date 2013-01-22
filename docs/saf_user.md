@@ -96,14 +96,6 @@ Returns the user's profile picture URL. Usage example:
 
 ***
 
-###getExtendedPerms()
-####Returns: _string_
-Returns the permissions the app requested. Usage example:
-
-    $saf->user->getExtendedPerms();
-
-***
-
 ###getGrantedPerms()
 ####Returns: _array_
 Returns the permissions the user granted. Usage example:
@@ -117,43 +109,6 @@ Returns the permissions the user granted. Usage example:
 Returns the permissions the user revoked. Usage example:
 
     $saf->user->getRevokedPerms();
-
-***
-
-###getLoginUrl()
-####Returns: _string_
-Returns the login URL. Usage example:
-
-    $saf->user->getLoginUrl();
-
->**NOTE:** This method already takes into account the proper redirect URL and
-desired scope.
-
-***
-
-###getLogoutUrl()
-####Returns: _string_
-Returns the logout URL. Usage example:
-
-    $saf->user->getLogoutUrl();
-
->**NOTE:** This method already takes into account the proper redirect URL.
-
-***
-
-###getLoginLink()
-####Returns: _string_
-Returns the login link (anchor tag). Usage example:
-
-    $saf->user->getLoginLink();
-
-***
-
-###getLogoutLink()
-####Returns: _string_
- Returns the logout link (anchor tag). Usage example:
-
-    $saf->user->getLogoutLink();
 
 ***
 

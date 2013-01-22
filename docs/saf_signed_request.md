@@ -37,14 +37,6 @@ Returns the page ID. Usage example:
 
 ***
 
-###getAppAccessToken()
-####Returns: _string_
-Returns the app access token. Usage example:
-
-    $page_id = $saf->getAppAccessToken();
-
-***
-
 ###getAppData()
 ####Returns: _string_
 Returns any data passed to the app via the signed request. Usage example:

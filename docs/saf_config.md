@@ -169,11 +169,11 @@ Returns the base URL. Usage example:
 
 ***
 
-###getPageTabUrl()
+###getTabUrl()
 ####Returns: _string_
-Returns the page Tab app URL. Usage example:
+Returns the Tab app URL. Usage example:
 
-    SAF_Config::getPageTabUrl();
+    SAF_Config::getTabUrl();
 
 ***
 
@@ -185,11 +185,11 @@ Returns the Canvas app URL. Usage example:
 
 ***
 
-###getAddPageTabUrl()
+###getAddTabUrl()
 ####Returns: _string_
 Returns the add page tab URL. Usage example:
 
-    SAF_Config::getAddPageTabUrl();
+    SAF_Config::getAddTabUrl();
 
 ***
 
