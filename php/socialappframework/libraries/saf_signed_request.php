@@ -92,16 +92,6 @@ abstract class SAF_Signed_Request extends SAF_Base {
         return $this->_page_id;
     }
 
-     /**
-     * Returns the app's access token
-     *
-     * @access    public
-     * @return    string|int
-     */
-    public function getAppAccessToken() {
-        return $this->getApplicationAccessToken();
-    }
-
     /**
      * Returns the app data
      *
