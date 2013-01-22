@@ -45,14 +45,6 @@ class SAF_User extends SAF_Debug {
     private $_data;
 
     /**
-     * The permissions the app is asking for
-     *
-     * @access    private
-     * @var       string
-     */
-    private $_extended_perms = '';
-
-    /**
      * The permissions granted
      *
      * @access    private
@@ -67,13 +59,6 @@ class SAF_User extends SAF_Debug {
      * @var       array
      */
     private $_revoked_perms  = array();
-
-    /**
-     * Redirect URL used for login URL
-     *
-     * @var    string
-     */
-    private $_redirect_url;
 
     /**
      * User connection
@@ -185,16 +170,6 @@ class SAF_User extends SAF_Debug {
     }
 
     /**
-     * Returns the permissions the app requested
-     *
-     * @access    public
-     * @return    string
-     */
-    public function getExtendedPerms() {
-        return $this->_extended_perms;
-    }
-
-    /**
      * Returns the permissions the user granted
      *
      * @access    public
@@ -212,55 +187,6 @@ class SAF_User extends SAF_Debug {
      */
     public function getRevokedPerms() {
         return $this->_revoked_perms;
-    }
-
-    /**
-     * Returns the login URL
-     *
-     * Override's the Facebook SDK's native method
-     *
-     * @access    public
-     * @return    string
-     */
-    public function getLoginUrl() {
-        $params = array(
-            'scope'        => $this->_extended_perms,
-            'redirect_uri' => $this->_redirect_url
-        );
-        return $this->_facebook->getLoginUrl($params);
-    }
-
-    /**
-     * Returns the logout URL
-     *
-     * Override's the Facebook SDK's native method
-     *
-     * @access    public
-     * @return    string
-     */
-    public function getLogoutUrl() {
-        $params = array( 'next' => SAF_Config::getLogoutRoute() );
-        return $this->_facebook->getLogoutUrl($params);
-    }
-
-    /**
-     * Returns the login link (anchor tag)
-     *
-     * @access    public
-     * @return    string
-     */
-    public function getLoginLink() {
-        return FB_Helper::login_link($this->getLoginUrl());
-    }
-
-    /**
-     * Returns the logout link (anchor tag)
-     *
-     * @access    public
-     * @return    string
-     */
-    public function getLogoutLink() {
-        return FB_Helper::logout_link($this->getLogoutUrl());
     }
 
     /**
@@ -285,16 +211,6 @@ class SAF_User extends SAF_Debug {
             return true;
         }
         return false;
-    }
-
-    /**
-     * Sets the redirect URL to be used with getLoginUrl()
-     *
-     * @access    public
-     * @return    void
-     */
-    public function setRedirectUrl($value) {
-        $this->_redirect_url = $value;
     }
 
     // ------------------------------------------------------------------------
@@ -325,17 +241,12 @@ class SAF_User extends SAF_Debug {
      * @return    void
      */
     private function _init() {
-        // determine our redirect url
-        $this->_redirect_url = $this->_determineRedirectUrl();
-
         // 3rd party cookie fix
         $this->_thirdPartyCookieFix();
 
-        // is the user a regular user or page admin and what extended perms should we ask for?
-        if ( $this->_facebook->isPageAdmin() == false ) {
-            $this->_extended_perms = SAF_Config::getExtendedPerms();
-        } else {
-            $this->_extended_perms = SAF_Config::getExtendedPermsAdmin();
+        // if the user is the page admin he may require additional perms
+        if ( $this->_facebook->isPageAdmin() === true ) {
+            $this->_facebook->setExtendedPerms(SAF_Config::getExtendedPermsAdmin());
         }
 
         // failsafe, use the user id or 'me', which allows us to still
@@ -419,34 +330,6 @@ class SAF_User extends SAF_Debug {
     // ------------------------------------------------------------------------
 
     /**
-     * Returns the proper redirect URL for use with getLoginUrl()
-     *
-     * @access    private
-     * @return    string
-     */
-    private function _determineRedirectUrl() {
-        switch (SAF_Config::getAppType()) {
-
-            // tab
-            case SAF_Config::APP_TYPE_TAB:
-                return $this->_facebook->page->getTabUrl();
-                break;
-
-            // canvas app
-            case SAF_Config::APP_TYPE_CANVAS:
-                return SAF_Config::getCanvasUrl();
-                break;
-
-            // facebook connect
-            default:
-                return SAF_Config::getBaseUrl();
-
-        }
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
      * Returns true if the user is the app developer
      *
      * @access    private
@@ -475,7 +358,7 @@ class SAF_User extends SAF_Debug {
      */
     private function _checkPermissions() {
         // explode our comma seperated perms into an array
-        $extended_perms = preg_replace('/\s+/', '', $this->_extended_perms);
+        $extended_perms = preg_replace('/\s+/', '', $this->_facebook->getExtendedPerms());
         $required_perms = explode(',', $extended_perms);
 
         try {
@@ -503,7 +386,7 @@ class SAF_User extends SAF_Debug {
 
         } catch (FacebookApiException $e) {
 
-            $this->debug(__CLASS__.':: Unable to check permissions. '.$e, null, 3, true);
+            $this->debug(__CLASS__.':: Unable to check permissions. '.$e->getMessage(), null, 3, true);
 
         }
 
