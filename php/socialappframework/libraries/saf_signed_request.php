@@ -159,8 +159,8 @@ abstract class SAF_Signed_Request extends SAF_Base {
             return;
         }
 
-        // setExtendedAccessToken() does not return a value on success, but will
-        // return false on an error
+        // setExtendedAccessToken() does not return a value on success,
+        // but will return false on an error
         $result = parent::setExtendedAccessToken();
         if ($result === false) {
             $this->debug(__CLASS__.':: Error trying to extend the access token.');
@@ -169,6 +169,10 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
         $access_token = $this->getPersistentData('access_token');
         $this->setAccessToken($access_token);
+
+        // store in our session (which the SDK will not overwrite)
+        $_SESSION['saf_'.SAF_Config::getAppId().'_access_token'] = $access_token;
+
         $this->debug(__CLASS__.':: Set extended access token.');
     }
 
@@ -197,32 +201,33 @@ abstract class SAF_Signed_Request extends SAF_Base {
      * @return    void
      */
     private function _init() {
-        // get the signed request (only available for tab or canvas apps)
-        // however, it will exist on Facebook Connect apps if using the
-        // Javascript SDK.
-        $signed_request = $this->getSignedRequest();
-
-        // TEMP FIX, ALLOWS US TO MAKE AJAX CALLS FROM OUR APP BY GETTING
-        // THE CODE FROM THE SR AND EXCHANGING IT FOR AN ACCESS TOKEN
-        $this->_facebookConnect();
-
-        // get the user id by any available means (signed request, auth code, session)
-        $this->_user_id = $this->getUser();
 
         // immediately exchange the short-lived access token for a long-lived one
         $this->setExtendedAccessToken();
+
+        // get the user id by any available means (signed request, auth code, session)
+        $this->_user_id = $this->getUser();
 
         if (!empty($this->_user_id)) {
             $this->debug(__CLASS__.':: User ID ('.$this->_user_id.').');
         }
 
+        // get the signed request (only available for tab or canvas apps)
+        // however, it will exist on Facebook Connect apps if using the
+        // Javascript SDK.
+        $signed_request = $this->getSignedRequest();
+
         // if we have a signed request
         if ( !empty($signed_request) ) {
 
-            // force user to view tab or canvas app within Facebook chrome
             // a code will only be present if the app also uses the Javascript SDK
             if ( isset($signed_request['code']) ) {
+
+                // force user to view tab or canvas app within Facebook chrome
                 $this->_forceFacebookChrome();
+
+                // get the stored access token from the session
+                $this->_getStoredAccessToken();
             }
 
             // are we viewing this within a fan page?
@@ -317,6 +322,36 @@ abstract class SAF_Signed_Request extends SAF_Base {
     // ------------------------------------------------------------------------
 
     /**
+     * Returns the stored access token from the Session if it exists. We should
+     * use this for all future API calls.
+     *
+     * @access    private
+     * @return    void
+     */
+    private function _getStoredAccessToken() {
+        // 1st, attempt to get the Facebook SDK's session (extended) access token
+        $access_token = $this->getPersistentData('access_token');
+
+        // 2nd, attempt to get the SAF session (extended) access token
+        // TODO: these seems hackish, but it works...may wish to revisit this
+        if (empty($access_token)) {
+            //$access_token = $_SESSION[$this->createSafVariableName('access_token')];
+        }
+
+        // if we have an access token, then set the Facebook SDK to use it
+        if ($access_token) {
+            // set the SDK to use the access token
+            $this->setAccessToken($access_token);
+            $this->debug(__CLASS__.':: We have an existing access token.');
+            return $access_token;
+        }
+
+        return false;
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
      * Upon user login (authentication) Facebook Connect apps will have 'state'
      * and 'code' parameters passed.  The code must be exchanged for an access
      * token.
@@ -325,18 +360,13 @@ abstract class SAF_Signed_Request extends SAF_Base {
      * @return    void
      */
     private function _facebookConnect() {
+        $this->debug(__CLASS__.':: Attempt Facebook Connect.');
+
         // Dec 5th breaking change fix: we must rely on the access token
         // we already got from exchanging the code as codes are now one-time
         // use and expire within 10 mins.
-        $access_token = $this->getPersistentData('access_token');
-        if ($access_token) {
-
-            // set the SDK to use the access token
-            $this->setAccessToken($access_token);
-
-            $this->debug(__CLASS__.':: We have an existing access token.');
+        if ($this->_getStoredAccessToken() != false) {
             return;
-
         }
 
         $signed_request = $this->getSignedRequest();
@@ -352,6 +382,17 @@ abstract class SAF_Signed_Request extends SAF_Base {
         if (!empty($code)) {
 
             // exchange the code for an access token
+            /*$token_url = $this->api('/oauth/access_token', 'GET', array(
+                'client_id' => SAF_Config::getAppId(),
+                'client_secret' => SAF_Config::getAppSecret(),
+                'redirect_uri' => urlencode(SAF_Config::getBaseUrl()),
+                'code' => $code
+            ));
+
+            parse_str($token_url, $params);
+            $access_token = $params['access_token'];*/
+
+            // exchange the code for an access token
             $access_token = $this->getAccessTokenFromCode($code, SAF_Config::getBaseUrl());
 
             if (!empty($access_token)) {
@@ -365,7 +406,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
             } else {
 
-                $this->debug(__CLASS__.':: Unable to obtain access token.', null, 3);
+                $this->debug(__CLASS__.':: Unable to obtain access token. The authorization code has been used.', null, 3);
 
             }
 
