@@ -42,6 +42,26 @@ abstract class SAF_Base extends Facebook {
     public $user;
 
     // ------------------------------------------------------------------------
+    // PRIVATE VARS
+    // ------------------------------------------------------------------------
+
+    /**
+     * The permissions the app is asking for
+     *
+     * @access    private
+     * @var       string
+     */
+    private $_extended_perms = '';
+
+    /**
+     * Redirect URL used for login URL
+     *
+     * @access    private
+     * @var       string
+     */
+    private $_redirect_url;
+
+    // ------------------------------------------------------------------------
 
     /**
      * Constructor
@@ -63,9 +83,153 @@ abstract class SAF_Base extends Facebook {
         // push additional allowed session keys into the Facebook SDK
         array_push(
             self::$kSupportedKeys,
-            'saf_fan_gate',
-            'saf_extended_access_token'
+            'saf_fan_gate'
         );
+
+        // determine our redirect url
+        $this->_redirect_url = $this->_determineRedirectUrl();
+
+        // set what perms the app requires
+        $this->_extended_perms = SAF_Config::getExtendedPerms();
+    }
+
+    // ------------------------------------------------------------------------
+    // PUBLIC METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Returns the login URL
+     *
+     * Override's the Facebook SDK's native method
+     *
+     * @access    public
+     * @param     array  of parameters to pass
+     * @return    string
+     */
+    public function getLoginUrl($params=null) {
+        // use defaults in no params passed
+        if (empty($params)) {
+            $params = array(
+                'scope'        => $this->_extended_perms,
+                'redirect_uri' => $this->_redirect_url
+            );
+        }
+        return parent::getLoginUrl($params);
+    }
+
+    /**
+     * Returns the logout URL
+     *
+     * Override's the Facebook SDK's native method
+     *
+     * @access    public
+     * @param     array  of parameters to pass
+     * @return    string
+     */
+    public function getLogoutUrl($params=null) {
+        // use defaults in no params passed
+        if (empty($params)) {
+            $params = array( 'next' => SAF_Config::getLogoutRoute() );
+        }
+        return parent::getLogoutUrl($params);
+    }
+
+    /**
+     * Returns the login link (anchor tag)
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getLoginLink() {
+        return FB_Helper::login_link($this->getLoginUrl());
+    }
+
+    /**
+     * Returns the logout link (anchor tag)
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getLogoutLink() {
+        return FB_Helper::logout_link($this->getLogoutUrl());
+    }
+
+    /**
+     * Returns the permissions the app requested
+     *
+     * @access    public
+     * @return    string  comma delimited string of perms
+     */
+    public function getExtendedPerms() {
+        return $this->_extended_perms;
+    }
+
+    /**
+     * Sets the extended perms to be used with getLoginURL();
+     *
+     * @access    public
+     * @param     string  comma delimited perms
+     * @return    void
+     */
+    public function setExtendedPerms($perms) {
+        $this->_extended_perms = $perms;
+    }
+
+    /**
+     * Sets the redirect URL to be used with getLoginUrl()
+     *
+     * @access    public
+     * @param     string  $value
+     * @return    void
+     */
+    public function setRedirectUrl($url) {
+        $this->_redirect_url = $url;
+    }
+
+    // ------------------------------------------------------------------------
+    // PRIVATE METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Returns the proper redirect URL for use with getLoginUrl()
+     *
+     * @access    private
+     * @return    string
+     */
+    private function _determineRedirectUrl() {
+        switch (SAF_Config::getAppType()) {
+
+            // tab
+            case SAF_Config::APP_TYPE_TAB:
+                return SAF_Config::getTabUrl();
+                break;
+
+            // canvas app
+            case SAF_Config::APP_TYPE_CANVAS:
+                return SAF_Config::getCanvasUrl();
+                break;
+
+            // facebook connect
+            default:
+                return SAF_Config::getBaseUrl();
+
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // PROTECTED METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Returns a SAF variable name in the form of "saf_APPID_key".
+     *
+     * @access    public
+     * @param     string  $key  the key name
+     * @return    string
+     */
+    protected function createSafVariableName($key) {
+        $parts = array('saf', SAF_Config::getAppId(), $key);
+        return implode('_', $parts);
     }
 
     // ------------------------------------------------------------------------
