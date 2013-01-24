@@ -73,7 +73,7 @@ class SAF_User extends SAF_Debug {
     // ------------------------------------------------------------------------
 
     /**
-     * Returns the user ID
+     * Returns user's Facebook ID
      *
      * @access    public
      * @return    string|int
@@ -146,7 +146,7 @@ class SAF_User extends SAF_Debug {
      * Returns the user's age range
      *
      * @access    public
-     * @return    string
+     * @return    object  containing min and max
      */
     public function getAgeRange() {
         return $this->_getValue('age_range');
@@ -295,7 +295,7 @@ class SAF_User extends SAF_Debug {
                 $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
 
                 // create user connection
-                $this->connection = new SAF_User_Connection($this, $this->_facebook);
+                //$this->connection = new SAF_User_Connection($this, $this->_facebook);
 
                 $this->debug(__CLASS__.':: User ('.$this->_id.') is authenticated with data:', $this->_data);
 
@@ -307,6 +307,9 @@ class SAF_User extends SAF_Debug {
             $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
 
         }
+
+        // create user connection
+        $this->connection = new SAF_User_Connection($this, $this->_facebook);
 
         $this->debug('--------------------');
     }
@@ -389,7 +392,6 @@ class SAF_User extends SAF_Debug {
             // everything we require
             foreach ($required_perms as $key => $value) {
                 if ( in_array($key, $this->_granted_perms) === false ) {
-                    $this->debug('Added revoked perm:', $key);
                     array_push($this->_revoked_perms, $key);
                 }
             }
