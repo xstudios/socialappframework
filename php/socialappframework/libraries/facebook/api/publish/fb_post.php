@@ -28,58 +28,6 @@ class FB_Post extends FB_OBject {
     // ------------------------------------------------------------------------
 
     /**
-     * Set message
-     *
-     * The message that appears in the post.
-     *
-     * @access    public
-     * @param     string  $value
-     * @return    void
-     */
-    public function setMessage($value) {
-        $this->_post['message'] = $value;
-    }
-
-    /**
-     * Set link
-     *
-     * The link attached to this post
-     *
-     * @access    public
-     * @param     string  $url
-     * @return    void
-     */
-    public function setLink($url) {
-        $this->_post['link'] = $url;
-    }
-
-    /**
-     * Set picture
-     *
-     * Post thumbnail image (can only be used if link is specified)
-     *
-     * @access    public
-     * @param     string  $url
-     * @return    void
-     */
-    public function setPicture($url) {
-        $this->_post['picture'] = $url;
-    }
-
-    /**
-     * Set name
-     *
-     * Post name (can only be used if link is specified)
-     *
-     * @access    public
-     * @param     string  $value
-     * @return    void
-     */
-    public function setName($value) {
-        $this->_post['name'] = $value;
-    }
-
-    /**
      * Set caption
      *
      * Post caption (can only be used if link is specified)
@@ -103,6 +51,58 @@ class FB_Post extends FB_OBject {
      */
     public function setDescription($value) {
         $this->_post['description'] = $value;
+    }
+
+    /**
+     * Set link
+     *
+     * The link attached to this post
+     *
+     * @access    public
+     * @param     string  $url
+     * @return    void
+     */
+    public function setLink($url) {
+        $this->_post['link'] = $url;
+    }
+
+    /**
+     * Set message
+     *
+     * The message that appears in the post.
+     *
+     * @access    public
+     * @param     string  $value
+     * @return    void
+     */
+    public function setMessage($value) {
+        $this->_post['message'] = $value;
+    }
+
+    /**
+     * Set name
+     *
+     * Post name (can only be used if link is specified)
+     *
+     * @access    public
+     * @param     string  $value
+     * @return    void
+     */
+    public function setName($value) {
+        $this->_post['name'] = $value;
+    }
+    
+    /**
+     * Set picture
+     *
+     * Post thumbnail image (can only be used if link is specified)
+     *
+     * @access    public
+     * @param     string  $url
+     * @return    void
+     */
+    public function setPicture($url) {
+        $this->_post['picture'] = $url;
     }
 
     /**
