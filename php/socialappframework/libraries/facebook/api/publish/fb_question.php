@@ -15,6 +15,8 @@ require_once dirname(__FILE__).'/fb_object.php';
  *
  * Assists with creating question posts
  *
+ * April 3, 2013 Breaking Change: Removing ability to POST to USER_ID/questions
+ *
  * @package      Social App Framework
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
