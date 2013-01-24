@@ -143,6 +143,16 @@ class SAF_User extends SAF_Debug {
     }
 
     /**
+     * Returns the user's age range
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getAgeRange() {
+        return $this->_getValue('age_range');
+    }
+
+    /**
      * Returns the user's profile URL
      *
      * @access    public

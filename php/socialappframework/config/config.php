@@ -44,7 +44,7 @@ SAF_Config::setDevelopers('743687287');
 // If you just want all the default fields set the parameter to an empty string
 // User fields: https://developers.facebook.com/docs/reference/api/user/
 // Page fields: https://developers.facebook.com/docs/reference/api/page/
-SAF_Config::setGraphUserFields('id, name, first_name, last_name, gender, username, email, link, picture, website');
+SAF_Config::setGraphUserFields('id, name, first_name, last_name, gender, username, email, link, picture, website, age_range');
 SAF_Config::setGraphPageFields('id, name, link, picture, website, is_published, likes');
 
 // ------------------------------------------------------------------------
