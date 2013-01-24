@@ -304,9 +304,9 @@ abstract class SAF_Signed_Request extends SAF_Base {
         }
 
         // if we have a user id, create a new user
-        if (!empty($this->_user_id)) {
+        //if (!empty($this->_user_id)) {
             $this->user = new SAF_User($this, $this->_user_id);
-        }
+        //}
     }
 
     // ------------------------------------------------------------------------
@@ -418,7 +418,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
         if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
             $this->debug(__CLASS__.':: '.$reason.'Viewing Tab app outside of Facebook.', null, 3);
             if ( SAF_Config::getForceFacebookView() == true ) {
-                header('Location: '.SAF_Config::getPageTabUrl());
+                header('Location: '.SAF_Config::getTabUrl());
                 exit;
             }
         }
