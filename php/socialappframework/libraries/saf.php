@@ -7,22 +7,6 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
-// config
-require_once dirname(__FILE__).'/../config/config.php';
-
-// helpers
-require_once dirname(__FILE__).'/../helpers/fb_helper.php';
-
-// saf
-require_once dirname(__FILE__).'/saf_config.php';
-require_once dirname(__FILE__).'/saf_base.php';
-require_once dirname(__FILE__).'/saf_debug.php';
-require_once dirname(__FILE__).'/saf_signed_request.php';
-require_once dirname(__FILE__).'/saf_page.php';
-require_once dirname(__FILE__).'/saf_page_connection.php';
-require_once dirname(__FILE__).'/saf_user.php';
-require_once dirname(__FILE__).'/saf_user_connection.php';
-
 // facebook api
 require_once dirname(__FILE__).'/facebook/sdk/facebook.php';
 require_once dirname(__FILE__).'/facebook/api/publish/fb_notification.php';
@@ -34,6 +18,22 @@ require_once dirname(__FILE__).'/facebook/api/publish/fb_link.php';
 require_once dirname(__FILE__).'/facebook/api/publish/fb_album.php';
 require_once dirname(__FILE__).'/facebook/api/publish/fb_checkin.php';
 require_once dirname(__FILE__).'/facebook/api/publish/fb_event.php';
+
+// saf
+require_once dirname(__FILE__).'/saf_config.php';
+require_once dirname(__FILE__).'/saf_base.php';
+require_once dirname(__FILE__).'/saf_debug.php';
+require_once dirname(__FILE__).'/saf_signed_request.php';
+require_once dirname(__FILE__).'/saf_page.php';
+require_once dirname(__FILE__).'/saf_page_connection.php';
+require_once dirname(__FILE__).'/saf_user.php';
+require_once dirname(__FILE__).'/saf_user_connection.php';
+
+// config (must be loaded after saf_config.php)
+require_once dirname(__FILE__).'/../config/config.php';
+
+// helpers
+require_once dirname(__FILE__).'/../helpers/fb_helper.php';
 
 /**
  * SAF class
