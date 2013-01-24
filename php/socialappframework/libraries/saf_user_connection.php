@@ -76,7 +76,7 @@ class SAF_User_Connection {
     // ------------------------------------------------------------------------
 
     /**
-     * Returns the apps and pages owned by the current user.
+     * Returns the pages owned by the current user.
      *
      * Permissions: manage_pages
      *
@@ -86,6 +86,21 @@ class SAF_User_Connection {
     public function getAccounts() {
         $this->_checkPermission('manage_pages');
         return $this->getConnection('accounts');
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Returns the apps owned by the current user.
+     *
+     * Permissions: manage_pages
+     *
+     * @access    public
+     * @return    array  of objects
+     */
+    public function getApplications() {
+        //$this->_checkPermission('manage_pages');
+        return $this->getConnection('applications/developer');
     }
 
     // ------------------------------------------------------------------------
