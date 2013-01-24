@@ -26,7 +26,7 @@ abstract class FB_Object {
     /**
      * SAF instance
      *
-     * @var  SAF
+     * @var  object SAF
      */
     protected $_facebook;
 
