@@ -72,6 +72,9 @@ class FB_Notification extends FB_Object {
     /**
      * Constructor
      *
+     * User mentions in the template should use the new syntax @[USER_ID]
+     * instead of the old syntax {USER_ID}
+     *
      * @access    public
      * @param     string  $template  the template text
      * @param     string  $href      the tracking data added to the url
