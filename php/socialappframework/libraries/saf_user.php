@@ -254,7 +254,7 @@ class SAF_User extends SAF_Debug {
         // 3rd party cookie fix
         $this->_thirdPartyCookieFix();
 
-        // if the user is the page admin he may require additional perms
+        // if the user is the page admin he/she may require additional perms
         if ( $this->_facebook->isPageAdmin() === true ) {
             $this->_facebook->setExtendedPerms(SAF_Config::getExtendedPermsAdmin());
         }
@@ -286,7 +286,9 @@ class SAF_User extends SAF_Debug {
                 }
 
                 // check user permissions
-                $this->_checkPermissions();
+                if ($this->_id) {
+                    $this->_checkPermissions();
+                }
 
                 // add our own useful social app framework parameter(s) to the fb_user object
                 $this->_data['saf_perms_granted'] = $this->_granted_perms;
@@ -303,7 +305,7 @@ class SAF_User extends SAF_Debug {
 
         } catch (FacebookApiException $e) {
 
-            $this->debug(__CLASS__.':: '.$e, null, 3);
+            $this->debug(__CLASS__.':: '.$e->getMessage(), null, 3);
             $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
 
         }
@@ -375,8 +377,10 @@ class SAF_User extends SAF_Debug {
         $required_perms = explode(',', $extended_perms);
 
         try {
+            $uid = $this->_facebook->getUserId() ? $this->_facebook->getUserId() : 'me';
+
             // call api
-            $result = $this->_facebook->api('/me/permissions', 'GET', array(
+            $result = $this->_facebook->api('/'.$uid.'/permissions', 'GET', array(
                 'access_token' => $this->_facebook->getAccessToken()
             ));
 
