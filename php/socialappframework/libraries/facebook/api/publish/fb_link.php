@@ -109,8 +109,8 @@ class FB_Link extends FB_Object {
      */
     public function create($profile_id='me') {
         // verify the profile has required permissions
-        if ($this->_facebook->hasPermission('share_item') === false &&
-            $this->_facebook->hasPermission('publish_stream') === false) {
+        if ($this->_facebook->user->hasPermission('share_item') === false &&
+            $this->_facebook->user->hasPermission('publish_stream') === false) {
             $result['error']['message'] = 'Requires permission: publish_stream or share_item';
             throw new FB_Api_Exception($result);
         }

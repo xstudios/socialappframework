@@ -26,7 +26,7 @@ abstract class FB_Object {
     /**
      * SAF instance
      *
-     * @var  object SAF
+     * @var  SAF
      */
     protected $_facebook;
 
@@ -72,7 +72,7 @@ abstract class FB_Object {
      * @return    void
      */
     protected function _verifyPermission($perm) {
-        if ($this->_facebook->hasPermission($perm) === false) {
+        if ($this->_facebook->user->hasPermission($perm) === false) {
             $result['error']['message'] = 'Requires permission: '.$perm;
             throw new FacebookApiException($result);
         }

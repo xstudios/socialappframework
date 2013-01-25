@@ -91,7 +91,7 @@ class FB_Post extends FB_OBject {
     public function setName($value) {
         $this->_post['name'] = $value;
     }
-    
+
     /**
      * Set picture
      *
@@ -247,8 +247,8 @@ class FB_Post extends FB_OBject {
      */
     public function create($profile_id='me') {
         // verify the profile has required permissions
-        if ($this->_facebook->hasPermission('publish_stream') === false &&
-            $this->_facebook->hasPermission('publish_actions') === false) {
+        if ($this->_facebook->user->hasPermission('publish_stream') === false &&
+            $this->_facebook->user->hasPermission('publish_actions') === false) {
             $result['error']['message'] = 'Requires permission: publish_stream or publish_actions';
             throw new FacebookApiException($result);
         }
