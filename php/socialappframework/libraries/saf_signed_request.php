@@ -14,11 +14,19 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class SAF_Signed_Request extends SAF_Base {
+class SAF_Signed_Request extends SAF_Debug {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS
     // ------------------------------------------------------------------------
+
+    /**
+     * Facebook instance
+     *
+     * @access    private
+     * @var       SAF_Base
+     */
+    private $_facebook;
 
     /**
      * The user ID
@@ -132,50 +140,17 @@ abstract class SAF_Signed_Request extends SAF_Base {
         return $this->_like_via_fan_gate;
     }
 
-    /**
-     * Overrides the Facebook SDK's setExtendedAccessToken() method.
-     * The Facebook SDK (3.2.2) doesn't set the access token property to the
-     * long-lived token for some strange reason so getAccessToken() will still
-     * return the short-lived token. So we have to get it from the app session
-     * where the Facebook SDK stores it and manually set the access token to the
-     * long-lived one.
-     *
-     * @access    public
-     * @return    void
-     */
-    public function setExtendedAccessToken() {
-        // if all we have is the app access token, bail...
-        if ($this->getAccessToken() === $this->getApplicationAccessToken()) {
-            return;
-        }
-
-        // setExtendedAccessToken() does not return a value on success,
-        // but will return false on an error
-        $result = parent::setExtendedAccessToken();
-        if ($result === false) {
-            $this->debug(__CLASS__.':: Error trying to extend the access token.');
-            return;
-        }
-
-        $access_token = $this->getPersistentData('access_token');
-        $this->setAccessToken($access_token);
-
-        // store in our session (which the SDK will not overwrite)
-        $_SESSION['saf_'.SAF_Config::getAppId().'_access_token'] = $access_token;
-
-        $this->debug(__CLASS__.':: Set extended access token.');
-    }
-
     // ------------------------------------------------------------------------
 
     /**
      * Constructor
      *
      * @access    public
+     * @param     SAF_Base  $facebook
      * @return    void
      */
-    public function __construct() {
-        parent::__construct();
+    public function __construct($facebook) {
+        $this->_facebook = $facebook;
 
         $this->_init();
     }
@@ -192,20 +167,10 @@ abstract class SAF_Signed_Request extends SAF_Base {
      */
     private function _init() {
 
-        // immediately exchange the short-lived access token for a long-lived one
-        $this->setExtendedAccessToken();
-
-        // get the user id by any available means (signed request, auth code, session)
-        $this->_user_id = $this->getUser();
-
-        if (!empty($this->_user_id)) {
-            $this->debug(__CLASS__.':: User ID ('.$this->_user_id.').');
-        }
-
         // get the signed request (only available for tab or canvas apps)
         // however, it will exist on Facebook Connect apps if using the
         // Javascript SDK.
-        $signed_request = $this->getSignedRequest();
+        $signed_request = $this->_facebook->getSignedRequest();
 
         // if we have a signed request
         if ( !empty($signed_request) ) {
@@ -216,29 +181,33 @@ abstract class SAF_Signed_Request extends SAF_Base {
                 // force user to view tab or canvas app within Facebook chrome
                 $this->_forceFacebookChrome();
 
-                // get the stored access token from the session
-                $this->_getStoredAccessToken();
+            }
+
+            // the signed request should solely determine who the user is
+            if (isset($signed_request['user_id'])) {
+                $this->_user_id = $signed_request['user_id'];
+                //$this->debug(__CLASS__.':: User ID ('.$this->_user_id.').');
             }
 
             // are we viewing this within a fan page?
-            // this key is only present if the app is being loaded within a page tab
+            // only present if the app is being loaded within a page tab
             if ( isset($signed_request['page']) ) {
 
                 // get page id
                 $this->_page_id = $signed_request['page']['id'];
-                $this->debug(__CLASS__.':: Page ID ('.$this->_page_id.').');
+                //$this->debug(__CLASS__.':: Page ID ('.$this->_page_id.').');
 
                 // does the user like this page?
                 $this->_page_liked = $signed_request['page']['liked'];
 
                 if ($this->_page_liked == true) {
 
-                    if ( $this->getPersistentData('saf_fan_gate') ) {
+                    if ($this->_facebook->getSafPersistentData('fan_gate')) {
 
                         $this->_like_via_fan_gate = true;
                         // unset fan gate flag so we don't keep assuming the
                         // user liked this via fan gate
-                        $this->clearPersistentData('saf_fan_gate');
+                        $this->_facebook->clearSafPersistentData('fan_gate');
                         $this->debug(__CLASS__.':: User likes this page (via Fan Gate).');
 
                     } else {
@@ -254,7 +223,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
                         $this->debug(__CLASS__.':: User does not like this page.');
                         // set a session flag so we know when the user originally
                         // came here they did not like the page
-                        $this->setPersistentData('saf_fan_gate', true);
+                        $this->_facebook->setSafPersistentData('fan_gate', true);
                     }
 
                 }
@@ -278,129 +247,17 @@ abstract class SAF_Signed_Request extends SAF_Base {
         // we are looking at the app outside of the Facebook chrome
         } else {
 
-            $this->_forceFacebookChrome('No signed request. ');
+            $this->_forceFacebookChrome();
 
             // facebook connect app
             if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
                 $this->debug(__CLASS__.':: No signed request. Viewing Facebook Connect app.', null, 3);
-                $this->_facebookConnect();
             }
 
         }
 
         $this->debug('--------------------');
 
-        // NOTE: Page must be created before User as User will reference Page
-        // methods for Tab and Canvas apps
-
-        // check if config forced a page ID
-        if (empty($this->_page_id)) {
-            $this->_page_id = SAF_Config::getPageId();
-        }
-
-        // if we have a page id, create a new page
-        if (!empty($this->_page_id)) {
-            $this->page = new SAF_Page($this, $this->_page_id);
-        }
-
-        // if we have a user id, create a new user
-        //if (!empty($this->_user_id)) {
-            $this->user = new SAF_User($this, $this->_user_id);
-        //}
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Returns the stored access token from the Session if it exists. We should
-     * use this for all future API calls.
-     *
-     * @access    private
-     * @return    void
-     */
-    private function _getStoredAccessToken() {
-        // 1st, attempt to get the Facebook SDK's session (extended) access token
-        $access_token = $this->getPersistentData('access_token');
-
-        // 2nd, attempt to get the SAF session (extended) access token
-        // TODO: these seems hackish, but it works...may wish to revisit this
-        if (empty($access_token)) {
-            //$access_token = $_SESSION[$this->createSafVariableName('access_token')];
-        }
-
-        // if we have an access token, then set the Facebook SDK to use it
-        if ($access_token) {
-            // set the SDK to use the access token
-            $this->setAccessToken($access_token);
-            $this->debug(__CLASS__.':: We have an existing access token.');
-            return $access_token;
-        }
-
-        return false;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Upon user login (authentication) Facebook Connect apps will have 'state'
-     * and 'code' parameters passed.  The code must be exchanged for an access
-     * token.
-     *
-     * @access    private
-     * @return    void
-     */
-    private function _facebookConnect() {
-        $this->debug(__CLASS__.':: Attempt Facebook Connect.');
-
-        // Dec 5th breaking change fix: we must rely on the access token
-        // we already got from exchanging the code as codes are now one-time
-        // use and expire within 10 mins.
-        if ($this->_getStoredAccessToken() != false) {
-            return;
-        }
-
-        $signed_request = $this->getSignedRequest();
-        $code = null;
-        if (!empty($signed_request)) {
-            $code = isset($signed_request['code']) ? $signed_request['code'] : null;
-        } else {
-            $code = isset($_REQUEST['code']) ? $_REQUEST['code'] : null;
-        }
-
-        // if we have a code we need to exhange it for an access token
-        // this is a one-time deal so we need to store it for future visits
-        if (!empty($code)) {
-
-            // exchange the code for an access token
-            /*$token_url = $this->api('/oauth/access_token', 'GET', array(
-                'client_id' => SAF_Config::getAppId(),
-                'client_secret' => SAF_Config::getAppSecret(),
-                'redirect_uri' => urlencode(SAF_Config::getBaseUrl()),
-                'code' => $code
-            ));
-
-            parse_str($token_url, $params);
-            $access_token = $params['access_token'];*/
-
-            // exchange the code for an access token
-            $access_token = $this->getAccessTokenFromCode($code, SAF_Config::getBaseUrl());
-
-            if (!empty($access_token)) {
-
-                // set the SDK to use the access token
-                $this->setAccessToken($access_token);
-                // immediately exchange the short-lived access token for a long-lived one
-                $this->setExtendedAccessToken();
-
-                $this->debug(__CLASS__.':: Obtained access token from the request code.');
-
-            } else {
-
-                $this->debug(__CLASS__.':: Unable to obtain access token. The authorization code has been used.', null, 3);
-
-            }
-
-        }
     }
 
     // ------------------------------------------------------------------------
@@ -410,13 +267,12 @@ abstract class SAF_Signed_Request extends SAF_Base {
      * Facebook chrome.
      *
      * @access    private
-     * $param     string $reason
      * @return    string
      */
-    private function _forceFacebookChrome($reason='') {
+    private function _forceFacebookChrome() {
         // tab app
         if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_TAB) {
-            $this->debug(__CLASS__.':: '.$reason.'Viewing Tab app outside of Facebook.', null, 3);
+            $this->debug(__CLASS__.':: Viewing Tab app outside of Facebook.', null, 3);
             if ( SAF_Config::getForceFacebookView() == true ) {
                 header('Location: '.SAF_Config::getTabUrl());
                 exit;
@@ -425,7 +281,7 @@ abstract class SAF_Signed_Request extends SAF_Base {
 
         // canvas app
         if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_CANVAS) {
-            $this->debug(__CLASS__.':: '.$reason.'Viewing Canvas app outside of Facebook.', null, 3);
+            $this->debug(__CLASS__.':: Viewing Canvas app outside of Facebook.', null, 3);
             if ( SAF_Config::getForceFacebookView() == true ) {
                 header('Location: '.SAF_Config::getCanvasUrl());
                 exit;
