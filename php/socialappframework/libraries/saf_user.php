@@ -24,7 +24,7 @@ class SAF_User extends SAF_Debug {
      * Facebook instance
      *
      * @access    private
-     * @var       SAF
+     * @var       SAF_Base
      */
     private $_facebook;
 
@@ -35,6 +35,14 @@ class SAF_User extends SAF_Debug {
      * @var       string|int
      */
     private $_id;
+
+    /**
+     * Authenticated
+     *
+     * @access    private
+     * @var       boolean
+     */
+    private $_authenticated = false;
 
     /**
      * User data
@@ -210,6 +218,16 @@ class SAF_User extends SAF_Debug {
     }
 
     /**
+     * Returns true if the user is authenticated
+     *
+     * @access    public
+     * @return    boolean
+     */
+    public function isAuthenticated() {
+        return $this->_authenticated;
+    }
+
+    /**
      * Returns true if a user has permission
      *
      * @access    public
@@ -229,7 +247,7 @@ class SAF_User extends SAF_Debug {
      * Constructor
      *
      * @access    public
-     * @param     SAF         $facebook
+     * @param     SAF_Base    $facebook
      * @param     string|int  $user_id
      * @return    void
      */
@@ -255,17 +273,18 @@ class SAF_User extends SAF_Debug {
         $this->_thirdPartyCookieFix();
 
         // if the user is the page admin he/she may require additional perms
-        if ( $this->_facebook->isPageAdmin() === true ) {
+        if ( $this->_facebook->sr->isPageAdmin() === true ) {
             $this->_facebook->setExtendedPerms(SAF_Config::getExtendedPermsAdmin());
         }
 
         // failsafe, use the user id or 'me', which allows us to still
         // get public user data if we know the user id since all we need
         // is the app access token and not a user access token
-        $uid = $this->_facebook->getUserId() ? $this->_facebook->getUserId() : 'me';
+        $uid = $this->_facebook->getUser() ? $this->_facebook->getUser() : 'me';
 
         // we have a user id and an access token, so probably a logged in user...
         // if not, we'll get an exception, which we will handle below
+        if ($this->_facebook->getUser()) {
         try {
 
             $this->_data = $this->_facebook->api('/'.$uid, 'GET', array(
@@ -276,24 +295,19 @@ class SAF_User extends SAF_Debug {
             // if we have user data
             if ( !empty($this->_data) ) {
 
+                // user is authenticated (we have data)
+                $this->_authenticated = true;
+
                 // set user ID
                 $this->_id = $this->_data['id'];
 
-                // if this is a facebook connect app this is where we will
-                // finally get a user id as there is no signed request
-                if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
-                    $this->_id = $this->_data['id'];
-                }
-
                 // check user permissions
-                if ($this->_id) {
-                    $this->_checkPermissions();
-                }
+                $this->_checkPermissions();
 
                 // add our own useful social app framework parameter(s) to the fb_user object
                 $this->_data['saf_perms_granted'] = $this->_granted_perms;
                 $this->_data['saf_perms_revoked'] = $this->_revoked_perms;
-                $this->_data['saf_page_admin']    = $this->_facebook->isPageAdmin();
+                $this->_data['saf_page_admin']    = $this->_facebook->sr->isPageAdmin();
                 $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
 
                 // create user connection
@@ -308,6 +322,9 @@ class SAF_User extends SAF_Debug {
             $this->debug(__CLASS__.':: '.$e->getMessage(), null, 3);
             $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
 
+        }
+        } else {
+            $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
         }
 
         // create user connection
@@ -334,7 +351,7 @@ class SAF_User extends SAF_Debug {
                 // if there is no cookie set then we have 3rd party cookie problem
                 if ( !isset($_COOKIE[session_name()]) ) {
                     // redirect the user to the real server
-                    $redirect_param = '?saf_redirect='.urlencode($this->_determineRedirectUrl());
+                    $redirect_param = '?saf_redirect='.urlencode($this->_facebook->getRedirectUrl());
                     echo '<script>top.location.href = "'.SAF_Config::getBaseUrl().$redirect_param.'";</script>';
                     exit();
                 }
@@ -372,15 +389,19 @@ class SAF_User extends SAF_Debug {
      * @return    void
      */
     private function _checkPermissions() {
+        // bail if we only have an app access token
+        if ($this->_facebook->getAccessToken() === $this->_facebook->getAppAccessToken()) {
+            return;
+        }
+
         // explode our comma seperated perms into an array
         $extended_perms = preg_replace('/\s+/', '', $this->_facebook->getExtendedPerms());
         $required_perms = explode(',', $extended_perms);
 
         try {
-            $uid = $this->_facebook->getUserId() ? $this->_facebook->getUserId() : 'me';
 
             // call api
-            $result = $this->_facebook->api('/'.$uid.'/permissions', 'GET', array(
+            $result = $this->_facebook->api('/me/permissions', 'GET', array(
                 'access_token' => $this->_facebook->getAccessToken()
             ));
 
