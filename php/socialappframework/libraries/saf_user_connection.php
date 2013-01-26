@@ -91,21 +91,6 @@ class SAF_User_Connection {
     // ------------------------------------------------------------------------
 
     /**
-     * Returns the apps owned by the current user.
-     *
-     * Permissions: manage_pages
-     *
-     * @access    public
-     * @return    array  of objects
-     */
-    public function getApplications() {
-        //$this->_checkPermission('manage_pages');
-        return $this->getConnection('applications/developer');
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
      * Returns the achievements for the user.
      *
      * Permissions: user_games_activity or friends_games_activity
@@ -146,6 +131,24 @@ class SAF_User_Connection {
     public function getAlbums() {
         $this->_checkPermission('user_photos');
         return $this->getConnection('albums');
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Returns the apps owned by the current user.
+     *
+     * Permissions: manage_pages
+     *
+     * @access    public
+     * @return    array  of objects
+     */
+    public function getApplications() {
+        //$this->_checkPermission('manage_pages');
+        if ($this->_facebook->getAccessToken() === $this->_facebook->getAppAccessToken()) {
+            //return 'Requires a valid user access token.';
+        }
+        return $this->getConnection('applications/developer');
     }
 
     // ------------------------------------------------------------------------
