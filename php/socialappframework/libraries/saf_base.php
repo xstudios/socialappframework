@@ -26,6 +26,14 @@ abstract class SAF_Base extends Facebook {
     // ------------------------------------------------------------------------
 
     /**
+     * SAF_Signed_Request object
+     *
+     * @access    public
+     * @var       SAF_Signed_Request
+     */
+    public $sr;
+
+    /**
      * SAF_Page object
      *
      * @access    public
@@ -80,17 +88,52 @@ abstract class SAF_Base extends Facebook {
             'fileUpload' => SAF_Config::getFileUpload()
         ));
 
-        // push additional allowed session keys into the Facebook SDK
-        array_push(
-            self::$kSupportedKeys,
-            'saf_fan_gate'
-        );
+        $this->_init();
+    }
 
+    // ------------------------------------------------------------------------
+    // PRIVATE METHODS
+    // ------------------------------------------------------------------------
+
+    /**
+     * Init
+     *
+     * @access    private
+     * @return    void
+     */
+    private function _init() {
         // determine our redirect url
         $this->_redirect_url = $this->_determineRedirectUrl();
 
         // set what perms the app requires
         $this->_extended_perms = SAF_Config::getExtendedPerms();
+
+        // get user id
+        $user_id = $this->getUser();
+        if ($user_id) {
+            $this->debug(__CLASS__.':: User ID ('.$user_id.').');
+            // immediately exchange the short-lived access token for a long-lived one
+            $this->setExtendedAccessToken();
+        }
+
+        // create a signed request object
+        $this->sr = new SAF_Signed_Request($this);
+
+        // NOTE: Page must be created before User since the User object
+        // will reference the Page object for Tab and Canvas apps
+
+        // get page id
+        $page_id = $this->sr->getPageId() ? $this->sr->getPageId() : SAF_Config::getPageId();
+
+        // if we have a page id, create a new page
+        if (!empty($page_id)) {
+            $this->page = new SAF_Page($this, $page_id);
+        }
+
+        // if we have a user id, create a new user
+        //if (!empty($this->_user_id)) {
+            $this->user = new SAF_User($this, $user_id);
+        //}
     }
 
     // ------------------------------------------------------------------------
@@ -186,6 +229,16 @@ abstract class SAF_Base extends Facebook {
     }
 
     /**
+     * Returns the redirect URL to be used with getLoginUrl()
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getRedirectUrl() {
+        return $this->_redirect_url;
+    }
+
+    /**
      * Sets the redirect URL to be used with getLoginUrl()
      *
      * @access    public
@@ -194,6 +247,40 @@ abstract class SAF_Base extends Facebook {
      */
     public function setRedirectUrl($url) {
         $this->_redirect_url = $url;
+    }
+
+    /**
+     * Overrides the Facebook SDK's setExtendedAccessToken() method.
+     * The Facebook SDK (3.2.2) doesn't set the access token property to the
+     * long-lived token for some strange reason so getAccessToken() will still
+     * return the short-lived token. So we have to get it from the app session
+     * where the Facebook SDK stores it and manually set the access token to the
+     * long-lived one.
+     *
+     * @access    public
+     * @return    void
+     */
+    public function setExtendedAccessToken() {
+        // if all we have is the app access token, bail...
+        if ($this->getAccessToken() === $this->getApplicationAccessToken()) {
+            return;
+        }
+
+        // setExtendedAccessToken() does not return a value on success,
+        // but will return false on an error
+        $result = parent::setExtendedAccessToken();
+        if ($result === false) {
+            $this->debug(__CLASS__.':: Error trying to extend the access token.');
+            return;
+        }
+
+        $access_token = $this->getPersistentData('access_token');
+        $this->setAccessToken($access_token);
+
+        // store in our session (which the SDK will not overwrite)
+        //$_SESSION[$this->constructSessionVariableName('access_token')] = $access_token;
+
+        $this->debug(__CLASS__.':: Set extended access token.');
     }
 
     // ------------------------------------------------------------------------
@@ -233,13 +320,51 @@ abstract class SAF_Base extends Facebook {
     /**
      * Returns a SAF variable name in the form of "saf_APPID_key".
      *
-     * @access    public
+     * @access    protected
      * @param     string  $key  the key name
      * @return    string
      */
     protected function createSafVariableName($key) {
         $parts = array('saf', SAF_Config::getAppId(), $key);
         return implode('_', $parts);
+    }
+
+    /**
+     * Sets a SAF session variable
+     *
+     * @access    public
+     * @param     string  $key      the key name
+     * @param     string  $default  the value
+     * @return    void
+     */
+    public function setSafPersistentData($key, $value) {
+        $key = $this->createSafVariableName($key);
+        return $_SESSION[$key] = $value;
+    }
+
+    /**
+     * Returns a SAF session variable
+     *
+     * @access    public
+     * @param     string  $key      the key name
+     * @param     string  $default  the default value to return
+     * @return    mixed
+     */
+    public function getSafPersistentData($key, $default=false) {
+        $key = $this->createSafVariableName($key);
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
+    }
+
+    /**
+     * Unsets a SAF session variable
+     *
+     * @access    public
+     * @param     string  $key  the key name
+     * @return    void
+     */
+    public function clearSafPersistentData($key) {
+        $key = $this->createSafVariableName($key);
+        unset($_SESSION[$key]);
     }
 
     // ------------------------------------------------------------------------
