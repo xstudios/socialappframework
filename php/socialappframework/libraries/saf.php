@@ -9,15 +9,16 @@
 
 // facebook api
 require_once dirname(__FILE__).'/facebook/sdk/facebook.php';
-require_once dirname(__FILE__).'/facebook/api/publish/fb_notification.php';
-require_once dirname(__FILE__).'/facebook/api/publish/fb_post.php';
-require_once dirname(__FILE__).'/facebook/api/publish/fb_comment.php';
-require_once dirname(__FILE__).'/facebook/api/publish/fb_question.php';
-require_once dirname(__FILE__).'/facebook/api/publish/fb_note.php';
-require_once dirname(__FILE__).'/facebook/api/publish/fb_link.php';
-require_once dirname(__FILE__).'/facebook/api/publish/fb_album.php';
-require_once dirname(__FILE__).'/facebook/api/publish/fb_checkin.php';
-require_once dirname(__FILE__).'/facebook/api/publish/fb_event.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_object.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_notification.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_post.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_comment.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_question.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_note.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_link.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_album.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_checkin.php';
+require_once dirname(__FILE__).'/facebook/graph/fb_graph_event.php';
 
 // saf
 require_once dirname(__FILE__).'/saf_config.php';
@@ -44,7 +45,7 @@ require_once dirname(__FILE__).'/../helpers/fb_helper.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF extends SAF_Signed_Request {
+class SAF extends SAF_Base {
 
     /**
      * SAF object
@@ -110,10 +111,10 @@ class SAF extends SAF_Signed_Request {
      *
      * @access    public
      * @param     string  $name
-     * @return    FB_Album
+     * @return    FB_Graph_Album
      */
     public static function createAlbum($name) {
-        return new FB_Album($name);
+        return new FB_Graph_Album($name);
     }
 
     /**
@@ -123,10 +124,10 @@ class SAF extends SAF_Signed_Request {
      * @param     string  $place  the Place Page ID
      * @param     string  $latitude
      * @param     string  $longitude
-     * @return    FB_Checkin
+     * @return    FB_Graph_Checkin
      */
     public static function createCheckin($place, $latitude, $longitude) {
-        return new FB_Checkin($place, $latitude, $longitude);
+        return new FB_Graph_Checkin($place, $latitude, $longitude);
     }
 
     /**
@@ -134,10 +135,10 @@ class SAF extends SAF_Signed_Request {
      *
      * @access    public
      * @param     string  $message
-     * @return    FB_Comment
+     * @return    FB_Graph_Comment
      */
     public static function createComment($message) {
-        return new FB_Comment($message);
+        return new FB_Graph_Comment($message);
     }
 
     /**
@@ -146,10 +147,10 @@ class SAF extends SAF_Signed_Request {
      * @access    public
      * @param     string  $name        the event name
      * @param     string  $start_time  the event start time, in ISO-8601
-     * @return    FB_Event
+     * @return    FB_Graph_Event
      */
     public static function createEvent($name, $start_time) {
-        return new FB_Event($name, $start_time);
+        return new FB_Graph_Event($name, $start_time);
     }
 
     /**
@@ -157,10 +158,10 @@ class SAF extends SAF_Signed_Request {
      *
      * @access    public
      * @param     string  $url
-     * @return    FB_Link
+     * @return    FB_Graph_Link
      */
     public static function createLink($url) {
-        return new FB_Link($url);
+        return new FB_Graph_Link($url);
     }
 
     /**
@@ -169,10 +170,10 @@ class SAF extends SAF_Signed_Request {
      * @access    public
      * @param     string  $subject  the subject
      * @param     string  $message  the comment
-     * @return    FB_Note
+     * @return    FB_Graph_Note
      */
     public static function createNote($subject, $message) {
-        return new FB_Note($subject, $message);
+        return new FB_Graph_Note($subject, $message);
     }
 
     /**
@@ -181,10 +182,10 @@ class SAF extends SAF_Signed_Request {
      * @access    public
      * @param     string  $template  the template text
      * @param     string  $href      the tracking data added to the url
-     * @return    FB_Notification
+     * @return    FB_Graph_Notification
      */
     public static function createNotification($template, $href) {
-        return new FB_Notification($template, $href);
+        return new FB_Graph_Notification($template, $href);
     }
 
     /**
@@ -192,10 +193,10 @@ class SAF extends SAF_Signed_Request {
      *
      * @access    public
      * @param     string  $message
-     * @return    FB_Post
+     * @return    FB_Graph_Post
      */
     public static function createPost($message) {
-        return new FB_Post($message);
+        return new FB_Graph_Post($message);
     }
 
     /**
@@ -203,10 +204,10 @@ class SAF extends SAF_Signed_Request {
      *
      * @access    public
      * @param     string  $question  the text of the question
-     * @return    FB_Question
+     * @return    FB_Graph_Question
      */
     public static function createQuestion($question) {
-        return new FB_Question($question);
+        return new FB_Graph_Question($question);
     }
 
     // ------------------------------------------------------------------------
