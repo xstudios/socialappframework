@@ -7,65 +7,48 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
-require_once dirname(__FILE__).'/fb_object.php';
+require_once dirname(__FILE__).'/fb_graph_object.php';
 
 /**
- * Facebook Question object class
- * Requires extended permission: publish_stream
+ * Facebook Link object class
+ * Requires extended permission: publish_stream or share_item
  *
- * Assists with creating question posts
- *
- * April 3, 2013 Breaking Change: Removing ability to POST to USER_ID/questions
+ * Assists with creating links.
  *
  * @package      Social App Framework
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class FB_Question extends FB_Object {
+class FB_Graph_Link extends FB_Graph_Object {
 
-    const CONNECTION = 'questions';
+    const CONNECTION = 'links';
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
 
     /**
-     * Set question
+     * Set link
      *
-     * The text of the question
+     * The link attached to this post
+     *
+     * @access    public
+     * @param     string  $url
+     * @return    void
+     */
+    public function setLink($url) {
+        $this->_post['link'] = $url;
+    }
+
+    /**
+     * Set message
      *
      * @access    public
      * @param     string  $value
      * @return    void
      */
-    public function setQuestion($value) {
-        $this->_post['question'] = $value;
-    }
-
-    /**
-     * Set options
-     *
-     * Array of answer options
-     *
-     * @access    public
-     * @param     array  $options
-     * @return    void
-     */
-    public function setOptions($options) {
-        $this->_post['options'] = $options;
-    }
-
-    /**
-     * Set allow new options
-     *
-     * Allows other users to add new options (True by default)
-     *
-     * @access    public
-     * @param     boolean  $value
-     * @return    void
-     */
-    public function setAllowNewOptions($value) {
-        $this->_post['allow_new_options'] = $value;
+    public function setMessage($value) {
+        $this->_post['message'] = $value;
     }
 
     /**
@@ -106,34 +89,35 @@ class FB_Question extends FB_Object {
     /**
      * Constructor
      *
-     * Requires extended permission: publish_stream
-     *
      * @access    public
-     * @param     string  $question  the text of the question
+     * @param     string  $url  the url
      * @return    void
      */
-    public function __construct($question) {
+    public function __construct($url='') {
         parent::__construct();
-        $this->_post['question'] = $question;
+		$this->_post['link'] = $url;
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * Create a question
+     * Create a link
      *
      * @access    public
      * @param     string|int  $id  the profile ID (eg - me)
-     * @return    string      the new question ID
+     * @return    string      the new link ID
      */
     public function create($profile_id='me') {
         // verify the profile has required permissions
-        $this->_verifyPermission('publish_stream');
+        if ($this->_facebook->user->hasPermission('share_item') === false &&
+            $this->_facebook->user->hasPermission('publish_stream') === false) {
+            $result['error']['message'] = 'Requires permission: publish_stream or share_item';
+            throw new FB_Api_Exception($result);
+        }
 
         // call the api
-        $result = $this->_facebook->api('/'.$profile_id.'/questions', 'post', $this->_post);
+        $result = $this->_facebook->api('/'.$profile_id.'/feed', 'post', $this->_post);
 
-        // return the post ID
         return $result['id'];
     }
 

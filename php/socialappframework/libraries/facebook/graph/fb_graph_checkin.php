@@ -7,7 +7,7 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
-require_once dirname(__FILE__).'/fb_object.php';
+require_once dirname(__FILE__).'/fb_graph_object.php';
 
 /**
  * Facebook Checkin object class
@@ -22,7 +22,7 @@ require_once dirname(__FILE__).'/fb_object.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class FB_Checkin extends FB_Object {
+class FB_Graph_Checkin extends FB_Graph_Object {
 
     const CONNECTION = 'checkins';
 

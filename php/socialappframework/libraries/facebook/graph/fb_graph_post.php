@@ -7,7 +7,7 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
-require_once dirname(__FILE__).'/fb_object.php';
+require_once dirname(__FILE__).'/fb_graph_object.php';
 
 /**
  * Facebook Post (aka - Feed) object class
@@ -19,7 +19,7 @@ require_once dirname(__FILE__).'/fb_object.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class FB_Post extends FB_OBject {
+class FB_Graph_Post extends FB_Graph_Object {
 
     const CONNECTION = 'feed';
 

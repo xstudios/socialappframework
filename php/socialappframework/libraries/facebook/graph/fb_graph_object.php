@@ -14,7 +14,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class FB_Object {
+abstract class FB_Graph_Object {
 
     /**
      * Post array
