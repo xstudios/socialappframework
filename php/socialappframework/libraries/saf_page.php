@@ -26,7 +26,7 @@ class SAF_Page extends SAF_Debug {
      * Facebook instance
      *
      * @access    private
-     * @var       SAF
+     * @var       SAF_Base
      */
     private $_facebook;
 
@@ -211,7 +211,7 @@ class SAF_Page extends SAF_Debug {
      * Constructor
      *
      * @access    public
-     * @param     SAF         $facebook
+     * @param     SAF_Base    $facebook
      * @param     string|int  $page_id
      * @return    void
      */
@@ -300,7 +300,7 @@ class SAF_Page extends SAF_Debug {
 
         $this->_data['saf_add_tab_url']  = SAF_Config::getAddTabUrl();
         $this->_data['saf_restrictions'] = $page_restrictions;
-        $this->_data['saf_liked']        = $this->_facebook->isPageLiked();
+        $this->_data['saf_liked']        = $this->_facebook->sr->isPageLiked();
         $this->_data['saf_rss_url']      = $this->getRssUrl();
 
         return $this->_data;
