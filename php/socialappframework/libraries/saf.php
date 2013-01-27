@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/facebook/graph/fb_graph_event.php';
 // saf
 require_once dirname(__FILE__).'/saf_config.php';
 require_once dirname(__FILE__).'/saf_base.php';
-require_once dirname(__FILE__).'/saf_debug.php';
+require_once dirname(__FILE__).'/saf_facebook.php';
 require_once dirname(__FILE__).'/saf_signed_request.php';
 require_once dirname(__FILE__).'/saf_page.php';
 require_once dirname(__FILE__).'/saf_page_connection.php';
@@ -45,7 +45,7 @@ require_once dirname(__FILE__).'/../helpers/fb_helper.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF extends SAF_Base {
+class SAF extends SAF_Facebook {
 
     /**
      * SAF object
