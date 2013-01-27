@@ -14,7 +14,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF_Page extends SAF_Debug {
+class SAF_Page extends SAF_Base {
 
     const RSS = 'https://www.facebook.com/feeds/page.php?id=%s&format=rss20';
 
@@ -26,7 +26,7 @@ class SAF_Page extends SAF_Debug {
      * Facebook instance
      *
      * @access    private
-     * @var       SAF_Base
+     * @var       SAF_Facebook
      */
     private $_facebook;
 
@@ -211,8 +211,8 @@ class SAF_Page extends SAF_Debug {
      * Constructor
      *
      * @access    public
-     * @param     SAF_Base    $facebook
-     * @param     string|int  $page_id
+     * @param     SAF_Facebook  $facebook
+     * @param     string|int    $page_id
      * @return    void
      */
     public function __construct($facebook, $page_id) {

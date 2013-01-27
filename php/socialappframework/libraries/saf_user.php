@@ -14,7 +14,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF_User extends SAF_Debug {
+class SAF_User extends SAF_Base {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS
@@ -24,7 +24,7 @@ class SAF_User extends SAF_Debug {
      * Facebook instance
      *
      * @access    private
-     * @var       SAF_Base
+     * @var       SAF_Facebook
      */
     private $_facebook;
 
@@ -247,8 +247,8 @@ class SAF_User extends SAF_Debug {
      * Constructor
      *
      * @access    public
-     * @param     SAF_Base    $facebook
-     * @param     string|int  $user_id
+     * @param     SAF_Facebook  $facebook
+     * @param     string|int    $user_id
      * @return    void
      */
     public function __construct($facebook, $user_id) {
