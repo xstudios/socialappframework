@@ -101,16 +101,6 @@ class SAF_User extends SAF_Base {
     }
 
     /**
-     * Returns the user's full name
-     *
-     * @access    public
-     * @return    string
-     */
-    public function getName() {
-        return $this->_getValue('name', '');
-    }
-
-    /**
      * Returns the user's first name
      *
      * @access    public
@@ -128,6 +118,16 @@ class SAF_User extends SAF_Base {
      */
     public function getLastName() {
         return $this->_getValue('last_name', '');
+    }
+
+    /**
+     * Returns the user's full name
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getName() {
+        return $this->_getValue('name', '');
     }
 
     /**
