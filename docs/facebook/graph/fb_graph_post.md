@@ -2,11 +2,11 @@
 ### Version 1.0.0
 
 ## Table of Contents
-* [FB Post](fb_post.md)
+* [FB Graph Post](fb_graph_post.md)
 
 
-# FB Post Class
-The FB Post class is a small class with a simple task: Publish a post.
+# FB Graph Post Class
+The FB Graph Post class is a small class with a simple task: Publish a post.
 
 Usage example:
 
