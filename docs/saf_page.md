@@ -5,7 +5,7 @@
 
 * [SAF Config](saf_config.md)
 * [SAF Class](saf.md)
-* [SAF Base Class](saf_base.md)
+* [SAF Facebook Class](saf_facebook.md)
 * [SAF Signed Request Class](saf_signed_request.md)
 * [SAF Page Class](saf_page.md)
 * [SAF Page Connection Class](saf_page_connection.md)

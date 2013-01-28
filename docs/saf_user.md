@@ -5,7 +5,7 @@
 
 * [SAF Config](saf_config.md)
 * [SAF Class](saf.md)
-* [SAF Base Class](saf_base.md)
+* [SAF Facebook Class](saf_facebook.md)
 * [SAF Signed Request Class](saf_signed_request.md)
 * [SAF Page Class](saf_page.md)
 * [SAF Page Connection Class](saf_page_connection.md)
@@ -76,6 +76,14 @@ Returns the user's email. Usage example:
 
 ***
 
+###getAgeRange()
+####Returns: _object_ with `min` and `max` values
+Returns the user's age range. Usage example:
+
+    $saf->user->getAgeRange();
+
+***
+
 ###getProfileUrl()
 ####Returns: _string_
 Returns the user's profile URL. Usage example:
@@ -120,6 +128,14 @@ Returns true if the user is the app developer. Usage example:
 
 >**NOTE: This method relies on the developer Id(s) being properly set in the 
 config file.**
+
+***
+
+###isAuthenticated()
+####Returns: _array_
+Returns true if the user is authenticated. Usage example:
+
+    $saf->user->isAuthenticated();
 
 ***
 

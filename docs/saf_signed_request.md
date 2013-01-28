@@ -5,7 +5,7 @@
 
 * [SAF Config](saf_config.md)
 * [SAF Class](saf.md)
-* [SAF Base Class](saf_base.md)
+* [SAF Facebook Class](saf_facebook.md)
 * [SAF Signed Request Class](saf_signed_request.md)
 * [SAF Page Class](saf_page.md)
 * [SAF Page Connection Class](saf_page_connection.md)
@@ -14,8 +14,8 @@
 
 # SAF Signed Request Class
 The SAF Signed Request class gathers info from the signed request and does a lot
-of leg work for you such as getting an access token via any means available, 
-extending access tokens, obtaining data passed to the application, etc. 
+of leg work for you such as extending access tokens, obtaining data passed to 
+the application, etc. 
 
 ##Public Methods
 

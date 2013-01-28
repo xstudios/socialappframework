@@ -5,7 +5,7 @@
 
 * [SAF Config](saf_config.md)
 * [SAF Class](saf.md)
-* [SAF Base Class](saf_base.md)
+* [SAF Facebook Class](saf_facebook.md)
 * [SAF Signed Request Class](saf_signed_request.md)
 * [SAF Page Class](saf_page.md)
 * [SAF Page Connection Class](saf_page_connection.md)
@@ -20,7 +20,7 @@ connections. See API docs on a [User](https://developers.facebook.com/docs/refer
 
 ###getAccounts()
 ####Returns: _array_
-Returns the apps and pages owned by the current user. Usage example:
+Returns the pages owned by the current user. Usage example:
 
     $saf->user->connection->getAccounts();
 
@@ -58,13 +58,23 @@ Returns the photo albums the user has created. Usage example:
 
 ***
 
+###getApplications()
+####Returns: _array_
+Returns the apps owned by the current user. Usage example:
+
+    $saf->user->connection->getApplications();
+
+>**Requires permissions:** app access token
+
+***
+
 ###getAppRequests()
 ####Returns: _array_
 Returns the user's outstanding requests from an app. Usage example:
 
     $saf->user->connection->getAppRequests();
 
->**Requires permissions:** app access token**
+>**Requires permissions:** app access token
 
 ***
 
@@ -446,4 +456,3 @@ Returns the videos this user has been tagged in. Usage example:
 >**Requires permissions:** `user_videos` or `friends_videos`
 
 ***
-
