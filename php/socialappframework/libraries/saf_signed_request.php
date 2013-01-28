@@ -202,12 +202,12 @@ class SAF_Signed_Request extends SAF_Base {
 
                 if ($this->_page_liked == true) {
 
-                    if ($this->_facebook->getSafPersistentData('fan_gate')) {
+                    if ($this->getSafPersistentData('fan_gate')) {
 
                         $this->_like_via_fan_gate = true;
                         // unset fan gate flag so we don't keep assuming the
                         // user liked this via fan gate
-                        $this->_facebook->clearSafPersistentData('fan_gate');
+                        $this->clearSafPersistentData('fan_gate');
                         $this->debug(__CLASS__.':: User likes this page (via Fan Gate).');
 
                     } else {
@@ -223,7 +223,7 @@ class SAF_Signed_Request extends SAF_Base {
                         $this->debug(__CLASS__.':: User does not like this page.');
                         // set a session flag so we know when the user originally
                         // came here they did not like the page
-                        $this->_facebook->setSafPersistentData('fan_gate', true);
+                        $this->setSafPersistentData('fan_gate', true);
                     }
 
                 }
