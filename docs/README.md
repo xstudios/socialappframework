@@ -27,7 +27,7 @@ your config file of course):
 
 * [SAF Config](docs/saf_config.md)
 * [SAF Class](docs/saf.md)
-* [SAF Base Class](docs/saf_base.md)
+* [SAF Facebook Class](docs/saf_facebook.md)
 * [SAF Signed Request Class](docs/saf_signed_request.md)
 * [SAF Page Class](docs/saf_page.md)
 * [SAF Page Connection Class](docs/saf_page_connection.md)
