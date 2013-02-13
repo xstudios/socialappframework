@@ -19,20 +19,16 @@ var SAF_Facebook = function(obj) {
 
     var mDebugMode = obj.debug_mode || false;
 
-    var mAppName  = obj.app_name;
     var mAppID    = obj.app_id;
     var mPageID   = obj.page_id;
 
     var mBaseURL  = obj.base_url;
     var mAppURL   = obj.app_url;
-    var mLoginURL = obj.login_url;
 
     var mPermissions = obj.permissions || '';
 
-    var mUserFields  = obj.user_fields || 'id, name, first_name, last_name, '+
-        'gender, username, email, link, picture, website';
-    var mPageFields  = obj.page_fields || 'id, name, category, is_published, '+
-        'likes, link, picture, website';
+    var mUserFields  = obj.user_fields || '';
+    var mPageFields  = obj.page_fields || '';
 
     var mUserID;
     var mAccessToken;
@@ -239,22 +235,11 @@ var SAF_Facebook = function(obj) {
     // ------------------------------------------------------------------------
     // SEND -- lets people to send content to specific friends via messages
     // ------------------------------------------------------------------------
-    this.send = function(_callbackFunc, _description, _name, _link, _image) {
-        // set defaults
-        _description = defaultValue(_description, 'Description goes here');
-        _name  = defaultValue(_name, mAppName);
-        _link  = defaultValue(_link, mAppURL);
-        _image = defaultValue(_image, mBaseURL + 'public/img/fb-icon.jpg');
+    this.send = function(_publishObj, _callbackFunc) {
+        // ensure method is correct
+        _publishObj.method = 'send';
 
-        var publishObj = {
-            method: 'send',
-            name: _name,
-            link: _link,
-            picture: _image,
-            description: _description
-        };
-
-        FB.ui(publishObj, function(_response) {
+        FB.ui(_publishObj, function(_response) {
             debug('Facebook::send', _response)
             doCallback(_callbackFunc, _response);
         });
@@ -324,13 +309,6 @@ var SAF_Facebook = function(obj) {
         };
         // no callback needed
         FB.ui(obj);
-    };
-
-    // ------------------------------------------------------------------------
-    // FORCE LOGIN
-    // ------------------------------------------------------------------------
-    this.forceLogin = function() {
-        top.location.href = mLoginURL;
     };
 
     // ------------------------------------------------------------------------
