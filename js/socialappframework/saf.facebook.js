@@ -63,6 +63,14 @@ var SAF_Facebook = function(obj) {
         return mAuthenticated;
     };
 
+    this.getPageId = function() {
+        return mPageID;
+    }
+
+    this.getUserId = function() {
+        return mUserID;
+    }
+
     // ------------------------------------------------------------------------
     // INIT
     // ------------------------------------------------------------------------
@@ -72,7 +80,7 @@ var SAF_Facebook = function(obj) {
 
         FB.init({
             appId: mAppID,
-            channelUrl: mBaseURL+'public/js/socialappframework/fb-channel.html',
+            channelUrl: 'https://fbrell.com/channel',
             status: true,
             cookie: true,
             oauth: true,
@@ -85,7 +93,7 @@ var SAF_Facebook = function(obj) {
         // subscribe to events
         FB.Event.subscribe('auth.authResponseChange', authResponseChangeHandler);
 
-        debug('Facebook:: __construct__', obj);
+        //debug('Facebook:: __construct__', obj);
     };
 
     // ------------------------------------------------------------------------
