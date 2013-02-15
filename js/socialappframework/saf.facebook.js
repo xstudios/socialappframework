@@ -234,6 +234,9 @@ var SAF_Facebook = function(obj) {
     // SHARE -- no need for user to be logged in, uses Facebook UI dialog
     // ------------------------------------------------------------------------
     this.share = function(_publishObj, _callbackFunc) {
+        // ensure method is set correctly
+        _publishObj.method = 'feed';
+
         FB.ui(_publishObj, function(_response) {
             debug('Facebook::share', _response);
             doCallback(_callbackFunc, _response);
@@ -244,7 +247,7 @@ var SAF_Facebook = function(obj) {
     // SEND -- lets people to send content to specific friends via messages
     // ------------------------------------------------------------------------
     this.send = function(_publishObj, _callbackFunc) {
-        // ensure method is correct
+        // ensure method is set correctly
         _publishObj.method = 'send';
 
         FB.ui(_publishObj, function(_response) {
