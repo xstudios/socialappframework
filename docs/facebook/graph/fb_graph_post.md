@@ -117,7 +117,7 @@ Set whether a post is published. Default is published. Usage example:
 
 ***
 
-###setScheduledPublishTime($$timestamp)
+###setScheduledPublishTime($timestamp)
 ####Parameter: _string_ a unix timestamp
 Set scheduled publish time. This is the time when the page post should go live, 
 this should be between 10 mins and 6 months from the time of publishing the post. 
