@@ -55,6 +55,14 @@ Set the post description. Usage example:
 
 ***
 
+###setMessage($value)
+####Parameter: _string_
+Set the post message. Usage example:
+
+    $post->setMessage('message');
+
+***
+
 ###setName($value)
 ####Parameter: _string_
 Set the post name. Usage example:

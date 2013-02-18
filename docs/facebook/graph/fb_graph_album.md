@@ -39,7 +39,7 @@ Set the album description. Usage example:
 ####Parameter: _array_
 Set the album privacy level. Usage example:
 
-    $album->setPrivacy();
+    $album->setPrivacy(array('value'=>'ALL_FRIENDS'));
 
 >**More info:** https://developers.facebook.com/docs/reference/api/privacy-parameter/
 

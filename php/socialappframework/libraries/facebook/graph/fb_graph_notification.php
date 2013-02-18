@@ -57,16 +57,6 @@ class FB_Graph_Notification extends FB_Graph_Object {
         $this->_post['href'] = $value;
     }
 
-    /**
-     * Get post
-     *
-     * @access    public
-     * @return    array
-     */
-    public function getPost() {
-        return $this->_post;
-    }
-
     // ------------------------------------------------------------------------
 
     /**
@@ -83,7 +73,7 @@ class FB_Graph_Notification extends FB_Graph_Object {
     public function __construct($template, $href) {
         parent::__construct();
         $this->_post['template'] = $template;
-        $this->_post['href'] = $href;
+        $this->_post['href']     = $href;
     }
 
     // ------------------------------------------------------------------------
@@ -95,12 +85,7 @@ class FB_Graph_Notification extends FB_Graph_Object {
      * @param     string|int  $profile_id  the user ID
      * @return    boolean     true if the post succeeded
      */
-    public function create($profile_id=null) {
-        // if id is not passed assume we are targeting the current user
-        if (empty($profile_id)) {
-            $profile_id = $this->_facebook->getUser();
-        }
-
+    public function create($profile_id) {
         // url
         $url = '/'.$profile_id.'/notifications';
 

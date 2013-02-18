@@ -21,7 +21,7 @@ Usage example:
     require_once 'socialappframework/facebook/graph/fb_graph_notification.php';
 
     $notification = FB_Graph_Notification('template', 'href');
-    $notification->create();
+    $notification->create('profile_id');
 
 ***
 
@@ -47,11 +47,11 @@ Set the unique tracking data you want added to the url. Usage example:
 
 ***
 
-###create($profile_id='me')
+###create($profile_id)
 ####Param: _string_ $profile_id the user ID
 ####Return: _boolean_
 Create the notification and return true if the post succeeded. Usage example:
 
-    $result = $notification->create();
+    $result = $notification->create('profile_id');
 
 ***
