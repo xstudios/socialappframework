@@ -2,25 +2,30 @@
 ### Version 1.0.0
 
 ## Table of Contents
+* [FB Graph Album](fb_graph_album.md)
+* [FB Graph Checkin](fb_graph_checkin.md)
+* [FB Graph Comment](fb_graph_comment.md)
+* [FB Graph Event](fb_graph_event.md)
+* [FB Graph Link](fb_graph_link.md)
+* [FB Graph Note](fb_graph_note.md)
+* [FB Graph Notification](fb_graph_notification.md)
 * [FB Graph Post](fb_graph_post.md)
+* [FB Graph Question](fb_graph_question.md)
 
 
 # FB Graph Post Class
-The FB Graph Post class is a small class with a simple task: Publish a post.
+A small class with a simple task: Publish a post.
 
 Usage example:
 
-    require_once 'socialappframework/facebook/api/publish/fb_post.php';
+    require_once 'socialappframework/facebook/graph/fb_graph_post.php';
 
-    $post = FB_Post('message');
-    $post->setLink('http://domain.com/');
+    $post = FB_Graph_Post('message');
     $post->create();
 
 ***
 
 ##Public Methods
-The public methods are the **same** methods available to the Facebook PHP SDK
-with some other useful methods thrown in.
 
 ###setLink($url)
 ####Parameter: _string_

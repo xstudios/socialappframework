@@ -47,7 +47,7 @@ class FB_Graph_Notification extends FB_Graph_Object {
     /**
      * Set href
      *
-     * The unique tracking data you want added to the url for tracking
+     * The unique tracking data you want added to the url
      *
      * @access    public
      * @param     string  $value
@@ -92,17 +92,17 @@ class FB_Graph_Notification extends FB_Graph_Object {
      * Create
      *
      * @access    public
-     * @param     string|int  $id  the user ID
+     * @param     string|int  $profile_id  the user ID
      * @return    boolean     true if the post succeeded
      */
-    public function create($id=null) {
+    public function create($profile_id=null) {
         // if id is not passed assume we are targeting the current user
-        if (empty($id)) {
-            $id = $this->_facebook->getUser();
+        if (empty($profile_id)) {
+            $profile_id = $this->_facebook->getUser();
         }
 
         // url
-        $url = '/'.$id.'/notifications';
+        $url = '/'.$profile_id.'/notifications';
 
         // add the app access token to the post
         $this->_post['access_token'] = $this->_facebook->getAppAccessToken();

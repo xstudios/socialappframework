@@ -29,7 +29,7 @@ class FB_Graph_Event extends FB_Graph_Object {
     // ------------------------------------------------------------------------
 
     /**
-     * Set name
+     * Sets the name
      *
      * @access    public
      * @param     string  $value
@@ -40,7 +40,7 @@ class FB_Graph_Event extends FB_Graph_Object {
     }
 
     /**
-     * Set start time, in ISO-8601
+     * Sets the start time, in ISO-8601
      *
      * @access    public
      * @param     string  $value
@@ -51,7 +51,7 @@ class FB_Graph_Event extends FB_Graph_Object {
     }
 
     /**
-     * Set end time, in ISO-8601
+     * Sets the end time, in ISO-8601
      *
      * @access    public
      * @param     string  $value
@@ -62,7 +62,7 @@ class FB_Graph_Event extends FB_Graph_Object {
     }
 
     /**
-     * Set description
+     * Sets the description
      *
      * @access    public
      * @param     string  $value
@@ -73,7 +73,7 @@ class FB_Graph_Event extends FB_Graph_Object {
     }
 
     /**
-     * Set location
+     * Sets the location
      *
      * @access    public
      * @param     string  $value
@@ -84,9 +84,9 @@ class FB_Graph_Event extends FB_Graph_Object {
     }
 
     /**
-     * Set location ID
+     * Sets the location ID
      *
-     * Facebook Place ID of the place the Event is taking place
+     * Facebook Place ID where the event is taking place
      *
      * @access    public
      * @param     string  $value
@@ -97,7 +97,7 @@ class FB_Graph_Event extends FB_Graph_Object {
     }
 
     /**
-     * Set privacy type
+     * Sets the privacy type
      *
      * OPEN (default), SECRET, or FRIENDS
      *

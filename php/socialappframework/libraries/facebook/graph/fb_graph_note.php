@@ -50,16 +50,6 @@ class FB_Graph_Note extends FB_Graph_Object {
         $this->_post['message'] = $value;
     }
 
-    /**
-     * Get post
-     *
-     * @access    public
-     * @return    array
-     */
-    public function getPost() {
-        return $this->_post;
-    }
-
     // ------------------------------------------------------------------------
 
     /**

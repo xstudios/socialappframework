@@ -31,16 +31,14 @@ class FB_Graph_Checkin extends FB_Graph_Object {
     // ------------------------------------------------------------------------
 
     /**
-     * Set tags
-     *
-     * List of tagged friends
+     * Set link
      *
      * @access    public
-     * @param     string  $value  comma separated list of user IDs
+     * @param     string  $url
      * @return    void
      */
-    public function setTags($value) {
-        $this->_post['tags'] = $value;
+    public function setLink($url) {
+        $this->_post['link'] = $url;
     }
 
     /**
@@ -55,17 +53,6 @@ class FB_Graph_Checkin extends FB_Graph_Object {
     }
 
     /**
-     * Set link
-     *
-     * @access    public
-     * @param     string  $url
-     * @return    void
-     */
-    public function setLink($url) {
-        $this->_post['link'] = $url;
-    }
-
-    /**
      * Set picture
      *
      * @access    public
@@ -74,6 +61,19 @@ class FB_Graph_Checkin extends FB_Graph_Object {
      */
     public function setPicture($url) {
         $this->_post['picture'] = $url;
+    }
+
+    /**
+     * Set tags
+     *
+     * List of tagged friends
+     *
+     * @access    public
+     * @param     string  $value  comma separated list of user IDs
+     * @return    void
+     */
+    public function setTags($value) {
+        $this->_post['tags'] = $value;
     }
 
     // ------------------------------------------------------------------------
