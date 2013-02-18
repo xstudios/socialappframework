@@ -175,6 +175,23 @@ var SAF_Facebook = function(obj) {
     };
 
     // ------------------------------------------------------------------------
+    // SUBSCRIBE TO COMMENT CREATE/REMOVE EVENTS
+    // ------------------------------------------------------------------------
+    this.subscribeToCreateComment = function(_callbackFunc) {
+        FB.Event.subscribe('comment.create', function(_response) {
+            debug('Facebook::subscribeToCreateComment', _response);
+            doCallback(_callbackFunc, _response);
+        });
+    };
+
+    this.subscribeToDeleteComment = function(_callbackFunc) {
+        FB.Event.subscribe('comment.remove', function(_response) {
+            debug('Facebook::subscribeToDeleteComment', _response);
+            doCallback(_callbackFunc, _response);
+        });
+    };
+
+    // ------------------------------------------------------------------------
     // GET PAGE DATA
     // ------------------------------------------------------------------------
     this.getPageData = function(_pageID, _callbackFunc) {
