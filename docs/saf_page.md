@@ -16,7 +16,8 @@
 The SAF Page class provides easy access to Page data and all a Page's available
 connections as well as to the Page Access Token (only if the User is the Page
 admin). See API docs on a [Page](https://developers.facebook.com/docs/reference/api/page/).
-**It is important to note that the Page class is only available in Tab
+
+**It is important to note that Page methods are only available in Tab
 applications, unless you explicitly call `SAF_Config::setPageId('PAGE_ID')`
 before calling `SAF::instance()`.**
 

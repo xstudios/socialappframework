@@ -288,7 +288,7 @@ Returns the 3rd party cookie fix value. Usage example:
 Set the fields we want to retrieve from the Graph API for a user. The value
 should be a comma delimited string. Usage example:
 
-    SAF_Config::setGraphUserFields('id, name, first_name, last_name, gender, email, link, picture, website');
+    SAF_Config::setGraphUserFields('id, first_name, last_name, gender, email, link, picture');
 
 ***
 
@@ -305,7 +305,7 @@ Returns the fields we want to retrive from the Graph API for a user. Usage examp
 Set the fields we want to retrieve from the Graph API for a page. The value
 should be a comma delimited string. Usage example:
 
-    SAF_Config::setGraphPageFields('id, name, category, is_published, likes, link, picture, website');
+    SAF_Config::setGraphPageFields('id, name, likes, link, picture');
 
 ***
 
@@ -350,8 +350,8 @@ Set the Page ID. Usage example:
 
     SAF_Config::setPageId('PAGE_ID');
 
->**NOTE: Only use this if you need page data on a Canvas, Facebook Connect app
-or AJAX request where Page data is not available (by default).**
+>**NOTE:** Only use this if you need page data on a Canvas, Facebook Connect app
+or AJAX request where Page data is not available (by default).
 
 ***
 

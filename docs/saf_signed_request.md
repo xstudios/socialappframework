@@ -15,8 +15,7 @@
 # SAF Signed Request Class
 The SAF Signed Request class gathers info from the signed request and does a lot
 of leg work for you such as extending access tokens, obtaining data passed to 
-the application, etc. 
-
+the application, etc. See how-to docs on the [Signed Request](https://developers.facebook.com/docs/howtos/login/signed-request/). 
 ##Public Methods
 
 ###getUserId()
