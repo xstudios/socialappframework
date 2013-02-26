@@ -123,10 +123,10 @@ class FB_Graph_Question extends FB_Graph_Object {
      * Create a question
      *
      * @access    public
-     * @param     string|int  $id  the profile ID (eg - me)
+     * @param     string|int  $id  the profile ID (must be a page)
      * @return    string      the new question ID
      */
-    public function create($profile_id='me') {
+    public function create($profile_id) {
         // verify the profile has required permissions
         $this->_verifyPermission('publish_stream');
 
