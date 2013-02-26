@@ -22,7 +22,6 @@ var SAF_Facebook = function(obj) {
     var mAppID    = obj.app_id;
     var mPageID   = obj.page_id;
 
-    var mBaseURL  = obj.base_url;
     var mAppURL   = obj.app_url;
 
     var mPermissions = obj.permissions || '';
@@ -65,18 +64,18 @@ var SAF_Facebook = function(obj) {
 
     this.getPageId = function() {
         return mPageID;
-    }
+    };
 
     this.getUserId = function() {
         return mUserID;
-    }
+    };
 
     // ------------------------------------------------------------------------
     // INIT
     // ------------------------------------------------------------------------
     var __construct__ = function() {
-        FB._https = (window.location.protocol == "https:");
-        FB._secure = (window.location.protocol == "https:");
+        FB._https  = (window.location.protocol === "https:");
+        FB._secure = (window.location.protocol === "https:");
 
         FB.init({
             appId: mAppID,
@@ -268,7 +267,7 @@ var SAF_Facebook = function(obj) {
         _publishObj.method = 'send';
 
         FB.ui(_publishObj, function(_response) {
-            debug('Facebook::send', _response)
+            debug('Facebook::send', _response);
             doCallback(_callbackFunc, _response);
         });
     };
@@ -333,7 +332,7 @@ var SAF_Facebook = function(obj) {
         var obj = {
             app_id: mAppID,
             method: 'pagetab',
-            redirect_uri: mAppURL,
+            redirect_uri: mAppURL
         };
         // no callback needed
         FB.ui(obj);
