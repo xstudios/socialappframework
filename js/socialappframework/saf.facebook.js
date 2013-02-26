@@ -58,7 +58,6 @@ var SAF_Facebook = function(obj) {
     };
 
     this.isAuthenticated = function() {
-        debug('Facebook::isAuthenticated ('+mAuthenticated+')');
         return mAuthenticated;
     };
 
