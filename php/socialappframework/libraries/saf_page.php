@@ -258,9 +258,6 @@ class SAF_Page extends SAF_Base {
                 // inject SAF data, some sort of page restriction (country/age)
                 $this->_data = $this->_injectSAFData(true);
 
-                // fall back to default page URL as SAF_User will need this value
-                $this->_data['saf_app_tab_url'] = 'https://www.facebook.com/';
-
                 // if this is an app tab set the redirect URL to this tab
                 if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
                     $this->_facebook->setRedirectUrl($this->getTabUrl());
