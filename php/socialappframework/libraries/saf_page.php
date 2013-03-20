@@ -296,6 +296,8 @@ class SAF_Page extends SAF_Base {
         if ( isset($this->_data['link']) ) {
             $url = str_replace( 'http', 'https', $this->_data['link'].'?sk=app_'.SAF_Config::getAppId() );
             $this->_data['saf_app_tab_url'] = $url;
+        } else {
+            $this->_data['saf_app_tab_url'] = SAF_Config::getTabUrl();
         }
 
         $this->_data['saf_add_tab_url']  = SAF_Config::getAddTabUrl();
