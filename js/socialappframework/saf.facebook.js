@@ -274,7 +274,7 @@ var SAF_Facebook = function(obj) {
     // ------------------------------------------------------------------------
     // SEND REQUEST
     // ------------------------------------------------------------------------
-    this.sendRequest = function(_userID, _message, _callbackFunc) {
+    this.sendRequest = function(_userID, _message, _redirect_url, _callbackFunc) {
         if (!_userID) {
             debug('Facebook::sendRequest > You must supply a user ID.');
             return;
@@ -286,7 +286,8 @@ var SAF_Facebook = function(obj) {
         var publishObj = {
             method: 'apprequests',
             message: _message,
-            to: _userID
+            to: _userID,
+            redirect_uri: _redirect_url
         };
 
         // callback will pass response back as a param
@@ -297,13 +298,14 @@ var SAF_Facebook = function(obj) {
         });
     };
 
-    this.sendRequestViaMultiFriendSelector = function(_message, _callbackFunc) {
+    this.sendRequestViaMultiFriendSelector = function(_message, _redirect_url, _callbackFunc) {
         // set defaults
         _message = defaultValue(_message, 'Message goes here.');
 
         var publishObj = {
             method: 'apprequests',
-            message: _message
+            message: _message,
+            redirect_uri: _redirect_url
         };
 
         // callback will pass response back as a param
