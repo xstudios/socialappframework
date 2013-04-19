@@ -375,9 +375,8 @@ class SAF_User extends SAF_Base {
         if ( in_array($this->_id, $developers) === true ) {
             $this->debug(__CLASS__.':: User is the app developer.');
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     // ------------------------------------------------------------------------
