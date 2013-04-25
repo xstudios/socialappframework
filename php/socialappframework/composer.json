@@ -1,0 +1,8 @@
+{
+    "require": {
+        "facebook/php-sdk": "*"
+    },
+    "config" : {
+        "vendor-dir" : "vendors"
+    }
+}
