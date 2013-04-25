@@ -7,8 +7,10 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
-// facebook api
-require_once dirname(__FILE__).'/../vendors/facebook/php-sdk/src/facebook.php';
+// facebook sdk
+require_once dirname(__FILE__).'/../../../../facebook/php-sdk/src/facebook.php';
+
+// saf facebook graph libraries
 require_once dirname(__FILE__).'/facebook/graph/fb_graph_object.php';
 require_once dirname(__FILE__).'/facebook/graph/fb_graph_notification.php';
 require_once dirname(__FILE__).'/facebook/graph/fb_graph_post.php';
@@ -20,7 +22,7 @@ require_once dirname(__FILE__).'/facebook/graph/fb_graph_album.php';
 require_once dirname(__FILE__).'/facebook/graph/fb_graph_checkin.php';
 require_once dirname(__FILE__).'/facebook/graph/fb_graph_event.php';
 
-// saf
+// saf libraries
 require_once dirname(__FILE__).'/saf_config.php';
 require_once dirname(__FILE__).'/saf_base.php';
 require_once dirname(__FILE__).'/saf_facebook.php';

@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "aa743b98780547ee4255e139e8aeb4b4",
+    "hash": "92f8420c4e13af6bd2e41e1b125cc166",
     "packages": [
         {
             "name": "facebook/php-sdk",
