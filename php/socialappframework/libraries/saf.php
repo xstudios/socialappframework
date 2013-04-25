@@ -8,7 +8,7 @@
  */
 
 // facebook api
-require_once dirname(__FILE__).'/facebook/sdk/facebook.php';
+require_once dirname(__FILE__).'/../vendors/facebook/php-sdk/src/facebook.php';
 require_once dirname(__FILE__).'/facebook/graph/fb_graph_object.php';
 require_once dirname(__FILE__).'/facebook/graph/fb_graph_notification.php';
 require_once dirname(__FILE__).'/facebook/graph/fb_graph_post.php';
