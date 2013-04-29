@@ -120,19 +120,6 @@ class SAF extends SAF_Facebook {
     }
 
     /**
-     * Returns a Facebook Checkin
-     *
-     * @access    public
-     * @param     string  $place  the Place Page ID
-     * @param     string  $latitude
-     * @param     string  $longitude
-     * @return    FB_Graph_Checkin
-     */
-    public static function createCheckin($place, $latitude, $longitude) {
-        return new FB_Graph_Checkin($place, $latitude, $longitude);
-    }
-
-    /**
      * Returns a Facebook Comment
      *
      * @access    public
