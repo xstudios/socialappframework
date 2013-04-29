@@ -7,6 +7,8 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
+//namespace SocialAppFramework\Page;
+
 /**
  * Social App Framework Page Connection class
  *
@@ -15,7 +17,7 @@
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  * @link         https://developers.facebook.com/docs/reference/api/page/
  */
-class SAF_Page_Connection {
+class PageConnection {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS

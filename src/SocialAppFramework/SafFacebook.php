@@ -7,6 +7,8 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
+//namespace SocialAppFramework;
+
 /**
  * Social App Framework Facebook class
  *
@@ -17,7 +19,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class SAF_Facebook extends Facebook {
+abstract class SafFacebook extends Facebook {
 
     const SAF_VERSION = '1.0.0';
 
@@ -29,7 +31,7 @@ abstract class SAF_Facebook extends Facebook {
      * SAF_Signed_Request object
      *
      * @access    public
-     * @var       SAF_Signed_Request
+     * @var       SignedRequest
      */
     public $sr;
 
@@ -37,7 +39,7 @@ abstract class SAF_Facebook extends Facebook {
      * SAF_Page object
      *
      * @access    public
-     * @var       SAF_Page
+     * @var       Page
      */
     public $page;
 
@@ -45,7 +47,7 @@ abstract class SAF_Facebook extends Facebook {
      * SAF_User object
      *
      * @access    public
-     * @var       SAF_User
+     * @var       User
      */
     public $user;
 
@@ -117,7 +119,7 @@ abstract class SAF_Facebook extends Facebook {
         }
 
         // create a signed request object
-        $this->sr = new SAF_Signed_Request($this);
+        $this->sr = new SignedRequest($this);
 
         // NOTE: Page must be created before User since the User object
         // will reference the Page object for Tab and Canvas apps
@@ -127,12 +129,12 @@ abstract class SAF_Facebook extends Facebook {
 
         // if we have a page id, create a new page
         if (!empty($page_id)) {
-            $this->page = new SAF_Page($this, $page_id);
+            $this->page = new Page($this, $page_id);
         }
 
         // if we have a user id, create a new user
         //if (!empty($this->_user_id)) {
-            $this->user = new SAF_User($this, $user_id);
+            $this->user = new User($this, $user_id);
         //}
     }
 

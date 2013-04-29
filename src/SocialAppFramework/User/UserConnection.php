@@ -7,6 +7,8 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
+//namespace SocialAppFramework\User;
+
 /**
  * Social App Framework User Connection class
  *
@@ -15,7 +17,7 @@
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  * @link         https://developers.facebook.com/docs/reference/api/user/
  */
-class SAF_User_Connection {
+class UserConnection {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS

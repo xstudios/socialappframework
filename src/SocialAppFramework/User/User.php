@@ -7,6 +7,10 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
+//namespace SocialAppFramework\User;
+
+require_once dirname(__FILE__).'/../BaseSaf.php';
+
 /**
  * Social App Framework User class
  *
@@ -14,7 +18,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF_User extends SAF_Base {
+class User extends BaseSaf {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS
@@ -24,7 +28,7 @@ class SAF_User extends SAF_Base {
      * Facebook instance
      *
      * @access    private
-     * @var       SAF_Facebook
+     * @var       SafFacebook
      */
     private $_facebook;
 
@@ -72,7 +76,7 @@ class SAF_User extends SAF_Base {
      * User connection
      *
      * @access    private
-     * @var       SAF_User_Connection
+     * @var       UserConnection
      */
     public $connection;
 
@@ -247,7 +251,7 @@ class SAF_User extends SAF_Base {
      * Constructor
      *
      * @access    public
-     * @param     SAF_Facebook  $facebook
+     * @param     SafFacebook  $facebook
      * @param     string|int    $user_id
      * @return    void
      */
@@ -311,7 +315,7 @@ class SAF_User extends SAF_Base {
                 $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
 
                 // create user connection
-                //$this->connection = new SAF_User_Connection($this, $this->_facebook);
+                //$this->connection = new UserConnection($this, $this->_facebook);
 
                 $this->debug(__CLASS__.':: User ('.$this->_id.') is authenticated with data:', $this->_data);
 
@@ -328,7 +332,7 @@ class SAF_User extends SAF_Base {
         }
 
         // create user connection
-        $this->connection = new SAF_User_Connection($this, $this->_facebook);
+        $this->connection = new UserConnection($this, $this->_facebook);
 
         $this->debug('--------------------');
     }

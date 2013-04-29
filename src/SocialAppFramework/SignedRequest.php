@@ -7,6 +7,8 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
+//namespace SocialAppFramework;
+
 /**
  * Social App Framework Signed Request class
  *
@@ -14,7 +16,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF_Signed_Request extends SAF_Base {
+class SignedRequest extends BaseSaf {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS

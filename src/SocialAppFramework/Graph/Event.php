@@ -7,7 +7,9 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
-require_once dirname(__FILE__).'/fb_graph_object.php';
+//namespace SocialAppFramework\Graph;
+
+require_once dirname(__FILE__).'/Object.php';
 
 /**
  * Facebook Event object class
@@ -20,7 +22,7 @@ require_once dirname(__FILE__).'/fb_graph_object.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class FB_Graph_Event extends FB_Graph_Object {
+class Event extends Object {
 
     const CONNECTION = 'events';
 

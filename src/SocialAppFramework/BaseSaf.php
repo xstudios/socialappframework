@@ -7,6 +7,8 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
+//namespace SocialAppFramework;
+
 /**
  * Social App Framework Base class
  *
@@ -14,7 +16,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class SAF_Base {
+abstract class BaseSaf {
 
     // ------------------------------------------------------------------------
 

@@ -7,7 +7,9 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
-require_once dirname(__FILE__).'/fb_graph_object.php';
+//namespace SocialAppFramework\Graph;
+
+require_once dirname(__FILE__).'/Object.php';
 
 /**
  * Facebook Question object class
@@ -21,7 +23,7 @@ require_once dirname(__FILE__).'/fb_graph_object.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class FB_Graph_Question extends FB_Graph_Object {
+class Question extends Object {
 
     const CONNECTION = 'questions';
 

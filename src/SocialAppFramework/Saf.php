@@ -7,36 +7,37 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
+//namespace SocialAppFramework;
+
 // facebook sdk
 require_once dirname(__FILE__).'/../../../../facebook/php-sdk/src/facebook.php';
 
 // saf facebook graph libraries
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_object.php';
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_notification.php';
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_post.php';
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_comment.php';
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_question.php';
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_note.php';
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_link.php';
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_album.php';
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_checkin.php';
-require_once dirname(__FILE__).'/facebook/graph/fb_graph_event.php';
+require_once dirname(__FILE__).'/Graph/Object.php';
+require_once dirname(__FILE__).'/Graph/Notification.php';
+require_once dirname(__FILE__).'/Graph/Post.php';
+require_once dirname(__FILE__).'/Graph/Comment.php';
+require_once dirname(__FILE__).'/Graph/Question.php';
+require_once dirname(__FILE__).'/Graph/Note.php';
+require_once dirname(__FILE__).'/Graph/Link.php';
+require_once dirname(__FILE__).'/Graph/Album.php';
+require_once dirname(__FILE__).'/Graph/Event.php';
 
 // saf libraries
-require_once dirname(__FILE__).'/saf_config.php';
-require_once dirname(__FILE__).'/saf_base.php';
-require_once dirname(__FILE__).'/saf_facebook.php';
-require_once dirname(__FILE__).'/saf_signed_request.php';
-require_once dirname(__FILE__).'/saf_page.php';
-require_once dirname(__FILE__).'/saf_page_connection.php';
-require_once dirname(__FILE__).'/saf_user.php';
-require_once dirname(__FILE__).'/saf_user_connection.php';
+require_once dirname(__FILE__).'/SAF_Config.php';
+require_once dirname(__FILE__).'/BaseSaf.php';
+require_once dirname(__FILE__).'/SafFacebook.php';
+require_once dirname(__FILE__).'/SignedRequest.php';
+require_once dirname(__FILE__).'/Page/Page.php';
+require_once dirname(__FILE__).'/Page/PageConnection.php';
+require_once dirname(__FILE__).'/User/User.php';
+require_once dirname(__FILE__).'/User/UserConnection.php';
 
 // config (must be loaded after saf_config.php)
-require_once dirname(__FILE__).'/../config/config.php';
+require_once dirname(__FILE__).'/config/config.php';
 
 // helpers
-require_once dirname(__FILE__).'/../helpers/fb_helper.php';
+require_once dirname(__FILE__).'/Helpers/FB_Helper.php';
 
 /**
  * SAF class
@@ -47,7 +48,7 @@ require_once dirname(__FILE__).'/../helpers/fb_helper.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF extends SAF_Facebook {
+class SAF extends SafFacebook {
 
     /**
      * SAF object
@@ -116,7 +117,7 @@ class SAF extends SAF_Facebook {
      * @return    FB_Graph_Album
      */
     public static function createAlbum($name) {
-        return new FB_Graph_Album($name);
+        return new Album($name);
     }
 
     /**
@@ -127,7 +128,7 @@ class SAF extends SAF_Facebook {
      * @return    FB_Graph_Comment
      */
     public static function createComment($message) {
-        return new FB_Graph_Comment($message);
+        return new Comment($message);
     }
 
     /**
@@ -139,7 +140,7 @@ class SAF extends SAF_Facebook {
      * @return    FB_Graph_Event
      */
     public static function createEvent($name, $start_time) {
-        return new FB_Graph_Event($name, $start_time);
+        return new Event($name, $start_time);
     }
 
     /**
@@ -150,7 +151,7 @@ class SAF extends SAF_Facebook {
      * @return    FB_Graph_Link
      */
     public static function createLink($url) {
-        return new FB_Graph_Link($url);
+        return new Link($url);
     }
 
     /**
@@ -162,7 +163,7 @@ class SAF extends SAF_Facebook {
      * @return    FB_Graph_Note
      */
     public static function createNote($subject, $message) {
-        return new FB_Graph_Note($subject, $message);
+        return new Note($subject, $message);
     }
 
     /**
@@ -174,7 +175,7 @@ class SAF extends SAF_Facebook {
      * @return    FB_Graph_Notification
      */
     public static function createNotification($template, $href) {
-        return new FB_Graph_Notification($template, $href);
+        return new Notification($template, $href);
     }
 
     /**
@@ -185,7 +186,7 @@ class SAF extends SAF_Facebook {
      * @return    FB_Graph_Post
      */
     public static function createPost($message) {
-        return new FB_Graph_Post($message);
+        return new Post($message);
     }
 
     /**
@@ -196,7 +197,7 @@ class SAF extends SAF_Facebook {
      * @return    FB_Graph_Question
      */
     public static function createQuestion($question) {
-        return new FB_Graph_Question($question);
+        return new Question($question);
     }
 
     // ------------------------------------------------------------------------

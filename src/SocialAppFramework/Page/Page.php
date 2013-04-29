@@ -7,6 +7,10 @@
  * with this package. If not, see <http://socialappframework.com/license/>.
  */
 
+//namespace SocialAppFramework\Page;
+
+require_once dirname(__FILE__).'/../BaseSaf.php';
+
 /**
  * Social App Framework Page class
  *
@@ -14,7 +18,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF_Page extends SAF_Base {
+class Page extends BaseSaf {
 
     const RSS = 'https://www.facebook.com/feeds/page.php?id=%s&format=rss20';
 
@@ -26,7 +30,7 @@ class SAF_Page extends SAF_Base {
      * Facebook instance
      *
      * @access    private
-     * @var       SAF_Facebook
+     * @var       SafFacebook
      */
     private $_facebook;
 
@@ -50,7 +54,7 @@ class SAF_Page extends SAF_Base {
      * Page connection
      *
      * @access    private
-     * @var       SAF_Page_Connection
+     * @var       PageConnection
      */
     public $connection;
 
@@ -211,7 +215,7 @@ class SAF_Page extends SAF_Base {
      * Constructor
      *
      * @access    public
-     * @param     SAF_Facebook  $facebook
+     * @param     SafFacebook  $facebook
      * @param     string|int    $page_id
      * @return    void
      */
@@ -268,7 +272,7 @@ class SAF_Page extends SAF_Base {
             }
 
             // create page connection
-            $this->connection = new SAF_Page_Connection($this, $this->_facebook);
+            $this->connection = new PageConnection($this, $this->_facebook);
 
             $this->debug(__CLASS__.':: Page ('.$this->_id.') data: ', $this->_data);
 
