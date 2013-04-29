@@ -26,15 +26,15 @@ any type of Facebook app (Tab, Canvas or Facebook Connect) in a matter of minute
 - Facebook PHP SDK >=3.2.2
 
 ## File Structure
-- vendors
-    - facebook
-        - php-sdk
-            - examples
-            - src
-            - tests
+- vendors/
+    - facebook/
+        - php-sdk/
+            - examples/
+            - src/
+            - tests/
 
-    - tsantor
-        - socialappframework
-            - docs
-            - src
-            - tests
+    - tsantor/
+        - socialappframework/
+            - docs/
+            - src/
+            - tests/
