@@ -22,4 +22,19 @@ any type of Facebook app (Tab, Canvas or Facebook Connect) in a matter of minute
 [http:://socialappframework.com](http:://socialappframework.com)
 
 ## Requirements
-- Facebook PHP SDK (3.2.2)
+- PHP >= 5.2.9
+- Facebook PHP SDK >=3.2.2
+
+## File Structure
+- vendors
+    - facebook
+        - php-sdk
+            - examples
+            - src
+            - tests
+
+    - tsantor
+        - socialappframework
+            - docs
+            - src
+            - tests
