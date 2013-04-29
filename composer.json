@@ -13,9 +13,7 @@
         }
     ],
     "require": {
-        "php": ">=5.2.9",
-        "ext-curl": "*",
-        "ext-json": "*"
+        "php": ">=5.2.9"
     },
     "autoload": {
         "classmap": ["src"]
