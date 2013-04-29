@@ -3,7 +3,7 @@
     "description": "Social App Framework",
     "keywords": ["saf", "socialappframework", "facebook", "sdk"],
     "type": "library",
-    "homepage": "https://github.com/tsantor/Social-App-Framework",
+    "homepage": "https://github.com/tsantor/socialappframework",
     "license": "MIT",
     "authors": [
         {
