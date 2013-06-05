@@ -274,9 +274,16 @@ class Page extends BaseSaf {
             // create page connection
             $this->connection = new PageConnection($this, $this->_facebook);
 
+            // set session data
+            $this->setSafPersistentData('page', $this->_data);
+
             $this->debug(__CLASS__.':: Page ('.$this->_id.') data: ', $this->_data);
 
         } catch (FacebookApiException $e) {
+
+            // clear session data - don't do this or we can't access the
+            // page session data later on on AJAX requests.
+            //$this->clearSafPersistentData('page');
 
             $this->debug(__CLASS__.':: '.$e, null, 3, true);
 
@@ -320,11 +327,19 @@ class Page extends BaseSaf {
      * @return    mixed
      */
     private function _getValue($key, $default=false) {
-        if ( !isset($this->_data[$key]) ) {
-            return $default;
+        // first, look in data we *should* have recevied from the graph
+        if ( isset($this->_data[$key]) ) {
+            return $this->_data[$key];
         }
 
-        return $this->_data[$key];
+        // second, look at the data we have in the session
+        $session_data = $this->getSafPersistentData('page');
+        if ( isset($session_data[$key]) ) {
+            return $session_data[$key];
+        }
+
+        // if all else fails, we return the default value
+        return $default;
     }
 
     // ------------------------------------------------------------------------

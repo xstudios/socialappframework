@@ -289,46 +289,59 @@ class User extends BaseSaf {
         // we have a user id and an access token, so probably a logged in user...
         // if not, we'll get an exception, which we will handle below
         if ($this->_facebook->getUser()) {
-        try {
+            try {
 
-            $this->_data = $this->_facebook->api('/'.$uid, 'GET', array(
-                //'access_token' => $access_token,
-                'fields' => SAF_Config::getGraphUserFields()
-            ));
+                $this->_data = $this->_facebook->api('/'.$uid, 'GET', array(
+                    //'access_token' => $access_token,
+                    'fields' => SAF_Config::getGraphUserFields()
+                ));
 
-            // if we have user data
-            if ( !empty($this->_data) ) {
+                // if we have user data
+                if ( !empty($this->_data) ) {
 
-                // user is authenticated (we have data)
-                $this->_authenticated = true;
+                    // user is authenticated (we have data)
+                    $this->_authenticated = true;
 
-                // set user ID
-                $this->_id = $this->_data['id'];
+                    // set user ID
+                    $this->_id = $this->_data['id'];
 
-                // check user permissions
-                $this->_checkPermissions();
+                    // check user permissions
+                    $this->_checkPermissions();
 
-                // add our own useful social app framework parameter(s) to the fb_user object
-                $this->_data['saf_perms_granted'] = $this->_granted_perms;
-                $this->_data['saf_perms_revoked'] = $this->_revoked_perms;
-                $this->_data['saf_page_admin']    = $this->_facebook->sr->isPageAdmin();
-                $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
+                    // add our own useful social app framework parameter(s) to the fb_user object
+                    $this->_data['saf_perms_granted'] = $this->_granted_perms;
+                    $this->_data['saf_perms_revoked'] = $this->_revoked_perms;
+                    $this->_data['saf_page_admin']    = $this->_facebook->sr->isPageAdmin();
+                    $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
 
-                // create user connection
-                //$this->connection = new UserConnection($this, $this->_facebook);
+                    // create user connection
+                    //$this->connection = new UserConnection($this, $this->_facebook);
 
-                $this->debug(__CLASS__.':: User ('.$this->_id.') is authenticated with data:', $this->_data);
+                    // set session data
+                    $this->setSafPersistentData('user', $this->_data);
+
+                    $this->debug(__CLASS__.':: User ('.$this->_id.') is authenticated with data:', $this->_data);
+
+                }
+
+            } catch (FacebookApiException $e) {
+
+                // If the user is logged out, you can have a user ID even though
+                // the access token is invalid. In this case, we'll get an
+                // exception, so we should ask the user to login again.
+
+                // clear session data - don't do this or we can't access the
+                // user session data later on on AJAX requests.
+                //$this->clearSafPersistentData('user');
+
+                $this->debug(__CLASS__.':: '.$e->getMessage(), null, 3);
+                $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
 
             }
-
-        } catch (FacebookApiException $e) {
-
-            $this->debug(__CLASS__.':: '.$e->getMessage(), null, 3);
-            $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
-
-        }
         } else {
+
             $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
+
         }
 
         // create user connection
@@ -443,11 +456,19 @@ class User extends BaseSaf {
      * @return    mixed
      */
     private function _getValue($key, $default=false) {
-        if ( !isset($this->_data[$key]) ) {
-            return $default;
+        // first, look in data we *should* have recevied from the graph
+        if ( isset($this->_data[$key]) ) {
+            return $this->_data[$key];
         }
 
-        return $this->_data[$key];
+        // second, look at the data we have in the session
+        $session_data = $this->getSafPersistentData('user');
+        if ( isset($session_data[$key]) ) {
+            return $session_data[$key];
+        }
+
+        // if all else fails, we return the default value
+        return $default;
     }
 
     // ------------------------------------------------------------------------

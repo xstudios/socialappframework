@@ -18,6 +18,8 @@
  */
 abstract class BaseSaf {
 
+    private $_suppported_keys = array('fan_gate', 'page', 'user');
+
     // ------------------------------------------------------------------------
 
     /**
@@ -53,6 +55,11 @@ abstract class BaseSaf {
      * @return    void
      */
     protected function setSafPersistentData($key, $value) {
+        if (!in_array($key, $this->_suppported_keys)) {
+            $this->debug(__CLASS__.':: Unsupported key passed to setSafPersistentData');
+            return;
+        }
+
         $key = $this->createSafVariableName($key);
         return $_SESSION[$key] = $value;
     }
@@ -66,6 +73,11 @@ abstract class BaseSaf {
      * @return    mixed
      */
     protected function getSafPersistentData($key, $default=false) {
+        if (!in_array($key, $this->_suppported_keys)) {
+            $this->debug(__CLASS__.':: Unsupported key passed to getSafPersistentData');
+            return;
+        }
+
         $key = $this->createSafVariableName($key);
         return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
     }
@@ -78,8 +90,26 @@ abstract class BaseSaf {
      * @return    void
      */
     protected function clearSafPersistentData($key) {
+        if (!in_array($key, $this->_suppported_keys)) {
+            $this->debug(__CLASS__.':: Unsupported key passed to clearSafPersistentData');
+            return;
+        }
+
         $key = $this->createSafVariableName($key);
         unset($_SESSION[$key]);
+    }
+
+    /**
+     * Unsets all SAF session data
+     *
+     * @access    protected
+     * @return    void
+     */
+    protected function clearAllSafPersistentData() {
+        foreach($this->_suppported_keys as $_key) {
+            $key = $this->createSafVariableName($_key);
+            unset($_SESSION[$key]);
+        }
     }
 
     // ------------------------------------------------------------------------

@@ -128,9 +128,9 @@ abstract class SafFacebook extends Facebook {
         $page_id = $this->sr->getPageId() ? $this->sr->getPageId() : SAF_Config::getPageId();
 
         // if we have a page id, create a new page
-        if (!empty($page_id)) {
+        //if (!empty($page_id)) {
             $this->page = new Page($this, $page_id);
-        }
+        //}
 
         // if we have a user id, create a new user
         //if (!empty($this->_user_id)) {
