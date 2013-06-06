@@ -270,7 +270,7 @@ class Page extends BaseSaf {
                         $this->_facebook->setRedirectUrl($this->getTabUrl());
                     }
 
-                    $this->debug(__CLASS__.':: Page ('.$this->_id.') may be unpublished or have country/age restrictions', null, 3, true);
+                    $this->debug(__CLASS__.':: Page ('.$this->_id.') may be unpublished or have country/age restrictions.', null, 3, true);
 
                 }
 
@@ -284,16 +284,26 @@ class Page extends BaseSaf {
 
             } catch (FacebookApiException $e) {
 
-                // clear session data - don't do this or we can't access the
-                // page session data later on on AJAX requests.
-                //$this->clearSafPersistentData('page');
-
                 $this->debug(__CLASS__.':: '.$e, null, 3, true);
 
             }
 
         } else {
-            $this->debug(__CLASS__.':: Page data not available');
+
+            $this->debug(__CLASS__.':: Page data not available (most likely no signed request or the signed request contained no page data).');
+
+            // fall back to session data if we have it
+            $this->_data = $this->getSafPersistentData('page');
+            if (!empty($this->_data)) {
+                $this->_id = $this->_data['id'];
+
+                $this->debug(__CLASS__.':: We got page data from our session.');
+                $this->debug(__CLASS__.':: Page ('.$this->_id.') data: ', $this->_data);
+
+                // create page connection
+                $this->connection = new PageConnection($this, $this->_facebook);
+            }
+
         }
 
         $this->debug('--------------------');

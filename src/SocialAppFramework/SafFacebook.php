@@ -124,8 +124,17 @@ abstract class SafFacebook extends Facebook {
         // NOTE: Page **MUST** be created before User since the User object
         // will reference the Page object for Tab and Canvas apps
 
-        // get page id
+        // get page id by first looking in the signed request, then the config
+        // and finally fallback to the session
         $page_id = $this->sr->getPageId() ? $this->sr->getPageId() : SAF_Config::getPageId();
+        if (empty($page_id)) {
+            // did we already get page info?
+            $page = $this->getPersistentData('page');
+
+            if (isset($page['id'])) {
+                $page_id = $page['id'];
+            }
+        }
 
         // create a new page
         $this->page = new Page($this, $page_id);
