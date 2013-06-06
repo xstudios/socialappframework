@@ -51,15 +51,15 @@ class FB_Helper {
     // ------------------------------------------------------------------------
 
     /**
-     * Returns the Facebook profile url
+     * Returns the Facebook profile url for a user or a page
      *
      * @access    public
-     * @param     int $fb_user_id
+     * @param     int $id
      * @return    string
      */
-    public static function profile_url($fb_user_id) {
+    public static function profile_url($id) {
         $html = 'https://www.facebook.com/profile.php?id=%s';
-        return sprintf($html, $fb_user_id);
+        return sprintf($html, $id);
     }
 
     // ------------------------------------------------------------------------
@@ -67,9 +67,12 @@ class FB_Helper {
     /**
      * Returns the Facebook fan page url
      *
+     * This method is deprecated, use the profile_url method
+     *
      * @access    public
      * @param     int $fb_page_id
      * @return    string
+     * @deprecated
      */
     public static function fan_page_url($fb_page_id) {
         $html = 'https://www.facebook.com/%s';
