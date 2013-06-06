@@ -237,56 +237,63 @@ class Page extends BaseSaf {
      * @return    void
      */
     private function _init() {
-        try {
 
-            // get page data
-            $this->_data = $this->_facebook->api('/'.$this->_id, 'GET', array(
-                //'access_token' => $this->getAccessToken(),
-                'fields' => 'access_token, '.SAF_Config::getGraphPageFields()
-            ));
+        if ($this->_id) {
 
-            // if we have page data
-            if ( !empty($this->_data) ) {
+            try {
 
-                // inject SAF data, no page restrictions we are aware of
-                $this->_data = $this->_injectSAFData(false);
+                // get page data
+                $this->_data = $this->_facebook->api('/'.$this->_id, 'GET', array(
+                    //'access_token' => $this->getAccessToken(),
+                    'fields' => 'access_token, '.SAF_Config::getGraphPageFields()
+                ));
 
-                // if this is an app tab set the redirect URL to this tab
-                if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
-                    $this->_facebook->setRedirectUrl($this->getTabUrl());
+                // if we have page data
+                if ( !empty($this->_data) ) {
+
+                    // inject SAF data, no page restrictions we are aware of
+                    $this->_data = $this->_injectSAFData(false);
+
+                    // if this is an app tab set the redirect URL to this tab
+                    if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
+                        $this->_facebook->setRedirectUrl($this->getTabUrl());
+                    }
+
+                // probably some sort of page restriction (country/age)
+                } else {
+
+                    // inject SAF data, some sort of page restriction (country/age)
+                    $this->_data = $this->_injectSAFData(true);
+
+                    // if this is an app tab set the redirect URL to this tab
+                    if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
+                        $this->_facebook->setRedirectUrl($this->getTabUrl());
+                    }
+
+                    $this->debug(__CLASS__.':: Page ('.$this->_id.') may be unpublished or have country/age restrictions', null, 3, true);
+
                 }
 
-            // probably some sort of page restriction (country/age)
-            } else {
+                // create page connection
+                $this->connection = new PageConnection($this, $this->_facebook);
 
-                // inject SAF data, some sort of page restriction (country/age)
-                $this->_data = $this->_injectSAFData(true);
+                // set session data
+                $this->setSafPersistentData('page', $this->_data);
 
-                // if this is an app tab set the redirect URL to this tab
-                if (SAF_Config::getAppType() === SAF_Config::APP_TYPE_TAB) {
-                    $this->_facebook->setRedirectUrl($this->getTabUrl());
-                }
+                $this->debug(__CLASS__.':: Page ('.$this->_id.') data: ', $this->_data);
 
-                $this->debug(__CLASS__.':: Page ('.$this->_id.') may be unpublished or have country/age restrictions', null, 3, true);
+            } catch (FacebookApiException $e) {
+
+                // clear session data - don't do this or we can't access the
+                // page session data later on on AJAX requests.
+                //$this->clearSafPersistentData('page');
+
+                $this->debug(__CLASS__.':: '.$e, null, 3, true);
 
             }
 
-            // create page connection
-            $this->connection = new PageConnection($this, $this->_facebook);
-
-            // set session data
-            $this->setSafPersistentData('page', $this->_data);
-
-            $this->debug(__CLASS__.':: Page ('.$this->_id.') data: ', $this->_data);
-
-        } catch (FacebookApiException $e) {
-
-            // clear session data - don't do this or we can't access the
-            // page session data later on on AJAX requests.
-            //$this->clearSafPersistentData('page');
-
-            $this->debug(__CLASS__.':: '.$e, null, 3, true);
-
+        } else {
+            $this->debug(__CLASS__.':: Page data not available');
         }
 
         $this->debug('--------------------');
