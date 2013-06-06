@@ -121,21 +121,17 @@ abstract class SafFacebook extends Facebook {
         // create a signed request object
         $this->sr = new SignedRequest($this);
 
-        // NOTE: Page must be created before User since the User object
+        // NOTE: Page **MUST** be created before User since the User object
         // will reference the Page object for Tab and Canvas apps
 
         // get page id
         $page_id = $this->sr->getPageId() ? $this->sr->getPageId() : SAF_Config::getPageId();
 
-        // if we have a page id, create a new page
-        //if (!empty($page_id)) {
-            $this->page = new Page($this, $page_id);
-        //}
+        // create a new page
+        $this->page = new Page($this, $page_id);
 
-        // if we have a user id, create a new user
-        //if (!empty($this->_user_id)) {
-            $this->user = new User($this, $user_id);
-        //}
+        // create a new user
+        $this->user = new User($this, $user_id);
     }
 
     // ------------------------------------------------------------------------
