@@ -27,7 +27,7 @@ class SAF_Config {
     const APP_TYPE_FACEBOOK_CONNECT = 'facebook connect';
 
     const URL_CANVAS       = 'https://apps.facebook.com/%s/';
-    const URL_PAGE_TAB     = 'https://www.facebook.com/%s?sk=app_%s';
+    const URL_PAGE_TAB     = 'https://www.facebook.com/%s/app_%s';
     const URL_ADD_PAGE_TAB = 'https://www.facebook.com/dialog/pagetab?app_id=%s&next=%s';
 
     // app type

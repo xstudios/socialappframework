@@ -78,6 +78,14 @@ class SignedRequest extends BaseSaf {
      */
     private $_app_data;
 
+     /**
+     * Is the page being viewed in the Facebook chrome?
+     *
+     * @access    private
+     * @var       boolean
+     */
+    private $_in_facebook_chrome = false;
+
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
@@ -142,6 +150,16 @@ class SignedRequest extends BaseSaf {
         return $this->_like_via_fan_gate;
     }
 
+    /**
+     * Returns true if the page is being viewed in the Facebook chrome
+     *
+     * @access    public
+     * @return    boolean
+     */
+    public function isInFacebookChrome() {
+        return $this->_in_facebook_chrome;
+    }
+
     // ------------------------------------------------------------------------
 
     /**
@@ -198,6 +216,11 @@ class SignedRequest extends BaseSaf {
                 // get page id
                 $this->_page_id = $signed_request['page']['id'];
                 //$this->debug(__CLASS__.':: Page ID ('.$this->_page_id.').');
+
+                // flag whether or not we are in the Facebook chrome
+                if ($this->_page_id) {
+                    $this->_in_facebook_chrome = true;
+                }
 
                 // does the user like this page?
                 $this->_page_liked = $signed_request['page']['liked'];

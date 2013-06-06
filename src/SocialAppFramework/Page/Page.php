@@ -309,7 +309,7 @@ class Page extends BaseSaf {
      */
     private function _injectSAFData($page_restrictions=false) {
         if ( isset($this->_data['link']) ) {
-            $url = str_replace( 'http', 'https', $this->_data['link'].'?sk=app_'.SAF_Config::getAppId() );
+            $url = str_replace( 'http', 'https', $this->_data['link'].'/app_'.SAF_Config::getAppId() );
             $this->_data['saf_app_tab_url'] = $url;
         } else {
             $this->_data['saf_app_tab_url'] = SAF_Config::getTabUrl();

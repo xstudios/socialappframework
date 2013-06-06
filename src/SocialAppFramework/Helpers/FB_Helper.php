@@ -16,9 +16,6 @@
  * You should have received a copy of the license along with this program.
  * If not, see <http://socialappframework.com/license/>.
  */
-
-//namespace SocialAppFramework\Helpers
-
 class FB_Helper {
 
     // ------------------------------------------------------------------------
@@ -90,7 +87,7 @@ class FB_Helper {
      * @return    string
      */
     public static function page_tab_url($fb_page_hash, $app_id) {
-        $html = 'https://www.facebook.com/%s?sk=app_%s)';
+        $html = 'https://www.facebook.com/%s/app_%s)';
         return sprintf($html, $fb_page_hash, $app_id);
     }
 
