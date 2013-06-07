@@ -270,14 +270,16 @@ class SignedRequest extends BaseSaf {
             $this->debug(__CLASS__.':: SAF Signed request data:', $signed_request);
 
         // we are looking at the app outside of the Facebook chrome
+        // or it's a subsequent page load or ajax request
         } else {
 
-            $this->_forceFacebookChrome();
-
-            // facebook connect app
             if (SAF_Config::getAppType() == SAF_Config::APP_TYPE_FACEBOOK_CONNECT) {
                 $this->debug(__CLASS__.':: No signed request. Viewing Facebook Connect app.', null, 3);
+            } else {
+                $this->debug(__CLASS__.':: No signed request.', null, 3);
             }
+
+            $this->_forceFacebookChrome();
 
         }
 

@@ -62,7 +62,7 @@ class User extends BaseSaf {
      * @access    private
      * @var       array
      */
-    private $_granted_perms  = array();
+    private $_granted_perms = array();
 
     /**
      * The permissions revoked
@@ -70,7 +70,7 @@ class User extends BaseSaf {
      * @access    private
      * @var       array
      */
-    private $_revoked_perms  = array();
+    private $_revoked_perms = array();
 
     /**
      * User connection
@@ -198,7 +198,8 @@ class User extends BaseSaf {
      * @return    array
      */
     public function getGrantedPerms() {
-        return $this->_granted_perms;
+        //return $this->_granted_perms;
+        return $this->_getValue('saf_perms_granted');
     }
 
     /**
@@ -208,7 +209,18 @@ class User extends BaseSaf {
      * @return    array
      */
     public function getRevokedPerms() {
-        return $this->_revoked_perms;
+        //return $this->_revoked_perms;
+        return $this->_getValue('saf_perms_revoked');
+    }
+
+    /**
+     * Returns true if the user is the page admin
+     *
+     * @access    public
+     * @return    boolean
+     */
+    public function isPageAdmin() {
+        return $this->_getValue('saf_page_admin');
     }
 
     /**
@@ -239,7 +251,7 @@ class User extends BaseSaf {
      * @return    boolean
      */
     public function hasPermission($perm) {
-        if ( in_array($perm, $this->_granted_perms) ) {
+        if ( in_array($perm, $this->getGrantedPerms()) ) {
             return true;
         }
         return false;
@@ -251,13 +263,16 @@ class User extends BaseSaf {
      * Constructor
      *
      * @access    public
-     * @param     SafFacebook  $facebook
+     * @param     SafFacebook   $facebook
      * @param     string|int    $user_id
      * @return    void
      */
     public function __construct($facebook, $user_id) {
         $this->_facebook = $facebook;
-        $this->_id  = $user_id;
+        $this->_id       = $user_id;
+
+        // create user connection
+        $this->connection = new UserConnection($this, $this->_facebook);
 
         $this->_init();
     }
@@ -289,6 +304,18 @@ class User extends BaseSaf {
         // we have a user id and an access token, so probably a logged in user...
         // if not, we'll get an exception, which we will handle below
         if ($this->_facebook->getUser()) {
+
+            // test to see if we already know who the user is from our session
+            // and bail out as we don't need to hit up the graph api
+            $this->_data = $this->getSafPersistentData('user');
+            if (!empty($this->_data)) {
+                $this->_id            = $this->_data['id'];
+
+                $this->debug(__CLASS__.':: We got user data from our session.');
+                $this->debug(__CLASS__.':: User ('.$this->_id.') data: ', $this->_data);
+                return;
+            }
+
             try {
 
                 $this->_data = $this->_facebook->api('/'.$uid, 'GET', array(
@@ -314,9 +341,6 @@ class User extends BaseSaf {
                     $this->_data['saf_page_admin']    = $this->_facebook->sr->isPageAdmin();
                     $this->_data['saf_app_developer'] = $this->_isAppDeveloper();
 
-                    // create user connection
-                    //$this->connection = new UserConnection($this, $this->_facebook);
-
                     // set session data
                     $this->setSafPersistentData('user', $this->_data);
 
@@ -326,26 +350,23 @@ class User extends BaseSaf {
 
             } catch (FacebookApiException $e) {
 
-                // If the user is logged out, you can have a user ID even though
+                // if the user is logged out, you can have a user ID even though
                 // the access token is invalid. In this case, we'll get an
                 // exception, so we should ask the user to login again.
-
-                // clear session data - don't do this or we can't access the
-                // user session data later on on AJAX requests.
-                //$this->clearSafPersistentData('user');
 
                 $this->debug(__CLASS__.':: '.$e->getMessage(), null, 3);
                 $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
 
             }
+
         } else {
 
-            $this->debug(__CLASS__.':: User is not authenticated. Prompt user to login...', null, 3);
+            // clear user session data
+            $this->clearSafPersistentData('user');
+
+            $this->debug(__CLASS__.':: User is not authenticated. User session data cleared. Prompt user to login...', null, 3);
 
         }
-
-        // create user connection
-        $this->connection = new UserConnection($this, $this->_facebook);
 
         $this->debug('--------------------');
     }

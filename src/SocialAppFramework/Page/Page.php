@@ -215,13 +215,16 @@ class Page extends BaseSaf {
      * Constructor
      *
      * @access    public
-     * @param     SafFacebook  $facebook
+     * @param     SafFacebook   $facebook
      * @param     string|int    $page_id
      * @return    void
      */
     public function __construct($facebook, $page_id) {
         $this->_facebook = $facebook;
         $this->_id       = $page_id;
+
+        // create page connection
+        $this->connection = new PageConnection($this, $this->_facebook);
 
         $this->_init();
     }
@@ -274,9 +277,6 @@ class Page extends BaseSaf {
 
                 }
 
-                // create page connection
-                $this->connection = new PageConnection($this, $this->_facebook);
-
                 // set session data
                 $this->setSafPersistentData('page', $this->_data);
 
@@ -299,9 +299,6 @@ class Page extends BaseSaf {
 
                 $this->debug(__CLASS__.':: We got page data from our session.');
                 $this->debug(__CLASS__.':: Page ('.$this->_id.') data: ', $this->_data);
-
-                // create page connection
-                $this->connection = new PageConnection($this, $this->_facebook);
             }
 
         }
