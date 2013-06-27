@@ -9,7 +9,7 @@
 
 //namespace SocialAppFramework\Graph;
 
-require_once dirname(__FILE__).'/Object.php';
+require_once dirname(__FILE__).'/SAF_Graph_Object.php';
 
 /**
  * Facebook Event object class
@@ -22,7 +22,7 @@ require_once dirname(__FILE__).'/Object.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class Event extends Object {
+class SAF_Graph_Event extends SAF_Graph_Object {
 
     const CONNECTION = 'events';
 

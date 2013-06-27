@@ -19,7 +19,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class SafFacebook extends Facebook {
+abstract class SAF_Facebook extends Facebook {
 
     const SAF_VERSION = '1.0.0';
 
@@ -31,7 +31,7 @@ abstract class SafFacebook extends Facebook {
      * SAF_Signed_Request object
      *
      * @access    public
-     * @var       SignedRequest
+     * @var       SAF_SignedRequest
      */
     public $sr;
 
@@ -39,7 +39,7 @@ abstract class SafFacebook extends Facebook {
      * SAF_Page object
      *
      * @access    public
-     * @var       Page
+     * @var       SAF_Page
      */
     public $page;
 
@@ -47,7 +47,7 @@ abstract class SafFacebook extends Facebook {
      * SAF_User object
      *
      * @access    public
-     * @var       User
+     * @var       SAF_User
      */
     public $user;
 
@@ -119,7 +119,7 @@ abstract class SafFacebook extends Facebook {
         }
 
         // create a signed request object
-        $this->sr = new SignedRequest($this);
+        $this->sr = new SAF_SignedRequest($this);
 
         // NOTE: Page **MUST** be created before User since the User object
         // will reference the Page object for Tab and Canvas apps
@@ -137,10 +137,10 @@ abstract class SafFacebook extends Facebook {
         }
 
         // create a new page
-        $this->page = new Page($this, $page_id);
+        $this->page = new SAF_Page($this, $page_id);
 
         // create a new user
-        $this->user = new User($this, $user_id);
+        $this->user = new SAF_User($this, $user_id);
     }
 
     // ------------------------------------------------------------------------

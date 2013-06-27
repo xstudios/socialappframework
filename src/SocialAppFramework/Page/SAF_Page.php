@@ -9,7 +9,7 @@
 
 //namespace SocialAppFramework\Page;
 
-require_once dirname(__FILE__).'/../BaseSaf.php';
+require_once dirname(__FILE__).'/../SAF_Base.php';
 
 /**
  * Social App Framework Page class
@@ -18,7 +18,7 @@ require_once dirname(__FILE__).'/../BaseSaf.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class Page extends BaseSaf {
+class SAF_Page extends SAF_Base {
 
     const RSS = 'https://www.facebook.com/feeds/page.php?id=%s&format=rss20';
 
@@ -30,7 +30,7 @@ class Page extends BaseSaf {
      * Facebook instance
      *
      * @access    private
-     * @var       SafFacebook
+     * @var       SAF_Facebook
      */
     private $_facebook;
 
@@ -54,7 +54,7 @@ class Page extends BaseSaf {
      * Page connection
      *
      * @access    private
-     * @var       PageConnection
+     * @var       SAF_PageConnection
      */
     public $connection;
 
@@ -215,7 +215,7 @@ class Page extends BaseSaf {
      * Constructor
      *
      * @access    public
-     * @param     SafFacebook   $facebook
+     * @param     SAF_Facebook   $facebook
      * @param     string|int    $page_id
      * @return    void
      */
@@ -224,7 +224,7 @@ class Page extends BaseSaf {
         $this->_id       = $page_id;
 
         // create page connection
-        $this->connection = new PageConnection($this, $this->_facebook);
+        $this->connection = new SAF_PageConnection($this, $this->_facebook);
 
         $this->_init();
     }

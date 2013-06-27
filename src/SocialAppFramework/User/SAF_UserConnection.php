@@ -17,7 +17,7 @@
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  * @link         https://developers.facebook.com/docs/reference/api/user/
  */
-class UserConnection {
+class SAF_UserConnection {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS

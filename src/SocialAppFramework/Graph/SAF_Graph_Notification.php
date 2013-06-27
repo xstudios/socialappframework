@@ -9,7 +9,7 @@
 
 //namespace SocialAppFramework\Graph;
 
-require_once dirname(__FILE__).'/Object.php';
+require_once dirname(__FILE__).'/SAF_Graph_Object.php';
 
 /**
  * Facebook Notification object class
@@ -25,7 +25,7 @@ require_once dirname(__FILE__).'/Object.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class Notification extends Object {
+class SAF_Graph_Notification extends SAF_Graph_Object {
 
     const CONNECTION = 'notifications';
 

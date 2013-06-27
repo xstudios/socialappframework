@@ -17,7 +17,7 @@
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  * @link         https://developers.facebook.com/docs/reference/api/page/
  */
-class PageConnection {
+class SAF_PageConnection {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS

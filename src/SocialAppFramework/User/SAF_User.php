@@ -9,7 +9,7 @@
 
 //namespace SocialAppFramework\User;
 
-require_once dirname(__FILE__).'/../BaseSaf.php';
+require_once dirname(__FILE__).'/../SAF_Base.php';
 
 /**
  * Social App Framework User class
@@ -18,7 +18,7 @@ require_once dirname(__FILE__).'/../BaseSaf.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class User extends BaseSaf {
+class SAF_User extends SAF_Base {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS
@@ -28,7 +28,7 @@ class User extends BaseSaf {
      * Facebook instance
      *
      * @access    private
-     * @var       SafFacebook
+     * @var       SAF_Facebook
      */
     private $_facebook;
 
@@ -76,7 +76,7 @@ class User extends BaseSaf {
      * User connection
      *
      * @access    private
-     * @var       UserConnection
+     * @var       SAF_UserConnection
      */
     public $connection;
 
@@ -263,7 +263,7 @@ class User extends BaseSaf {
      * Constructor
      *
      * @access    public
-     * @param     SafFacebook   $facebook
+     * @param     SAF_Facebook  $facebook
      * @param     string|int    $user_id
      * @return    void
      */
@@ -272,7 +272,7 @@ class User extends BaseSaf {
         $this->_id       = $user_id;
 
         // create user connection
-        $this->connection = new UserConnection($this, $this->_facebook);
+        $this->connection = new SAF_UserConnection($this, $this->_facebook);
 
         $this->_init();
     }
@@ -309,6 +309,9 @@ class User extends BaseSaf {
             // and bail out as we don't need to hit up the graph api
             $this->_data = $this->getSafPersistentData('user');
             if (!empty($this->_data)) {
+                // user is authenticated (we have data)
+                $this->_authenticated = true;
+
                 $this->_id            = $this->_data['id'];
 
                 $this->debug(__CLASS__.':: We got user data from our session.');

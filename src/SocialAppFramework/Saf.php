@@ -13,25 +13,26 @@
 require_once dirname(__FILE__).'/../../../../facebook/php-sdk/src/facebook.php';
 
 // saf facebook graph libraries
-require_once dirname(__FILE__).'/Graph/Object.php';
-require_once dirname(__FILE__).'/Graph/Notification.php';
-require_once dirname(__FILE__).'/Graph/Post.php';
-require_once dirname(__FILE__).'/Graph/Comment.php';
-require_once dirname(__FILE__).'/Graph/Question.php';
-require_once dirname(__FILE__).'/Graph/Note.php';
-require_once dirname(__FILE__).'/Graph/Link.php';
-require_once dirname(__FILE__).'/Graph/Album.php';
-require_once dirname(__FILE__).'/Graph/Event.php';
+require_once dirname(__FILE__).'/Graph/SAF_Graph_Object.php';
+require_once dirname(__FILE__).'/Graph/SAF_Graph_Notification.php';
+require_once dirname(__FILE__).'/Graph/SAF_Graph_Post.php';
+require_once dirname(__FILE__).'/Graph/SAF_Graph_Comment.php';
+require_once dirname(__FILE__).'/Graph/SAF_Graph_Question.php';
+require_once dirname(__FILE__).'/Graph/SAF_Graph_Note.php';
+require_once dirname(__FILE__).'/Graph/SAF_Graph_Link.php';
+require_once dirname(__FILE__).'/Graph/SAF_Graph_Album.php';
+require_once dirname(__FILE__).'/Graph/SAF_Graph_Event.php';
 
 // saf libraries
 require_once dirname(__FILE__).'/SAF_Config.php';
-require_once dirname(__FILE__).'/BaseSaf.php';
-require_once dirname(__FILE__).'/SafFacebook.php';
-require_once dirname(__FILE__).'/SignedRequest.php';
-require_once dirname(__FILE__).'/Page/Page.php';
-require_once dirname(__FILE__).'/Page/PageConnection.php';
-require_once dirname(__FILE__).'/User/User.php';
-require_once dirname(__FILE__).'/User/UserConnection.php';
+require_once dirname(__FILE__).'/SAF_Base.php';
+require_once dirname(__FILE__).'/SAF_Facebook.php';
+require_once dirname(__FILE__).'/SAF_SignedRequest.php';
+
+require_once dirname(__FILE__).'/Page/SAF_Page.php';
+require_once dirname(__FILE__).'/Page/SAF_PageConnection.php';
+require_once dirname(__FILE__).'/User/SAF_User.php';
+require_once dirname(__FILE__).'/User/SAF_UserConnection.php';
 
 // config (must be loaded after saf_config.php)
 require_once dirname(__FILE__).'/config/config.php';
@@ -48,7 +49,7 @@ require_once dirname(__FILE__).'/Helpers/FB_Helper.php';
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SAF extends SafFacebook {
+class SAF extends SAF_Facebook {
 
     /**
      * SAF object
@@ -114,10 +115,10 @@ class SAF extends SafFacebook {
      *
      * @access    public
      * @param     string  $name
-     * @return    FB_Graph_Album
+     * @return    SAF_Graph_Album
      */
     public static function createAlbum($name) {
-        return new Album($name);
+        return new SAF_Graph_Album($name);
     }
 
     /**
@@ -125,10 +126,10 @@ class SAF extends SafFacebook {
      *
      * @access    public
      * @param     string  $message
-     * @return    FB_Graph_Comment
+     * @return    SAF_Graph_Comment
      */
     public static function createComment($message) {
-        return new Comment($message);
+        return new SAF_Graph_Comment($message);
     }
 
     /**
@@ -137,10 +138,10 @@ class SAF extends SafFacebook {
      * @access    public
      * @param     string  $name        the event name
      * @param     string  $start_time  the event start time, in ISO-8601
-     * @return    FB_Graph_Event
+     * @return    SAF_Graph_Event
      */
     public static function createEvent($name, $start_time) {
-        return new Event($name, $start_time);
+        return new SAF_Graph_Event($name, $start_time);
     }
 
     /**
@@ -148,10 +149,10 @@ class SAF extends SafFacebook {
      *
      * @access    public
      * @param     string  $url
-     * @return    FB_Graph_Link
+     * @return    SAF_Graph_Link
      */
     public static function createLink($url) {
-        return new Link($url);
+        return new SAF_Graph_Link($url);
     }
 
     /**
@@ -160,10 +161,10 @@ class SAF extends SafFacebook {
      * @access    public
      * @param     string  $subject  the subject
      * @param     string  $message  the comment
-     * @return    FB_Graph_Note
+     * @return    SAF_Graph_Note
      */
     public static function createNote($subject, $message) {
-        return new Note($subject, $message);
+        return new SAF_Graph_Note($subject, $message);
     }
 
     /**
@@ -172,10 +173,10 @@ class SAF extends SafFacebook {
      * @access    public
      * @param     string  $template  the template text
      * @param     string  $href      the tracking data added to the url
-     * @return    FB_Graph_Notification
+     * @return    SAF_Graph_Notification
      */
     public static function createNotification($template, $href) {
-        return new Notification($template, $href);
+        return new SAF_Graph_Notification($template, $href);
     }
 
     /**
@@ -183,10 +184,10 @@ class SAF extends SafFacebook {
      *
      * @access    public
      * @param     string  $message
-     * @return    FB_Graph_Post
+     * @return    SAF_Graph_Post
      */
     public static function createPost($message) {
-        return new Post($message);
+        return new SAF_Graph_Post($message);
     }
 
     /**
@@ -194,10 +195,10 @@ class SAF extends SafFacebook {
      *
      * @access    public
      * @param     string  $question  the text of the question
-     * @return    FB_Graph_Question
+     * @return    SAF_Graph_Question
      */
     public static function createQuestion($question) {
-        return new Question($question);
+        return new SAF_Graph_Question($question);
     }
 
     // ------------------------------------------------------------------------

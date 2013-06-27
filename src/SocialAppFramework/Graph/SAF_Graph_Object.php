@@ -16,7 +16,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class Object {
+abstract class SAF_Graph_Object {
 
     /**
      * Post array

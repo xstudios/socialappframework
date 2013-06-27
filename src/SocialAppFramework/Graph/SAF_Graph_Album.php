@@ -9,40 +9,31 @@
 
 //namespace SocialAppFramework\Graph;
 
-require_once dirname(__FILE__).'/Object.php';
+require_once dirname(__FILE__).'/SAF_Graph_Object.php';
 
 /**
- * Facebook Note object class
- * Requires extended permission: publish_stream (and manage_pages if posting as
- * a page)
+ * Facebook Album object class
+ * Requires extended permission: publish_stream
  *
- * Assists with creating notes.
+ * This class can be used completely stand-alone as long as you have a valid
+ * access token to make Facebook graph calls.
  *
  * @package      Social App Framework
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class Note extends Object {
+class SAF_Graph_Album extends SAF_Graph_Object {
 
-    const CONNECTION = 'notes';
+    const CONNECTION = 'albums';
 
     // ------------------------------------------------------------------------
     // GETTERS / SETTERS
     // ------------------------------------------------------------------------
 
     /**
-     * Set subject
-     *
-     * @access    public
-     * @param     string  $value
-     * @return    void
-     */
-    public function setSubject($value) {
-        $this->_post['subject'] = $value;
-    }
-
-    /**
      * Set message
+     *
+     * Album description
      *
      * @access    public
      * @param     string  $value
@@ -52,37 +43,50 @@ class Note extends Object {
         $this->_post['message'] = $value;
     }
 
+    /**
+     * Set privacy
+     *
+     * https://developers.facebook.com/docs/reference/api/privacy-parameter/
+     *
+     * @access    public
+     * @param     array  $array  privacy parameter
+     * @return    void
+     */
+    public function setPrivacy($array) {
+        $this->_post['privacy'] = json_encode($array);
+    }
+
     // ------------------------------------------------------------------------
 
     /**
      * Constructor
      *
      * @access    public
-     * @param     string  $subject  the subject
-     * @param     string  $message  the comment
+     * @param     string  $name  the album name
      * @return    void
      */
-    public function __construct($subject, $message) {
+    public function __construct($name) {
         parent::__construct();
-        $this->_post['subject'] = $subject;
-        $this->_post['message'] = $message;
+        $this->_post['name'] = $name;
+        // set default privacy to ALL_FRIENDS and not EVERYONE
+        $this->_post['privacy'] = json_encode(array('value'=>'ALL_FRIENDS'));
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * Create a note
+     * Create a album
      *
      * @access    public
      * @param     string|int  $id  the profile ID (eg - me)
-     * @return    string      the new note ID
+     * @return    string      the new album ID
      */
     public function create($profile_id='me') {
         // verify the profile has required permissions
         $this->_verifyPermission('publish_stream');
 
         // call the api
-        $result = $this->_facebook->api('/'.$profile_id.'/notes', 'post', $this->_post);
+        $result = $this->_facebook->api('/'.$profile_id.'/albums', 'post', $this->_post);
 
         return $result['id'];
     }

@@ -16,7 +16,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-abstract class BaseSaf {
+abstract class SAF_Base {
 
     private $_suppported_keys = array('fan_gate', 'page', 'user');
 

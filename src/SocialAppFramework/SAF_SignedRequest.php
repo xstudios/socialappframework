@@ -16,7 +16,7 @@
  * @category     Facebook
  * @author       Tim Santor <tsantor@xstudiosinc.com>
  */
-class SignedRequest extends BaseSaf {
+class SAF_SignedRequest extends SAF_Base {
 
     // ------------------------------------------------------------------------
     // PRIVATE VARS
