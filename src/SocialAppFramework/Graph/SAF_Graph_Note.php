@@ -78,9 +78,6 @@ class SAF_Graph_Note extends SAF_Graph_Object {
      * @return    string      the new note ID
      */
     public function create($profile_id='me') {
-        // verify the profile has required permissions
-        $this->_verifyPermission('publish_stream');
-
         // call the api
         $result = $this->_facebook->api('/'.$profile_id.'/notes', 'post', $this->_post);
 

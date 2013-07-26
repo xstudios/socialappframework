@@ -82,9 +82,6 @@ class SAF_Graph_Album extends SAF_Graph_Object {
      * @return    string      the new album ID
      */
     public function create($profile_id='me') {
-        // verify the profile has required permissions
-        $this->_verifyPermission('publish_stream');
-
         // call the api
         $result = $this->_facebook->api('/'.$profile_id.'/albums', 'post', $this->_post);
 

@@ -56,28 +56,10 @@ abstract class SAF_Graph_Object {
      * @return    boolean     true if the delete succeeded
      */
     public function delete($object_id) {
-        // verify the profile has required permissions
-        $this->_verifyPermission('publish_stream');
-
         // call the api
         $result = $this->_facebook->api('/'.$object_id, 'delete');
 
         return $result;
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
-     * Verify permissions
-     *
-     * @access    protected
-     * @return    void
-     */
-    protected function _verifyPermission($perm) {
-        if ($this->_facebook->user->hasPermission($perm) === false) {
-            $result['error']['message'] = 'Requires permission: '.$perm;
-            throw new FacebookApiException($result);
-        }
     }
 
     // ------------------------------------------------------------------------

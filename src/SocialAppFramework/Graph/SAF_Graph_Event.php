@@ -137,9 +137,6 @@ class SAF_Graph_Event extends SAF_Graph_Object {
      * @return    string      the new event ID
      */
     public function create($object_id='me') {
-        // verify the profile has required permissions
-        $this->_verifyPermission('create_event');
-
         // call the api
         $result = $this->_facebook->api('/'.$object_id.'/events', 'post', $this->_post);
 

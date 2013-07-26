@@ -129,9 +129,6 @@ class SAF_Graph_Question extends SAF_Graph_Object {
      * @return    string      the new question ID
      */
     public function create($profile_id) {
-        // verify the profile has required permissions
-        $this->_verifyPermission('publish_stream');
-
         // call the api
         $result = $this->_facebook->api('/'.$profile_id.'/questions', 'post', $this->_post);
 
