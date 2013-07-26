@@ -249,11 +249,11 @@ class SAF_Graph_Post extends SAF_Graph_Object {
      */
     public function create($profile_id='me') {
         // verify the profile has required permissions
-        if ($this->_facebook->user->hasPermission('publish_stream') === false &&
+        /*if ($this->_facebook->user->hasPermission('publish_stream') === false &&
             $this->_facebook->user->hasPermission('publish_actions') === false) {
             $result['error']['message'] = 'Requires permission: publish_stream or publish_actions';
             throw new FacebookApiException($result);
-        }
+        }*/
 
         // call the api
         $result = $this->_facebook->api('/'.$profile_id.'/feed', 'post', $this->_post);
