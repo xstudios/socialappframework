@@ -65,10 +65,8 @@ class SAF_UserConnection {
      * @return    mixed
      */
     public function getConnection($connection, $query=array()) {
-        $connection = '/'.$connection;
-
         // call the api
-        $result = $this->_facebook->api('/'.$this->_user->getId().$connection, 'GET', $query);
+        $result = $this->_facebook->api('/'.$this->_user->getId().'/'.$connection, 'GET', $query);
 
         return $result['data'];
     }

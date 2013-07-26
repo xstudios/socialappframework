@@ -65,10 +65,8 @@ class SAF_PageConnection {
      * @return    mixed
      */
     public function getConnection($connection, $query=array()) {
-        $connection = '/'.$connection;
-
         // call the api
-        $result = $this->_facebook->api('/'.$this->_page->getId().$connection, 'GET', $query);
+        $result = $this->_facebook->api('/'.$this->_page->getId().'/'.$connection, 'GET', $query);
 
         return $result['data'];
     }
@@ -220,6 +218,20 @@ class SAF_PageConnection {
      */
     public function getLinks() {
         return $this->getConnection('links');
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Get the page's locations.
+     *
+     * @access    public
+     * @return    array  of location objects
+     */
+    public function getLocations() {
+        return $this->getConnection('locations', array(
+            'access_token' => $this->_getPageAccessToken()
+        ));
     }
 
     // ------------------------------------------------------------------------
