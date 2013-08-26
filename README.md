@@ -47,16 +47,9 @@ any type of Facebook app (Tab, Canvas or Facebook Connect) in a matter of minute
         $ git pull origin master
 
 1. Once updated with the latest code, create a new branch with a branch name
-describing what your changes are
-
+describing what your changes are. Possible types (bugfix, feature, improvement):
+   
         $ git checkout -b bugfix/fix-signed-request
-
-
-    Possible types:
-
-    * bugfix
-    * feature
-    * improvement
 
 1. Make your code changes. Always make sure to sign-off (-s) on all commits made
 
