@@ -38,3 +38,34 @@ any type of Facebook app (Tab, Canvas or Facebook Connect) in a matter of minute
             - docs/
             - src/
             - tests/
+
+##Making pull requests
+
+1. Before anything, make sure to update the _MAIN SAF REPOSITORY_.
+
+        $ git checkout master
+        $ git pull origin master
+
+1. Once updated with the latest code, create a new branch with a branch name
+describing what your changes are
+
+        $ git checkout -b bugfix/fix-signed-request
+
+
+    Possible types:
+
+    * bugfix
+    * feature
+    * improvement
+
+1. Make your code changes. Always make sure to sign-off (-s) on all commits made
+
+        $ git commit -s -m "Commit message"
+
+1. Once you've committed all the code to this branch, push the branch to your
+_FORKED SAF REPOSITORY_
+
+        $ git push fork bugfix/fix-signed-request
+
+1. Go back to your _FORKED SAF REPOSITORY_ on GitHub and submit a pull request.
+1. I will review your code and merge it in when it has been classified as suitable.
