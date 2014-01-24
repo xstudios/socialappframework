@@ -31,6 +31,14 @@ class SAF_SignedRequest extends SAF_Base {
     private $_facebook;
 
     /**
+     * Signed Request data
+     *
+     * @access    private
+     * @var       array
+     */
+    private $_data;
+
+    /**
      * The user ID
      *
      * @access    private
@@ -98,6 +106,36 @@ class SAF_SignedRequest extends SAF_Base {
      */
     public function getUserId() {
         return $this->_user_id;
+    }
+
+    /**
+     * Returns the user's country
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getUserCountry() {
+        return $this->_getValue('country');
+    }
+
+    /**
+     * Returns the user's locale
+     *
+     * @access    public
+     * @return    string
+     */
+    public function getUserLocale() {
+        return $this->_getValue('locale');
+    }
+
+    /**
+     * Returns the user's age range
+     *
+     * @access    public
+     * @return    object
+     */
+    public function getUserAgeRange() {
+        return $this->_getValue('age');
     }
 
     /**
@@ -190,13 +228,13 @@ class SAF_SignedRequest extends SAF_Base {
         // get the signed request (only available for tab or canvas apps)
         // however, it will exist on Facebook Connect apps if using the
         // Javascript SDK.
-        $signed_request = $this->_facebook->getSignedRequest();
+        $this->_data = $this->_facebook->getSignedRequest();
 
         // if we have a signed request
-        if ( !empty($signed_request) ) {
+        if ( !empty($this->_data) ) {
 
             // a code will only be present if the app also uses the Javascript SDK
-            if ( isset($signed_request['code']) ) {
+            if ( isset($this->_data['code']) ) {
 
                 // force user to view tab or canvas app within Facebook chrome
                 $this->_forceFacebookChrome();
@@ -204,17 +242,17 @@ class SAF_SignedRequest extends SAF_Base {
             }
 
             // the signed request should solely determine who the user is
-            if (isset($signed_request['user_id'])) {
-                $this->_user_id = $signed_request['user_id'];
+            if (isset($this->_data['user_id'])) {
+                $this->_user_id = $this->_data['user_id'];
                 //$this->debug(__CLASS__.':: User ID ('.$this->_user_id.').');
             }
 
             // are we viewing this within a fan page?
             // only present if the app is being loaded within a page tab
-            if ( isset($signed_request['page']) ) {
+            if ( isset($this->_data['page']) ) {
 
                 // get page id
-                $this->_page_id = $signed_request['page']['id'];
+                $this->_page_id = $this->_data['page']['id'];
                 //$this->debug(__CLASS__.':: Page ID ('.$this->_page_id.').');
 
                 // flag whether or not we are in the Facebook chrome
@@ -223,7 +261,7 @@ class SAF_SignedRequest extends SAF_Base {
                 }
 
                 // does the user like this page?
-                $this->_page_liked = $signed_request['page']['liked'];
+                $this->_page_liked = $this->_data['page']['liked'];
 
                 if ($this->_page_liked == true) {
 
@@ -254,20 +292,20 @@ class SAF_SignedRequest extends SAF_Base {
                 }
 
                 // is user a page admin?
-                if ( isset($signed_request['page']['admin']) && $signed_request['page']['admin'] == true ) {
+                if ( isset($this->_data['page']['admin']) && $this->_data['page']['admin'] == true ) {
                     $this->_page_admin = true;
                     $this->debug(__CLASS__.':: User is the page admin.');
                 }
 
                 // get app data passed via the url
-                if ( isset($signed_request['app_data']))  {
-                    $this->_app_data = $signed_request['app_data'];
+                if ( isset($this->_data['app_data']))  {
+                    $this->_app_data = $this->_data['app_data'];
                     $this->debug(__CLASS__.':: App data (passed via \'app_data\' GET param):', $this->_app_data);
                 }
 
             }
 
-            $this->debug(__CLASS__.':: SAF Signed request data:', $signed_request);
+            $this->debug(__CLASS__.':: SAF Signed request data:', $this->_data);
 
         // we are looking at the app outside of the Facebook chrome
         // or it's a subsequent page load or ajax request
@@ -314,6 +352,26 @@ class SAF_SignedRequest extends SAF_Base {
                 exit;
             }
         }
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * Returns a key value whether it exists or not
+     *
+     * @access    private
+     * @param     string $key key to check for
+     * @param     mixed $default default value if not set
+     * @return    mixed
+     */
+    private function _getValue($key, $default=false) {
+        // first, look in data we *should* have recevied from the graph
+        if ( isset($this->_data[$key]) ) {
+            return $this->_data[$key];
+        }
+
+        // if all else fails, we return the default value
+        return $default;
     }
 
     // ------------------------------------------------------------------------

@@ -339,6 +339,8 @@ class SAF_User extends SAF_Base {
                     $this->_checkPermissions();
 
                     // add our own useful social app framework parameter(s) to the fb_user object
+                    $this->_data['saf_country']       = $this->_facebook->sr->getUserCountry();
+                    $this->_data['saf_locale']        = $this->_facebook->sr->getUserLocale();
                     $this->_data['saf_perms_granted'] = $this->_granted_perms;
                     $this->_data['saf_perms_revoked'] = $this->_revoked_perms;
                     $this->_data['saf_page_admin']    = $this->_facebook->sr->isPageAdmin();
