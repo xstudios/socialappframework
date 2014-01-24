@@ -115,7 +115,7 @@ class SAF_SignedRequest extends SAF_Base {
      * @return    string
      */
     public function getUserCountry() {
-        return $this->_getValue('country');
+        return $this->_data['user']['country'];
     }
 
     /**
@@ -125,7 +125,7 @@ class SAF_SignedRequest extends SAF_Base {
      * @return    string
      */
     public function getUserLocale() {
-        return $this->_getValue('locale');
+        return $this->_data['user']['locale'];
     }
 
     /**
@@ -135,7 +135,7 @@ class SAF_SignedRequest extends SAF_Base {
      * @return    object
      */
     public function getUserAgeRange() {
-        return $this->_getValue('age');
+        return $this->_data['user']['age'];
     }
 
     /**
