@@ -131,11 +131,29 @@ class SAF_SignedRequest extends SAF_Base {
     /**
      * Returns the user's age range
      *
+     * The age object, which is part of the user object will only be
+     * returned in the signed_request parameter for Canvas Apps;
+     * it will not be returned for external apps.
+     *
      * @access    public
-     * @return    object
+     * @return    string
      */
     public function getUserAgeRange() {
-        return $this->_data['user']['age'];
+        if (isset($this->_data['user']['age'])) {
+            switch($this->_data['user']['age']['min']) {
+                case 13:
+                    return '13-17';
+                    break;
+                case 18:
+                    return '18-20';
+                    break;
+                case 21:
+                    return '21+';
+                    break;
+                default:
+                    return 'Unknown';
+            }
+        }
     }
 
     /**
