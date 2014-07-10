@@ -307,7 +307,9 @@ class SAF_User extends SAF_Base {
 
             // test to see if we already know who the user is from our session
             // and bail out as we don't need to hit up the graph api
-            $this->_data = $this->getSafPersistentData('user');
+            // NOTE: This can potentially cause issues...look into making
+            // this better (eg - compare user ids)
+            /*$this->_data = $this->getSafPersistentData('user');
             if (!empty($this->_data)) {
                 // user is authenticated (we have data)
                 $this->_authenticated = true;
@@ -317,7 +319,7 @@ class SAF_User extends SAF_Base {
                 $this->debug(__CLASS__.':: We got user data from our session.');
                 $this->debug(__CLASS__.':: User ('.$this->_id.') data: ', $this->_data);
                 return;
-            }
+            }*/
 
             try {
 
